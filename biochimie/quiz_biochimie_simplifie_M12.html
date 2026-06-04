@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Biochimie S2 - Module 12 (Q221 à Q227)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Clean correct/incorrect styles: NO text boxes, just colors */
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="quiz_biochimie_simplifie_M11.html"><<</a>Quiz Biochimie S2 - Module 12 (Q221 à Q227)</h1>
+        </header>
+        
+        <div class="revision-box">
+            <h3>📝 Fiche de révision : Parodonte et Caries (Questions 221 à 227)</h3><p><strong>Parodonte/Carie :</strong> La plaque bactérienne fermente les sucres (pH acide) déminéralisant l'émail. Le tartre est la minéralisation de la plaque (pH alcalin salivaire).</p>
+        </div>
+
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer les questions 🔄</button>
+        </form>
+    </div>
+    <script>
+        const quizData = [{"id": 219, "question": "L\u2019hypercalc\u00e9mie\u00a0:", "options": [{"id": "219_A", "text": "Elle conduit \u00e0 la t\u00e9tanie", "correct": false}, {"id": "219_B", "text": "Elle peut \u00eatre associ\u00e9e \u00e0 des conditions n\u00e9oplasiques", "correct": true}, {"id": "219_C", "text": "Elle survient en cas d'empoisonnement \u00e0 la vitamine D", "correct": true}, {"id": "219_D", "text": "Elle peut \u00eatre associ\u00e9e \u00e0 une carence en vitamine D", "correct": false}, {"id": "219_E", "text": "Elle se produit \u00e0 des niveaux de calcium sup\u00e9rieurs \u00e0 10,5 mg/dL", "correct": false}, {"id": "219_F", "text": "Elle peut provoquer une hypoplasie de l'\u00e9mail", "correct": false}, {"id": "219_G", "text": "Elle peut provoquer des manifestations cardiaques", "correct": true}, {"id": "219_H", "text": "Elle conduit \u00e0 la fluorose dentaire supagingic Phosphateca... X piaquedictairemineliste datites...aspalo Ce.pourensynth,deVitt.) 8- 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 62/64", "correct": false}, {"id": "219_I", "text": "Elle peut \u00eatre associ\u00e9e \u00e0 une hyperthyro\u00efdie", "correct": false}, {"id": "219_J", "text": "Elle appara\u00eet \u00e0 des niveaux de calcium inf\u00e9rieurs \u00e0 10 mg/dl", "correct": false}]}, {"id": 220, "question": "L'absorption du calcium peut d\u00e9pendre de\u00a0:", "options": [{"id": "220_A", "text": "La quantit\u00e9 de fluorure dans le corps", "correct": false}, {"id": "220_B", "text": "Le pH salivaire", "correct": true}, {"id": "220_C", "text": "Le pH de l'estomac", "correct": true}, {"id": "220_D", "text": "La quantit\u00e9 d'acides gras libres dans l'intestin", "correct": true}, {"id": "220_E", "text": "La pr\u00e9sence de la vitamine B3 dans les aliments", "correct": false}, {"id": "220_F", "text": "La pr\u00e9sence de la mucine dans la salive", "correct": false}, {"id": "220_G", "text": "La pr\u00e9sence de la lysozyme", "correct": false}, {"id": "220_H", "text": "Le niveau de vitamine D3", "correct": true}, {"id": "220_I", "text": "Le rapport dans lequel Ca2+ et P se trouvent dans l'intestin", "correct": true}, {"id": "220_J", "text": "La nature de la nourriture", "correct": true}]}, {"id": 221, "question": "La synth\u00e8se du collag\u00e8ne :", "options": [{"id": "221_A", "text": "Elle comprend une \u00e9tape de glycosylation", "correct": true}, {"id": "221_B", "text": "Elle est d\u00e9pendante de la vitamine D", "correct": false}, {"id": "221_C", "text": "Elle comprend des \u00e9tapes de glycosylation extracellulaire", "correct": false}, {"id": "221_D", "text": "Elle d\u00e9pend de la vitamine C", "correct": true}, {"id": "221_E", "text": "Elle a un stade extracellulaire o\u00f9 des acides amin\u00e9s sont perdus", "correct": false}, {"id": "221_F", "text": "Elle se produit principalement dans les fibroblastes", "correct": true}, {"id": "221_G", "text": "Elle se produit au niveau des macrophages", "correct": false}, {"id": "221_H", "text": "Elle comprend des \u00e9tapes intracellulaires de la formation du procollag\u00e8ne \u03b1", "correct": true}, {"id": "221_I", "text": "Elle comprend une \u00e9tape d'hydroxylation de la glycine", "correct": true}, {"id": "221_J", "text": "Elle comprend d'\u00e9tapes intracellulaires de condensation des fibrilles de collag\u00e8ne", "correct": true}]}, {"id": 222, "question": "La matrice extracellulaire du tissu conjonctif :", "options": [{"id": "222_A", "text": "C'est un gel de polysaccharide", "correct": true}, {"id": "222_B", "text": "Elle peut contenir des macrophages qui se multiplient au cours de l'inflammation", "correct": true}, {"id": "222_C", "text": "Elle ne contient pas d'\u00e9l\u00e9ments cellulaires", "correct": false}, {"id": "222_D", "text": "Elle ne contient que des prot\u00e9ines de type collag\u00e8ne", "correct": false}, {"id": "222_E", "text": "Elle peut subir des changements dans des maladies telles que les rhumatismes", "correct": true}, {"id": "222_F", "text": "C'est un gel riche en disaccharides", "correct": false}, {"id": "222_G", "text": "Elle est synth\u00e9tis\u00e9e au niveau des macrophages", "correct": false}, {"id": "222_H", "text": "Elle peut contenir des prot\u00e9ines de nature fibrillaire", "correct": true}, {"id": "222_I", "text": "Elle contient des prot\u00e9ines de type globuline", "correct": false}, {"id": "222_J", "text": "Elle contient des glycosaminoglycanes qui donnent de la souplesse au tissu conjonctif", "correct": true}]}, {"id": 223, "question": "Concernant les prot\u00e9ines du tissu conjonctif, on peut af\ufb01rmer que :", "options": [{"id": "223_A", "text": "Elles donnent de la souplesse au tissu", "correct": true}, {"id": "223_B", "text": "La r\u00e9ticuline a une structure similaire au collag\u00e8ne", "correct": true}, {"id": "223_C", "text": "Elles sont du type glycosaminoglycanes", "correct": false}, {"id": "223_D", "text": "Elles ne sont synth\u00e9tis\u00e9es que dans les fibroblastes", "correct": false}, {"id": "223_E", "text": "La glycine pr\u00e9domine dans la structure du collag\u00e8ne auto >ar Reficine Elastine CollageseP Repitiechaque3AA 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 63/64", "correct": true}, {"id": "223_F", "text": "Elles sont majoritairement de type \u00e9lastine", "correct": false}, {"id": "223_G", "text": "Elles contiennent principalement des acides amin\u00e9s aromatiques dans leur structure", "correct": false}, {"id": "223_H", "text": "On les trouve dans la matrice extracellulaire", "correct": true}, {"id": "223_I", "text": "L'\u00e9lastine se trouve principalement dans l'aorte", "correct": false}, {"id": "223_J", "text": "L'\u00e9lastine ne contient pas d'OH-Lys", "correct": false}]}, {"id": 224, "question": "La min\u00e9ralisation osseuse :", "options": [{"id": "224_A", "text": "Elle est favoris\u00e9e par la calcitonine", "correct": false}, {"id": "224_B", "text": "Elle est favoris\u00e9e par un faible taux de calcitriol", "correct": false}, {"id": "224_C", "text": "Elle se produit avant la synth\u00e8se de la matrice organique", "correct": false}, {"id": "224_D", "text": "Elle est influenc\u00e9e par un niveau optimal d'amylase", "correct": true}, {"id": "224_E", "text": "Elle est favoris\u00e9e par un pH alcalin", "correct": true}, {"id": "224_F", "text": "Elle ne d\u00e9pend pas de la concentration en ions calcium", "correct": false}, {"id": "224_G", "text": "Elle consiste en un stockage des phosphates tricalciques au sein d'une matrice organique", "correct": true}, {"id": "224_H", "text": "Elle d\u00e9pend de la pr\u00e9sence de la phosphatase alcaline", "correct": true}, {"id": "224_I", "text": "Elle est influenc\u00e9e par la pr\u00e9sence de mucopolysaccharides", "correct": false}, {"id": "224_J", "text": "Elle est favoris\u00e9e par un pH acide", "correct": false}]}, {"id": 225, "question": "Concernant le composant organique de l'\u00e9mail, on peut af\ufb01rmer que :", "options": [{"id": "225_A", "text": "Il a une forte concentration de phosphatase alcaline", "correct": false}, {"id": "225_B", "text": "Il varie inversement proportionnel au poids de l'\u00e9mail", "correct": false}, {"id": "225_C", "text": "Il comprend des prot\u00e9ines diff\u00e9rentes dans l'\u00e9mail adulte, par rapport \u00e0 l'\u00e9mail jeune", "correct": true}, {"id": "225_D", "text": "Il comprend principalement des polysaccharides", "correct": false}, {"id": "225_E", "text": "Il peut contenir des prot\u00e9ines telles que les \u00e9namelines", "correct": true}, {"id": "225_F", "text": "Il peut contenir des acides gras satur\u00e9s", "correct": false}, {"id": "225_G", "text": "L'\u00e9mail mature contient des prot\u00e9ines telles que l'ost\u00e9opontine", "correct": false}, {"id": "225_H", "text": "Il comprend des cellules telles que les odontoblastes", "correct": false}, {"id": "225_I", "text": "Les am\u00e9log\u00e9nines sont les prot\u00e9ines de l'\u00e9mail jeune, avec une structure diff\u00e9rente de celle du collag\u00e8ne", "correct": true}, {"id": "225_J", "text": "Il comprend une grande quantit\u00e9 de carbonate de calcium", "correct": false}]}, {"id": 226, "question": "Contrairement \u00e0 l'\u00e9mail, la pulpe dentaire :", "options": [{"id": "226_A", "text": "Elle peut contenir des prot\u00e9ines telles que l'\u00e9mail", "correct": false}, {"id": "226_B", "text": "Elle contient des vaisseaux sanguins et des nerfs", "correct": true}, {"id": "226_C", "text": "Elle comprend principalement des prot\u00e9ines telles que les am\u00e9log\u00e9nines", "correct": false}, {"id": "226_D", "text": "C'est un tissu non calcifi\u00e9", "correct": true}, {"id": "226_E", "text": "Elle ne contient pas d'enzymes", "correct": false}, {"id": "226_F", "text": "C'est un tissu calcifi\u00e9 en relation \u00e9troite avec la dentine", "correct": false}, {"id": "226_G", "text": "Elle contient une grande quantit\u00e9 de glycog\u00e8ne", "correct": true}, {"id": "226_H", "text": "Elle a une consistance comparable \u00e0 la moelle osseuse", "correct": true}, {"id": "226_I", "text": "Elle comprend des cellules telles que les odontoblastes", "correct": true}, {"id": "226_J", "text": "Elle contient des cellules telles que les ost\u00e9oblastes, \u00e0 partir desquelles se forme l'os alv\u00e9olaire * X GAbX &acrposateinag,proportin AmepagewinGmaneet 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 64/64", "correct": false}]}, {"id": 227, "question": "Contrairement \u00e0 la plaque bact\u00e9rienne, le tartre dentaire :", "options": [{"id": "227_A", "text": "Il est favoris\u00e9 par l'augmentation de la composante prot\u00e9ique salivaire", "correct": false}, {"id": "227_B", "text": "Il a un r\u00f4le protecteur contre la d\u00e9min\u00e9ralisation de l'\u00e9mail", "correct": false}, {"id": "227_C", "text": "Il est form\u00e9 par le d\u00e9p\u00f4t de substances min\u00e9rales \u00e0 la surface de la plaque bact\u00e9rienne", "correct": true}, {"id": "227_D", "text": "Il peut contenir des cristaux de phosphate de calcium", "correct": true}, {"id": "227_E", "text": "Il ne contient pas d'enzymes", "correct": false}, {"id": "227_F", "text": "Il contient des cellules telles que les odontoblastes", "correct": false}, {"id": "227_G", "text": "Il repr\u00e9sente un facteur irritant pour le parodonte", "correct": true}, {"id": "227_H", "text": "Il est favoris\u00e9 par l'\u00e9tablissement d'un pH alcalin dans la cavit\u00e9 buccale", "correct": true}, {"id": "227_I", "text": "Il ne peut se former qu'au niveau sous-gingival", "correct": true}, {"id": "227_J", "text": "Il se forme \u00e0 la surface du c\u00e9ment doup. >PlaqueBackleine plaquedistriebesienze mineralistich Y Farbredentaire etaccaiciet", "correct": false}]}];
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `Q${q.id} - ${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    optionsGrid.appendChild(label);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

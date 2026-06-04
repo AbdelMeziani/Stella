@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Biochimie S2 - Module 5 (Q81 à Q100)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-container { display: flex; flex-direction: column; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .explanation-box { display: none; margin-top: 5px; padding: 12px 15px; border-radius: 6px; font-size: 0.95em; line-height: 1.5; animation: fadeIn 0.4s ease; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); }
+        .expl-correct { background-color: #e8f5e9; color: #1b5e20; border-left: 5px solid #4caf50; }
+        .expl-incorrect { background-color: #ffebee; color: #b71c1c; border-left: 5px solid #f44336; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="quiz_biochimie_Q61_80.html"><<</a>Quiz Biochimie S2 - Module 5 (Q81 à Q100)<a href="quiz_biochimie_Q101_120.html">>></a></h1>
+        </header>
+        
+        <div class="revision-box">
+            <h3>📝 Fiche de révision : Cholestérol et Acides Biliaires (Questions 81 à 100)</h3>
+    <p><strong>Biosynthèse du Cholestérol :</strong> Processus cytoplasmique à partir d'Acétyl-CoA. L'enzyme régulatrice absolue est l'<strong>HMG-CoA Réductase</strong> (inhibée par les statines, le cholestérol et le glucagon ; stimulée par l'insuline). Étapes : Mévalonate -> Isoprènes (C5) -> Squalène -> Lanostérol (C30) -> Cholestérol (C27).<br>
+    <strong>Acides Biliaires :</strong> Seule voie d'excrétion du cholestérol. Les <strong>acides primaires</strong> (cholique, chénodésoxycholique) sont formés dans le foie. Les bactéries intestinales les transforment en <strong>acides secondaires</strong> (désoxycholique, lithocholique) par perte d'un groupement OH en position 7.</p>
+        </div>
+
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses et afficher les explications</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer les 20 questions 🔄</button>
+        </form>
+    </div>
+    <script>
+        const quizData = [{"id": 81, "question": "La synth\u00e8se des phospholipides peut impliquer :", "options": [{"id": "81_A", "text": "Utilisation d'un acide amin\u00e9 sulfurique (SAM)", "correct": true}, {"id": "81_B", "text": "Couplage de la choline avec l'acide phosphatidique", "correct": true}, {"id": "81_C", "text": "Action de certaines phosphorylases", "correct": false}, {"id": "81_D", "text": "Consommation d'un nucl\u00e9otide pyrimidique", "correct": true}, {"id": "81_E", "text": "Consommation d'\u00e9nergie", "correct": true}, {"id": "81_F", "text": "Production d'un interm\u00e9diaire commun avec la synth\u00e8se TG", "correct": true}, {"id": "81_G", "text": "Utilisation d'un acide amin\u00e9 avec un groupe -OH", "correct": false}, {"id": "81_H", "text": "Utilisation d'un acide amin\u00e9 aromatique", "correct": false}, {"id": "81_I", "text": "Action d'une carboxylase", "correct": false}, {"id": "81_J", "text": "Production d'acide phosphatidique", "correct": false}]}, {"id": 82, "question": "Phospholipase D:", "options": [{"id": "82_A", "text": "Elle peut intervenir dans l'intestin gr\u00eale", "correct": false}, {"id": "82_B", "text": "Agit sur les phospholipides en lib\u00e9rant de l'acide arachidique", "correct": false}, {"id": "82_C", "text": "Elle peut lib\u00e9rer de la phospho-choline", "correct": true}, {"id": "82_D", "text": "Elle peut lib\u00e9rer la choline de la l\u00e9cithine", "correct": false}, {"id": "82_E", "text": "Elle lib\u00e8re le diglyc\u00e9ride dy phospholipide", "correct": false}, {"id": "82_F", "text": "Agit sur les phospholipides en lib\u00e9rant de l'acide arachidonique", "correct": false}, {"id": "82_G", "text": "Elle peut lib\u00e9rer de la phospho-\u00e9thanolamine", "correct": false}, {"id": "82_H", "text": "Peut intervenir dans les h\u00e9patocytes", "correct": false}, {"id": "82_I", "text": "Elle lib\u00e8re l'acide phosphatidique des phospholipides", "correct": true}, {"id": "82_J", "text": "Elle produit un interm\u00e9diaire de la synth\u00e8se des TG", "correct": false}]}, {"id": 83, "question": "Phospholipase C:", "options": [{"id": "83_A", "text": "Peut agir sur les h\u00e9patocytes", "correct": false}, {"id": "83_B", "text": "Elle produit un interm\u00e9diaire de la synth\u00e8se des TG", "correct": true}, {"id": "83_C", "text": "Lib\u00e8re un monoglyc\u00e9ride des phospholipides", "correct": true}, {"id": "83_D", "text": "Elle peut lib\u00e9rer de la phospho-choline", "correct": false}, {"id": "83_E", "text": "Peut lib\u00e9rer de la phospho-\u00e9thanolamine", "correct": true}, {"id": "83_F", "text": "Elle lib\u00e8re l'acide phosphatidique des phospholipides", "correct": false}, {"id": "83_G", "text": "Elle peut lib\u00e9rer la choline de la l\u00e9cithin", "correct": false}, {"id": "83_H", "text": "Elle agit sur les phospholipides en lib\u00e9rant de l'acide arachidique", "correct": false}, {"id": "83_I", "text": "Elle agit sur les phospholipides en lib\u00e9rant de l'acide arachidonique", "correct": false}, {"id": "83_J", "text": "Elle peut intervenir dans l'intestin gr\u00eale", "correct": false}]}, {"id": 84, "question": "En ce qui concerne les glycolipides, on peut affirmer que :", "options": [{"id": "84_A", "text": "Leur structure peut contenir un monosaccharide", "correct": true}, {"id": "84_B", "text": "Leur structure comprend 2 acides gras", "correct": false}, {"id": "84_C", "text": "Leur structure peut contenir de l'inositol", "correct": false}, {"id": "84_D", "text": "Elles peuvent \u00eatre d\u00e9grad\u00e9s par le PLA2 avec lib\u00e9ration d'acide arachidonique", "correct": false}, {"id": "84_E", "text": "Toutes les c\u00e9ramides ont un composant commun dans leur structure", "correct": false}, {"id": "84_F", "text": "Leur structure contient de s\u00e9rine", "correct": false}, {"id": "84_G", "text": "Peut contenir du glyc\u00e9rol dans sa structure", "correct": false}, {"id": "84_H", "text": "Leur synth\u00e8se n\u00e9cessite la consommation de coenzymes r\u00e9duits", "correct": false}, {"id": "84_I", "text": "Leur structure comprend une c\u00e9ramide", "correct": true}, {"id": "84_J", "text": "Leur synth\u00e8se n\u00e9cessite la consommation de coenzymes oxyd\u00e9s", "correct": false}]}, {"id": 85, "question": "Cholest\u00e9rol :", "options": [{"id": "85_A", "text": "C'est un sphingolipide", "correct": false}, {"id": "85_B", "text": "C'est un alcool polycyclique", "correct": true}, {"id": "85_C", "text": "Il est synth\u00e9tis\u00e9 dans l'intestin sous l'action du microbiote", "correct": false}, {"id": "85_D", "text": "Il poss\u00e8de une cha\u00eene lat\u00e9rale de 8 atomes de carbone", "correct": false}, {"id": "85_E", "text": "Il a 3 atomes de C suppl\u00e9mentaires par comparaison avec l'acide cholique", "correct": true}, {"id": "85_F", "text": "C'est un alcool monohydroxylique", "correct": true}, {"id": "85_G", "text": "Il peut \u00eatre d\u00e9grad\u00e9 par la lipase pancr\u00e9atique", "correct": false}, {"id": "85_H", "text": "Il peut \u00eatre transport\u00e9 dans le sang par les VLDL", "correct": true}, {"id": "85_I", "text": "Il module la fluidit\u00e9 de la membrane cellulaire", "correct": true}, {"id": "85_J", "text": "Il n'est pas pr\u00e9sent dans les membranes cellulaires", "correct": false}]}, {"id": 86, "question": "S\u00e9lectionnez les affirmations vraies concernant le cholest\u00e9rol :", "options": [{"id": "86_A", "text": "C'est un alcool polycyclique", "correct": true}, {"id": "86_B", "text": "Peut conduire \u00e0 la formation d'acide ch\u00e9nod\u00e9soxycholique", "correct": true}, {"id": "86_C", "text": "Sa structure contient des acides gras", "correct": false}, {"id": "86_D", "text": "Il peut \u00eatre transport\u00e9 vers les tissus sous la forme de LDL", "correct": false}, {"id": "86_E", "text": "Il a une cha\u00eene lat\u00e9rale satur\u00e9e", "correct": false}, {"id": "86_F", "text": "Sa synth\u00e8se commence \u00e0 partir de l'ac\u00e9tyl ~SCOA", "correct": true}, {"id": "86_G", "text": "C'est un pr\u00e9curseur pour la synth\u00e8se des phospholipides", "correct": false}, {"id": "86_H", "text": "Il contribue \u00e0 la synth\u00e8se des triglyc\u00e9rides", "correct": false}, {"id": "86_I", "text": "Il est transport\u00e9 vers le foie par les chylomicrons", "correct": true}, {"id": "86_J", "text": "Sa d\u00e9gradation s'effectue par un processus de thiolyse", "correct": false}]}, {"id": 87, "question": "Concernant les r\u00f4les du cholest\u00e9rol, on peut dire :", "options": [{"id": "87_A", "text": "Module la fluidit\u00e9 de la membrane cellulaire", "correct": true}, {"id": "87_B", "text": "En exc\u00e8s, il contribue \u00e0 la formation de corps c\u00e9toniques", "correct": false}, {"id": "87_C", "text": "Par sa d\u00e9gradation, l'acide cholique peut \u00eatre obtenu", "correct": true}, {"id": "87_D", "text": "Il a un r\u00f4le structurel", "correct": true}, {"id": "87_E", "text": "Par d\u00e9gradation dans le foie, il g\u00e9n\u00e8re directement des acides biliaires secondaires", "correct": false}, {"id": "87_F", "text": "Peut contribuer \u00e0 la synth\u00e8se de la vitamine D", "correct": true}, {"id": "87_G", "text": "Il intervient dans la synth\u00e8se de la sphingomy\u00e9line", "correct": false}, {"id": "87_H", "text": "C'est un pr\u00e9curseur pour les hormones st\u00e9ro\u00efdiennes", "correct": true}, {"id": "87_I", "text": "C'est un pr\u00e9curseur de la vitamine B6", "correct": false}, {"id": "87_J", "text": "Il peut g\u00e9n\u00e9rer du glyc\u00e9rol et des acides gras \u00e0 la suite de sa d\u00e9gradation", "correct": false}]}, {"id": 88, "question": "Synth\u00e8se du cholest\u00e9rol :", "options": [{"id": "88_A", "text": "Elle se produit uniquement dans le foie", "correct": false}, {"id": "88_B", "text": "Cela commence par les acides gras satur\u00e9s", "correct": false}, {"id": "88_C", "text": "Elle conduit \u00e0 la formation interm\u00e9diaire de mol\u00e9cules \u00e0 5 atomes de carbone", "correct": true}, {"id": "88_D", "text": "Elle comprend des \u00e9tapes de condensation des mol\u00e9cules de lanost\u00e9rol", "correct": false}, {"id": "88_E", "text": "Commence par de l'ac\u00e9tyl ~SCOA", "correct": true}, {"id": "88_F", "text": "Cela commence par les acides biliaires", "correct": false}, {"id": "88_G", "text": "Elle n\u00e9cessite de la carnitine", "correct": false}, {"id": "88_H", "text": "Elle implique une \u00e9tape catalys\u00e9e par une thiolase", "correct": false}, {"id": "88_I", "text": "Elle comprend \u00e9galement une \u00e9tape de cyclisation", "correct": true}, {"id": "88_J", "text": "C'est un processus r\u00e9ducteur", "correct": true}]}, {"id": 89, "question": "HMG-CoA r\u00e9ductase :", "options": [{"id": "89_A", "text": "Catalyse la formation d'unit\u00e9s isopr\u00e9no\u00efdes", "correct": false}, {"id": "89_B", "text": "Elle ne peut pas \u00eatre inhib\u00e9e par un niveau \u00e9lev\u00e9 de cholest\u00e9rol s\u00e9rique", "correct": false}, {"id": "89_C", "text": "Elle est stimul\u00e9e par les acides biliaires primaires", "correct": false}, {"id": "89_D", "text": "Elle a une forme active phosphoryl\u00e9e", "correct": true}, {"id": "89_E", "text": "Elle catalyse une r\u00e9action limitant la vitesse de la synth\u00e8se du cholest\u00e9rol", "correct": true}, {"id": "89_F", "text": "Elle conduit \u00e0 la formation d'acide m\u00e9valonique", "correct": true}, {"id": "89_G", "text": "Elle catalyse les transformations du squal\u00e8ne en lanost\u00e9rol", "correct": false}, {"id": "89_H", "text": "Elle peut \u00eatre inhib\u00e9e par les statines", "correct": true}, {"id": "89_I", "text": "Elle peut \u00eatre inhib\u00e9e par une augmentation du cholest\u00e9rol alimentaire", "correct": false}, {"id": "89_J", "text": "Elle peut avoir une forme active d\u00e9phosphoryl\u00e9e", "correct": true}]}, {"id": 90, "question": "M\u00e9valonate :", "options": [{"id": "90_A", "text": "Il r\u00e9sulte de l'action d'une enzyme stimul\u00e9e par l'insuline", "correct": false}, {"id": "90_B", "text": "Il est form\u00e9 par une r\u00e9action de phosphorylation", "correct": false}, {"id": "90_C", "text": "Par cyclisation, il conduit \u00e0 la formation de squal\u00e8ne", "correct": false}, {"id": "90_D", "text": "Il se forme sous l'action d'une r\u00e9ductase", "correct": true}, {"id": "90_E", "text": "Il peut conduire \u00e0 la formation d'une mol\u00e9cule triphosphoryl\u00e9e", "correct": true}, {"id": "90_F", "text": "Par phosphorylation, il forme directement la premi\u00e8re unit\u00e9 isopr\u00e9no\u00efde", "correct": false}, {"id": "90_G", "text": "Il est form\u00e9 comme interm\u00e9diaire lors de la synth\u00e8se du cholest\u00e9rol", "correct": true}, {"id": "90_H", "text": "Il r\u00e9sulte directement de l'ac\u00e9tyl ~SCoA par carboxylation", "correct": false}, {"id": "90_I", "text": "Il r\u00e9sulte de la d\u00e9gradation du cholest\u00e9rol", "correct": false}, {"id": "90_J", "text": "Il est form\u00e9 \u00e0 partir d'une mol\u00e9cule commune \u00e0 la synth\u00e8se des corps c\u00e9toniques", "correct": false}]}, {"id": 91, "question": "Unit\u00e9s isopr\u00e9no\u00efdes:", "options": [{"id": "91_A", "text": "Ce sont des mol\u00e9cules interm\u00e9diaires cycliques dans la synth\u00e8se du cholest\u00e9rol", "correct": false}, {"id": "91_B", "text": "Ce sont de mol\u00e9cules isom\u00e9riques", "correct": false}, {"id": "91_C", "text": "Ce sont des mol\u00e9cules phosphoryl\u00e9es", "correct": false}, {"id": "91_D", "text": "Ils sont form\u00e9s par des r\u00e9actions de phosphorylation", "correct": true}, {"id": "91_E", "text": "Ils peuvent \u00eatre form\u00e9s sous l'action d'une d\u00e9carboxylase", "correct": true}, {"id": "91_F", "text": "Ils conduisent \u00e0 la formation d'acide m\u00e9valonique", "correct": false}, {"id": "91_G", "text": "Ce sont des mol\u00e9cules interm\u00e9diaires dans la synth\u00e8se du cholest\u00e9rol", "correct": true}, {"id": "91_H", "text": "Ce sont des mol\u00e9cules \u00e0 5 atomes de carbone", "correct": true}, {"id": "91_I", "text": "Ce sont des mol\u00e9cules acides \u00e0 6 atomes de carbone", "correct": false}, {"id": "91_J", "text": "Ils conduisent \u00e0 la formation directe de squal\u00e8ne", "correct": false}]}, {"id": 92, "question": "Lanost\u00e9rol :", "options": [{"id": "92_A", "text": "C'est une mol\u00e9cule lin\u00e9aire \u00e0 partir de laquelle se forme le cholest\u00e9rol", "correct": false}, {"id": "92_B", "text": "C'est une mol\u00e9cule qui r\u00e9sulte d'un processus de cyclisation", "correct": true}, {"id": "92_C", "text": "Il a un groupe OH en position 3 (au C3)", "correct": true}, {"id": "92_D", "text": "Contrairement au cholest\u00e9rol, il poss\u00e8de 3 groupes m\u00e9thyles suppl\u00e9mentaires", "correct": true}, {"id": "92_E", "text": "Il peut conduire \u00e0 la formation d'un alcool \u00e0 27 atomes de carbone", "correct": true}, {"id": "92_F", "text": "C'est un interm\u00e9diaire dans la synth\u00e8se de l'h\u00e9moglobine", "correct": false}, {"id": "92_G", "text": "Il est form\u00e9 \u00e0 partir du squal\u00e8ne par une r\u00e9action de d\u00e9carboxylation", "correct": false}, {"id": "92_H", "text": "Il a une cha\u00eene lat\u00e9rale satur\u00e9e compos\u00e9e de 8 atomes de carbone", "correct": false}, {"id": "92_I", "text": "Il peut conduire \u00e0 la formation d'unit\u00e9s isopr\u00e9no\u00efdes par des modifications de la cha\u00eene lat\u00e9rale", "correct": false}, {"id": "92_J", "text": "Il poss\u00e8de une cha\u00eene lat\u00e9rale insatur\u00e9e", "correct": false}]}, {"id": 93, "question": "La transformation du lanost\u00e9rol en cholest\u00e9rol implique :", "options": [{"id": "93_A", "text": "Saturation de la cha\u00eene lat\u00e9rale", "correct": true}, {"id": "93_B", "text": "\u00c9limination d'un groupe -OH du carbone 7", "correct": false}, {"id": "93_C", "text": "Disparition d'une double liaison", "correct": true}, {"id": "93_D", "text": "Ajout d'un groupe -OH au carbone 7", "correct": false}, {"id": "93_E", "text": "Consommation de NADH", "correct": false}, {"id": "93_F", "text": "Suppression de 3 groupes m\u00e9thyles suppl\u00e9mentaires", "correct": true}, {"id": "93_G", "text": "\u00c9limination de deux groupes m\u00e9thyles suppl\u00e9mentaires", "correct": false}, {"id": "93_H", "text": "D\u00e9placer une double liaison", "correct": true}, {"id": "93_I", "text": "R\u00e9actions de cyclisation", "correct": false}, {"id": "93_J", "text": "Consommation de NADPH", "correct": true}]}, {"id": 94, "question": "En ce qui concerne la r\u00e9gulation du cholest\u00e9rol, on peut dire :", "options": [{"id": "94_A", "text": "L'augmentation du cholest\u00e9rol plasmatique stimule l'expression du g\u00e8ne de la HMG-CoA r\u00e9ductase", "correct": false}, {"id": "94_B", "text": "Elle ne peut \u00eatre obtenue par les hormones", "correct": false}, {"id": "94_C", "text": "Elle ne peut pas \u00eatre influenc\u00e9e par les acides biliaires", "correct": false}, {"id": "94_D", "text": "Elle est obtenue exclusivement par un feedback n\u00e9gatif", "correct": false}, {"id": "94_E", "text": "L'acide ch\u00e9nod\u00e9soxycholique peut inhiber la synth\u00e8se du cholest\u00e9rol", "correct": true}, {"id": "94_F", "text": "Elle peut \u00eatre obtenue en phosphorylant/d\u00e9phosphorylant l'enzyme cl\u00e9", "correct": true}, {"id": "94_G", "text": "La formation de m\u00e9valonate est une \u00e9tape limitante dans la synth\u00e8se du cholest\u00e9rol", "correct": true}, {"id": "94_H", "text": "Les statines stimulent la forme active de la HMG-CoA r\u00e9ductase", "correct": false}, {"id": "94_I", "text": "L'insuline stimule l'expression du g\u00e8ne de la HMG-CoA r\u00e9ductase", "correct": true}, {"id": "94_J", "text": "Les statines peuvent \u00eatre des inhibiteurs comp\u00e9titifs de la HMG-CoA r\u00e9ductase.", "correct": true}]}, {"id": 95, "question": "Ath\u00e9roscl\u00e9rose:", "options": [{"id": "95_A", "text": "Elle est favoris\u00e9e par une diminution des TG dans le sang", "correct": false}, {"id": "95_B", "text": "Elle est favoris\u00e9e par une diminution des r\u00e9cepteurs LDL", "correct": true}, {"id": "95_C", "text": "Elle a les m\u00eames causes que la st\u00e9atose h\u00e9patique", "correct": false}, {"id": "95_D", "text": "Elle est favoris\u00e9e par l'augmentation des LDL", "correct": true}, {"id": "95_E", "text": "C'est une maladie caus\u00e9e par l'hypercholest\u00e9rol\u00e9mie", "correct": true}, {"id": "95_F", "text": "Elle conduit \u00e0 l'\u00e9largissement des vaisseaux sanguins et \u00e0 une meilleure irrigation des tissus", "correct": false}, {"id": "95_G", "text": "Elle est favoris\u00e9e par l'hypoch est\u00e9rol\u00e9mie", "correct": false}, {"id": "95_H", "text": "Elle provoque une augmentation du flux sanguin", "correct": false}, {"id": "95_I", "text": "Elle peut entra\u00eener une isch\u00e9mie des tissus irrigu\u00e9s par les vaisseaux affect\u00e9s", "correct": true}, {"id": "95_J", "text": "Elle peut entra\u00eener r\u00e9duction du flux sanguin", "correct": true}]}, {"id": 96, "question": "Acides biliaires :", "options": [{"id": "96_A", "text": "Les primaires sont form\u00e9s dans le foie", "correct": true}, {"id": "96_B", "text": "Ils sont synth\u00e9tis\u00e9s dans le pancr\u00e9as", "correct": false}, {"id": "96_C", "text": "Les premiers sont form\u00e9s par cyclisation du squal\u00e8ne", "correct": false}, {"id": "96_D", "text": "Les acides biliaires primaires ont besoin de Na+ et de K+ pour passer dans l'intestin", "correct": false}, {"id": "96_E", "text": "Les secondaires se forment dans l'intestin", "correct": true}, {"id": "96_F", "text": "Les secondaires r\u00e9sultent directement de la d\u00e9gradation du cholest\u00e9rol", "correct": false}, {"id": "96_G", "text": "Ils ont une structure similaire \u00e0 celle des triglyc\u00e9rides", "correct": false}, {"id": "96_H", "text": "Les acides biliaires primaires perdent ensuite le groupe OH en C7", "correct": false}, {"id": "96_I", "text": "Les primaires peuvent former des sels biliaires", "correct": true}, {"id": "96_J", "text": "Ils r\u00e9sultent de la d\u00e9gradation des phospholipides", "correct": false}]}, {"id": 97, "question": "Acide cholique:", "options": [{"id": "97_A", "text": "Il peut inhiber la synth\u00e8se du cholest\u00e9rol", "correct": true}, {"id": "97_B", "text": "Il est form\u00e9 \u00e0 partir de l'acide ch\u00e9nod\u00e9soxycholique par la perte du groupe OH en position 7", "correct": false}, {"id": "97_C", "text": "Il est form\u00e9 dans le foie", "correct": true}, {"id": "97_D", "text": "Compar\u00e9 \u00e0 l'acide lithocholique, il poss\u00e8de 2 groupes OH suppl\u00e9mentaire", "correct": false}, {"id": "97_E", "text": "Les groupes OH suppl\u00e9mentaires sont en positions 7 et 12 du cholest\u00e9rol", "correct": false}, {"id": "97_F", "text": "Il est form\u00e9 par conjugaison avec la glycine et la taurine", "correct": true}, {"id": "97_G", "text": "Il est form\u00e9 dans l'intestin \u00e0 partir de l'acide lithocholique", "correct": false}, {"id": "97_H", "text": "Il a des groupes OH suppl\u00e9mentaires aux positions 3 et 7 du cholest\u00e9rol", "correct": false}, {"id": "97_I", "text": "Il repr\u00e9sente un sel biliaire form\u00e9 dans le foie", "correct": true}, {"id": "97_J", "text": "Peut conduire \u00e0 la formation d'acide d\u00e9soxycholique", "correct": false}]}, {"id": 98, "question": "Acide ch\u00e9nod\u00e9soxycholique:", "options": [{"id": "98_A", "text": "Il a un groupe hydroxyle sur le carbone 7", "correct": true}, {"id": "98_B", "text": "C'est un acide biliaire secondaire", "correct": false}, {"id": "98_C", "text": "Il a un groupe carboxyle sur le carbone 7", "correct": false}, {"id": "98_D", "text": "Il est form\u00e9 dans les h\u00e9patocytes", "correct": true}, {"id": "98_E", "text": "Il est form\u00e9 dans la bile", "correct": false}, {"id": "98_F", "text": "Il est form\u00e9 par la consommation de NADPH", "correct": false}, {"id": "98_G", "text": "Il se forme dans l'intestin gr\u00eale", "correct": false}, {"id": "98_H", "text": "Il a un groupe hydroxyle sur le carbone 3", "correct": true}, {"id": "98_I", "text": "Il a un groupe carboxyle sur le carbone 3", "correct": false}, {"id": "98_J", "text": "C'est un acide biliaire primaire", "correct": true}]}, {"id": 99, "question": "Acides biliaires secondaires :", "options": [{"id": "99_A", "text": "Ils se forment dans l'intestin", "correct": true}, {"id": "99_B", "text": "Ils sont form\u00e9s \u00e0 partir du cholest\u00e9rol dans le foie", "correct": false}, {"id": "99_C", "text": "Ils sont form\u00e9s \u00e0 partir d'acides biliaires primaires par la perte du groupe OH en position 3", "correct": true}, {"id": "99_D", "text": "Ils ont un repr\u00e9sentant avec 2 groupes OH dans sa structure", "correct": false}, {"id": "99_E", "text": "Ils ne contribuent pas \u00e0 la r\u00e9gulation de la synth\u00e8se du cholest\u00e9rol", "correct": false}, {"id": "99_F", "text": "Leur repr\u00e9sentant est l'acide lithocholique, qui est form\u00e9 \u00e0 partir de l'acide ch\u00e9nod\u00e9soxycholique", "correct": true}, {"id": "99_G", "text": "Peut stimuler la lipase pancr\u00e9atique", "correct": false}, {"id": "99_H", "text": "Ils se conjuguent \u00e0 la glycine et la taurine pour former des sels biliaires", "correct": true}, {"id": "99_I", "text": "Ils ont comme repr\u00e9sent\u00e9, l'acide cholique", "correct": false}, {"id": "99_J", "text": "Ils n'ont pas de groupe OH en position 7", "correct": false}]}, {"id": 100, "question": "Contrairement aux acides biliaires secondaires, les acides biliaires primaires :", "options": [{"id": "100_A", "text": "Ils sont form\u00e9s par des modifications de l'h\u00e8me", "correct": false}, {"id": "100_B", "text": "Ils sont form\u00e9s dans la rate", "correct": false}, {"id": "100_C", "text": "Ils sont form\u00e9s \u00e0 partir du cholest\u00e9rol par des changements dans le noyau et cha\u00eene lat\u00e9rale", "correct": true}, {"id": "100_D", "text": "Ils peuvent perdre un OH de la position 3 sous l'action du microbiote intestinal", "correct": false}, {"id": "100_E", "text": "Ils peuvent entra\u00eener la formation de sels biliaires", "correct": true}, {"id": "100_F", "text": "Ils ont l'acide d\u00e9soxycholique comme repr\u00e9sentant", "correct": false}, {"id": "100_G", "text": "Ils sont form\u00e9s dans le foie", "correct": true}, {"id": "100_H", "text": "Ils ne peuvent pas r\u00e9guler la synth\u00e8se du cholest\u00e9rol", "correct": false}, {"id": "100_I", "text": "Ils sont form\u00e9s sous l'action des hydroxylases", "correct": true}, {"id": "100_J", "text": "Ils ont un groupe OH suppl\u00e9mentaire en position 7", "correct": true}]}];
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `Q${q.id} - ${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const optContainer = document.createElement('div');
+                    optContainer.className = 'option-container';
+
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    const explDiv = document.createElement('div');
+                    explDiv.className = 'explanation-box';
+                    explDiv.id = 'expl-' + opt.id;
+                    
+                    if (opt.correct) {
+                        explDiv.innerHTML = `<strong>✅ VRAI :</strong> ${opt.explanation}`;
+                        explDiv.classList.add('expl-correct');
+                    } else {
+                        explDiv.innerHTML = `<strong>❌ FAUX :</strong> Ce distracteur est incorrect. <em>Rappel :</em> ${opt.explanation}`;
+                        explDiv.classList.add('expl-incorrect');
+                    }
+
+                    optContainer.appendChild(label);
+                    optContainer.appendChild(explDiv);
+                    optionsGrid.appendChild(optContainer);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    const explDiv = document.getElementById(`expl-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        explDiv.style.display = 'block';
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                            explDiv.style.display = 'block';
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

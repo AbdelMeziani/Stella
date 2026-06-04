@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Biochimie S2 - Module 12 (Q221 à Q227)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-container { display: flex; flex-direction: column; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .explanation-box { display: none; margin-top: 5px; padding: 12px 15px; border-radius: 6px; font-size: 0.95em; line-height: 1.5; animation: fadeIn 0.4s ease; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); }
+        .expl-correct { background-color: #e8f5e9; color: #1b5e20; border-left: 5px solid #4caf50; }
+        .expl-incorrect { background-color: #ffebee; color: #b71c1c; border-left: 5px solid #f44336; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="quiz_biochimie_Q201_220.html"><<</a>Quiz Biochimie S2 - Module 12 (Q221 à Q227)</h1>
+        </header>
+        
+        <div class="revision-box">
+            <h3>📝 Fiche de révision : Parodonte, Biochimie Buccale et Carie (Questions 221 à 227)</h3>
+    <p><strong>Le Parodonte :</strong> Le ligament parodontal, composé de fibres collagéniques, fixe le cément à l'os alvéolaire. La gencive ferme l'espace parodontal et réagit (fluide gingival, enzymes) lors d'une inflammation.<br>
+    <strong>Salive, Plaque et Carie :</strong> La salive est riche en amylase et lysozyme (antibactérien) et tamponne le pH. La plaque bactérienne fermente les sucres, fait chuter le pH (acide) et déminéralise l'émail (carie). Le tartre est la précipitation de minéraux salivaires sur la plaque.</p>
+        </div>
+
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses et afficher les explications</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer ce module 🔄</button>
+        </form>
+    </div>
+    <script>
+        const quizData = [{"id": 221, "question": "La synth\u00e8se du collag\u00e8ne :", "options": [{"id": "221_A", "text": "Elle comprend une \u00e9tape de glycosylation", "correct": true}, {"id": "221_B", "text": "Elle est d\u00e9pendante de la vitamine D", "correct": false}, {"id": "221_C", "text": "Elle comprend des \u00e9tapes de glycosylation extracellulaire", "correct": false}, {"id": "221_D", "text": "Elle d\u00e9pend de la vitamine C", "correct": true}, {"id": "221_E", "text": "Elle a un stade extracellulaire o\u00f9 des acides amin\u00e9s sont perdus", "correct": false}, {"id": "221_F", "text": "Elle se produit principalement dans les fibroblastes", "correct": true}, {"id": "221_G", "text": "Elle se produit au niveau des macrophages", "correct": false}, {"id": "221_H", "text": "Elle comprend des \u00e9tapes intracellulaires de la formation du procollag\u00e8ne \u03b1", "correct": true}, {"id": "221_I", "text": "Elle comprend une \u00e9tape d'hydroxylation de la glycine", "correct": true}, {"id": "221_J", "text": "Elle comprend d'\u00e9tapes intracellulaires de condensation des fibrilles de collag\u00e8ne", "correct": true}]}, {"id": 222, "question": "La matrice extracellulaire du tissu conjonctif :", "options": [{"id": "222_A", "text": "C'est un gel de polysaccharide", "correct": true}, {"id": "222_B", "text": "Elle peut contenir des macrophages qui se multiplient au cours de l'inflammation", "correct": true}, {"id": "222_C", "text": "Elle ne contient pas d'\u00e9l\u00e9ments cellulaires", "correct": false}, {"id": "222_D", "text": "Elle ne contient que des prot\u00e9ines de type collag\u00e8ne", "correct": false}, {"id": "222_E", "text": "Elle peut subir des changements dans des maladies telles que les rhumatismes", "correct": true}, {"id": "222_F", "text": "C'est un gel riche en disaccharides", "correct": false}, {"id": "222_G", "text": "Elle est synth\u00e9tis\u00e9e au niveau des macrophages", "correct": false}, {"id": "222_H", "text": "Elle peut contenir des prot\u00e9ines de nature fibrillaire", "correct": true}, {"id": "222_I", "text": "Elle contient des prot\u00e9ines de type globuline", "correct": false}, {"id": "222_J", "text": "Elle contient des glycosaminoglycanes qui donnent de la souplesse au tissu conjonctif", "correct": true}]}, {"id": 223, "question": "Concernant les prot\u00e9ines du tissu conjonctif, on peut af\ufb01rmer que :", "options": [{"id": "223_A", "text": "Elles donnent de la souplesse au tissu", "correct": true}, {"id": "223_B", "text": "La r\u00e9ticuline a une structure similaire au collag\u00e8ne", "correct": true}, {"id": "223_C", "text": "Elles sont du type glycosaminoglycanes", "correct": false}, {"id": "223_D", "text": "Elles ne sont synth\u00e9tis\u00e9es que dans les fibroblastes", "correct": false}, {"id": "223_E", "text": "La glycine pr\u00e9domine dans la structure du collag\u00e8ne", "correct": true}, {"id": "223_F", "text": "Elles sont majoritairement de type \u00e9lastine", "correct": false}, {"id": "223_G", "text": "Elles contiennent principalement des acides amin\u00e9s aromatiques dans leur structure", "correct": false}, {"id": "223_H", "text": "On les trouve dans la matrice extracellulaire", "correct": true}, {"id": "223_I", "text": "L'\u00e9lastine se trouve principalement dans l'aorte", "correct": false}, {"id": "223_J", "text": "L'\u00e9lastine ne contient pas d'OH-Lys", "correct": false}]}, {"id": 224, "question": "La min\u00e9ralisation osseuse :", "options": [{"id": "224_A", "text": "Elle est favoris\u00e9e par la calcitonine", "correct": false}, {"id": "224_B", "text": "Elle est favoris\u00e9e par un faible taux de calcitriol", "correct": false}, {"id": "224_C", "text": "Elle se produit avant la synth\u00e8se de la matrice organique", "correct": false}, {"id": "224_D", "text": "Elle est influenc\u00e9e par un niveau optimal d'amylase", "correct": true}, {"id": "224_E", "text": "Elle est favoris\u00e9e par un pH alcalin", "correct": true}, {"id": "224_F", "text": "Elle ne d\u00e9pend pas de la concentration en ions calcium", "correct": false}, {"id": "224_G", "text": "Elle consiste en un stockage des phosphates tricalciques au sein d'une matrice", "correct": true}, {"id": "224_H", "text": "Elle d\u00e9pend de la pr\u00e9sence de la phosphatase alcaline", "correct": true}, {"id": "224_I", "text": "Elle est influenc\u00e9e par la pr\u00e9sence de mucopolysaccharides", "correct": false}, {"id": "224_J", "text": "Elle est favoris\u00e9e par un pH acide", "correct": false}]}, {"id": 225, "question": "Concernant le composant organique de l'\u00e9mail, on peut af\ufb01rmer que :", "options": [{"id": "225_A", "text": "Il a une forte concentration de phosphatase alcaline", "correct": false}, {"id": "225_B", "text": "Il varie inversement proportionnel au poids de l'\u00e9mail", "correct": false}, {"id": "225_C", "text": "Il comprend des prot\u00e9ines diff\u00e9rentes dans l'\u00e9mail adulte, par rapport \u00e0 l'\u00e9mail jeune", "correct": true}, {"id": "225_D", "text": "Il comprend principalement des polysaccharides", "correct": false}, {"id": "225_E", "text": "Il peut contenir des prot\u00e9ines telles que les \u00e9namelines", "correct": true}, {"id": "225_F", "text": "Il peut contenir des acides gras satur\u00e9s", "correct": false}, {"id": "225_G", "text": "L'\u00e9mail mature contient des prot\u00e9ines telles que l'ost\u00e9opontine", "correct": false}, {"id": "225_H", "text": "Il comprend des cellules telles que les odontoblastes", "correct": false}, {"id": "225_I", "text": "Les am\u00e9log\u00e9nines sont les prot\u00e9ines de l'\u00e9mail jeune, avec une structure diff\u00e9rente de", "correct": true}, {"id": "225_J", "text": "Il comprend une grande quantit\u00e9 de carbonate de calcium", "correct": false}]}, {"id": 226, "question": "Contrairement \u00e0 l'\u00e9mail, la pulpe dentaire :", "options": [{"id": "226_A", "text": "Elle peut contenir des prot\u00e9ines telles que l'\u00e9mail", "correct": false}, {"id": "226_B", "text": "Elle contient des vaisseaux sanguins et des nerfs", "correct": true}, {"id": "226_C", "text": "Elle comprend principalement des prot\u00e9ines telles que les am\u00e9log\u00e9nines", "correct": false}, {"id": "226_D", "text": "C'est un tissu non calcifi\u00e9", "correct": true}, {"id": "226_E", "text": "Elle ne contient pas d'enzymes", "correct": false}, {"id": "226_F", "text": "C'est un tissu calcifi\u00e9 en relation \u00e9troite avec la dentine", "correct": false}, {"id": "226_G", "text": "Elle contient une grande quantit\u00e9 de glycog\u00e8ne", "correct": true}, {"id": "226_H", "text": "Elle a une consistance comparable \u00e0 la moelle osseuse", "correct": true}, {"id": "226_I", "text": "Elle comprend des cellules telles que les odontoblastes", "correct": true}, {"id": "226_J", "text": "Elle contient des cellules telles que les ost\u00e9oblastes, \u00e0 partir desquelles se forme l'os", "correct": false}]}, {"id": 227, "question": "Contrairement \u00e0 la plaque bact\u00e9rienne, le tartre dentaire :", "options": [{"id": "227_A", "text": "Il est favoris\u00e9 par l'augmentation de la composante prot\u00e9ique salivaire", "correct": false}, {"id": "227_B", "text": "Il a un r\u00f4le protecteur contre la d\u00e9min\u00e9ralisation de l'\u00e9mail", "correct": false}, {"id": "227_C", "text": "Il est form\u00e9 par le d\u00e9p\u00f4t de substances min\u00e9rales \u00e0 la surface de la plaque", "correct": true}, {"id": "227_D", "text": "Il peut contenir des cristaux de phosphate de calcium", "correct": true}, {"id": "227_E", "text": "Il ne contient pas d'enzymes", "correct": false}, {"id": "227_F", "text": "Il contient des cellules telles que les odontoblastes", "correct": false}, {"id": "227_G", "text": "Il repr\u00e9sente un facteur irritant pour le parodonte", "correct": true}, {"id": "227_H", "text": "Il est favoris\u00e9 par l'\u00e9tablissement d'un pH alcalin dans la cavit\u00e9 buccale", "correct": true}, {"id": "227_I", "text": "Il ne peut se former qu'au niveau sous-gingival", "correct": true}, {"id": "227_J", "text": "Il se forme \u00e0 la surface du c\u00e9ment", "correct": false}]}];
+        const explanations = {"181": "L'ict\u00e8re pr\u00e9h\u00e9patique est caus\u00e9 par une h\u00e9molyse excessive (thalass\u00e9mie, h\u00e9molyse immune, \u00e9rythropo\u00ef\u00e8se inefficace, d\u00e9ficit en G6PD ou glutathion).", "182": "L'ict\u00e8re h\u00e9patocellulaire est d\u00fb \u00e0 une atteinte du foie (h\u00e9patite, poisons, d\u00e9fauts de conjugaison comme Gilbert ou Crigler-Najjar, ou d'excr\u00e9tion comme Dubin-Johnson).", "183": "L'ict\u00e8re h\u00e9patocellulaire (ex: h\u00e9patite, intoxication au CCl4) est souvent 'biphasique' : il y a \u00e9l\u00e9vation des deux types de bilirubine (directe et indirecte).", "184": "L'ict\u00e8re obstructif (post-h\u00e9patique) bloque la bile : la bilirubine directe reflue dans le sang puis l'urine (urine fonc\u00e9e), et n'atteint pas l'intestin (selles d\u00e9color\u00e9es, pas d'urobilinog\u00e8ne).", "185": "L'ict\u00e8re h\u00e9molytique : production massive de bilirubine indirecte (liposoluble, non filtr\u00e9e par le rein -> pas de bilirubine urinaire), selles hyperchromiques (pleiochromiques).", "186": "Les prot\u00e9ines plasmatiques majeures incluent l'albumine, le fibrinog\u00e8ne (coagulation), les lipoprot\u00e9ines (transport lipidique), et des inhibiteurs de prot\u00e9ases (alpha-1-antitrypsine).", "187": "Les enzymes fonctionnelles du plasma (synth\u00e9tis\u00e9es par le foie pour agir dans le sang) incluent LCAT, LPL, pseudocholinest\u00e9rase et les facteurs de coagulation.", "188": "Les transf\u00e9rases dos\u00e9es en clinique incluent ALAT, ASAT (transaminases), GGT (gamma-glutamyl transf\u00e9rase), OCT et Cr\u00e9atine Kinase.", "189": "La bilirubine directe (conjugu\u00e9e) est hydrosoluble, filtrable par le rein, excr\u00e9t\u00e9e dans la bile puis r\u00e9duite par la flore intestinale.", "190": "La bilirubine indirecte (libre) est toxique pour le cerveau (kernict\u00e8re), liposoluble, transport\u00e9e par l'albumine, et d\u00e9truite par la lumi\u00e8re (photosensible).", "191": "Le calcium est crucial pour l'h\u00e9mostase (facteur IV), la min\u00e9ralisation osseuse (hydroxyapatite), et se trouve \u00e0 la fois dans les cellules et les fluides extracellulaires.", "192": "Le calcium est le messager intracellulaire par excellence (contraction musculaire, s\u00e9cr\u00e9tion, agr\u00e9gation plaquettaire) et est indispensable \u00e0 la coagulation sanguine.", "193": "La calc\u00e9mie est finement r\u00e9gul\u00e9e par la PTH (hypercalc\u00e9miante), le Calcitriol (augmente l'absorption intestinale et r\u00e9nale) et la Calcitonine (hypocalc\u00e9miante).", "194": "La PTH stimule la r\u00e9absorption r\u00e9nale du calcium. Le Calcitriol stimule l'absorption intestinale et l'activit\u00e9 ost\u00e9oclastique. La Calcitonine inhibe l'absorption intestinale et la r\u00e9sorption osseuse.", "195": "La PTH (Parathormone) est s\u00e9cr\u00e9t\u00e9e par les glandes parathyro\u00efdes en r\u00e9ponse \u00e0 l'hypocalc\u00e9mie. Elle augmente la r\u00e9absorption de Ca et l'excr\u00e9tion de P.", "196": "Le Calcitriol (1,25-diOH-VitD3) est la forme active de la vitamine D. Produit dans le rein, il stimule l'absorption intestinale du calcium et favorise l'activit\u00e9 ost\u00e9oclastique.", "197": "L'hypocalc\u00e9mie peut r\u00e9sulter d'une insuffisance r\u00e9nale (d\u00e9faut de calcitriol), d'une hypoparathyro\u00efdie, et cause le rachitisme ou des anomalies de l'\u00e9mail chez l'enfant.", "198": "Le phosphore est absorb\u00e9, forme les acides nucl\u00e9iques, les compos\u00e9s riches en \u00e9nergie (ATP), participe \u00e0 la contraction musculaire, et constitue l'hydroxyapatite.", "199": "Le fluor prot\u00e8ge contre les caries (fluoroapatite). Son exc\u00e8s cause la fluorose (taches de l'\u00e9mail). Il est excr\u00e9t\u00e9 par voie r\u00e9nale.", "200": "La pulpe est un tissu conjonctif mou, riche en eau, tandis que la dentine est moins min\u00e9ralis\u00e9e que l'\u00e9mail. L'\u00e9mail n'est pas un tissu mou.", "201": "Le ligament parodontal (alv\u00e9olaire) est un tissu conjonctif riche en fibres (non min\u00e9ralis\u00e9), qui ancre la dent, transmet les forces et contient des vaisseaux sanguins.", "202": "Le c\u00e9ment recouvre la racine, ancre les fibres de Sharpey du ligament, prot\u00e8ge la dentine et a une composition min\u00e9rale/organique proche de celle de l'os.", "203": "Le parodonte de soutien comprend le c\u00e9ment, le ligament alv\u00e9olo-dentaire, et l'os alv\u00e9olaire. Il fixe la dent et absorbe les forces masticatoires.", "204": "Le fluide gingival (sulculaire) suinte dans le sillon. Il contient des cellules (leucocytes), des enzymes, et son volume/composition augmente fortement en cas d'inflammation.", "205": "La salive contient de l'eau, du mucus (mucine), des enzymes antibact\u00e9riennes (lysozyme). La s\u00e9cr\u00e9tion parotidienne est fluide (s\u00e9reuse).", "206": "La salive est riche en amylase (digestion), en mucine (lubrification), en lysozyme (antibact\u00e9rien), et poss\u00e8de des syst\u00e8mes tampons (bicarbonates) pour stabiliser le pH.", "207": "Fonctions de la salive : digestion (amylase), protection m\u00e9canique (mucine), r\u00e9gulation du pH (tampons), d\u00e9fense antibact\u00e9rienne, excr\u00e9tion de m\u00e9taux lourds.", "208": "La formation des tissus durs (os, dentine, \u00e9mail) implique toujours la s\u00e9cr\u00e9tion d'une matrice organique (prot\u00e9ines) d'abord, suivie d'une min\u00e9ralisation (cristaux de Ca/P).", "209": "Le faible composant organique de l'\u00e9mail mature comprend des glycoprot\u00e9ines, du glucose, des acides gras et des citrates. Il n'y a pas de collag\u00e8ne.", "210": "La dentine est plus organique et moins min\u00e9ralis\u00e9e que l'\u00e9mail, mais plus min\u00e9ralis\u00e9e que la pulpe. Elle contient de l'eau et des glycoprot\u00e9ines (ost\u00e9opontine).", "211": "La gencive est une muqueuse protectrice qui adh\u00e8re au collet de la dent, fermant l'espace parodontal. Ses enzymes s'activent lors de l'inflammation.", "212": "Les ions inorganiques salivaires : Phosphates, Calcium, Bicarbonates, Sodium, Potassium, Chlore. Ils maintiennent le pH et la saturation pour la remin\u00e9ralisation.", "213": "La carie est une destruction localis\u00e9e. L'attaque acide (pH bas) des bact\u00e9ries dissout les cristaux d'hydroxyapatite (d\u00e9min\u00e9ralisation).", "214": "Constituants organiques de la salive : Globulines, Mucine, Glycoprot\u00e9ines, Enzymes, Vitamines, Ur\u00e9e, Acide urique.", "215": "La plaque bact\u00e9rienne se loge dans les zones de r\u00e9tention (interproximales, sillons). Elle a un m\u00e9tabolisme intense (glycolyse acide) et synth\u00e9tise des polysaccharides adh\u00e9rents.", "216": "Le tartre est la min\u00e9ralisation de la plaque bact\u00e9rienne (cristaux de phosphate de calcium). Le tartre sus-gingival est jaune/blanc, le sous-gingival est sombre.", "217": "Une min\u00e9ralisation optimale exige un apport ad\u00e9quat en Calcium, Phosphore, Vitamine D (climat ensoleill\u00e9) et une bonne absorption intestinale.", "218": "La carie est favoris\u00e9e par un pH acide, une x\u00e9rostomie (diminution de salive), une carence en fluor, et une morphologie dentaire r\u00e9tentive.", "219": "L'hypercalc\u00e9mie (intoxication Vit D, tumeurs) peut causer des calcifications ectopiques, des troubles du rythme cardiaque et de la fatigue musculaire.", "220": "L'absorption du calcium d\u00e9pend de la Vitamine D, du pH gastrique (acide favorise la solubilisation), du ratio Ca/P, et des acides gras (qui peuvent former des savons insolubles).", "221": "La synth\u00e8se du collag\u00e8ne n\u00e9cessite les fibroblastes, la vitamine C (hydroxylation Pro/Lys), la glycosylation, et la s\u00e9cr\u00e9tion de procollag\u00e8ne (cliv\u00e9 en extracellulaire).", "222": "La matrice extracellulaire (MEC) est un gel hydrat\u00e9 (GAGs) contenant des prot\u00e9ines fibrillaires (collag\u00e8ne). Les macrophages y r\u00e9sident et s'activent dans l'inflammation.", "223": "Le collag\u00e8ne (riche en Glycine) donne la r\u00e9sistance. L'\u00e9lastine (aorte, poumons) donne la souplesse. La r\u00e9ticuline est un type de collag\u00e8ne fin.", "224": "La min\u00e9ralisation (pr\u00e9cipitation de phosphate tricalcique) n\u00e9cessite un pH alcalin localement, cr\u00e9\u00e9 par l'action de la phosphatase alcaline.", "225": "L'\u00e9mail jeune est riche en prot\u00e9ines (am\u00e9log\u00e9nines). L'\u00e9mail mature perd l'eau et les prot\u00e9ines (\u00e9nam\u00e9lines restantes) au profit de la min\u00e9ralisation massive.", "226": "La pulpe est un tissu mou, non min\u00e9ralis\u00e9, vascularis\u00e9 et innerv\u00e9. Sa p\u00e9riph\u00e9rie est bord\u00e9e d'odontoblastes. Elle contient du glycog\u00e8ne en r\u00e9serve.", "227": "Le tartre (tartre) est un d\u00e9p\u00f4t min\u00e9ral (cristaux de phosphate de calcium) sur la dent. C'est un facteur irritant local majeur pour le parodonte, favoris\u00e9 par un pH alcalin salivaire.", "121": "La Tyrosine est le pr\u00e9curseur des cat\u00e9cholamines (DOPA, Dopamine, Noradr\u00e9naline, Adr\u00e9naline) et de la m\u00e9lanine via des r\u00e9actions d'hydroxylation, d\u00e9carboxylation et m\u00e9thylation.", "122": "Le d\u00e9ficit en Ph\u00e9nylalanine hydroxylase cause la Ph\u00e9nylc\u00e9tonurie (PKU), accumulant la Ph\u00e9nylalanine et ses d\u00e9riv\u00e9s (ph\u00e9nylpyruvate) dans les urines, causant des troubles neuro (oligophr\u00e9nie).", "123": "Dans la PKU, la Ph\u00e9nylalanine est transamin\u00e9e en compos\u00e9s anormaux excr\u00e9t\u00e9s dans l'urine. La synth\u00e8se de DOPA/m\u00e9lanine chute (teint clair, pas fonc\u00e9) et le syst\u00e8me nerveux est atteint.", "124": "Les tyrosin\u00e9mies (type 1 et 2) et l'Alkaptonurie (d\u00e9ficit en homogentisate oxydase, provoquant des urines noires) sont des d\u00e9fauts g\u00e9n\u00e9tiques du m\u00e9tabolisme de la tyrosine.", "125": "La Noradr\u00e9naline est m\u00e9thyl\u00e9e en Adr\u00e9naline (PNMT) gr\u00e2ce \u00e0 la S-ad\u00e9nosyl-m\u00e9thionine (SAM), n\u00e9cessitant l'acide amin\u00e9 M\u00e9thionine et de l'ATP.", "126": "Tyrosine ->(OH)-> DOPA ->(d\u00e9carboxylation)-> Dopamine ->(OH)-> Noradr\u00e9naline ->(m\u00e9thylation par SAM)-> Adr\u00e9naline.", "127": "La Vitamine B6 (PLP) est le coenzyme indispensable aux d\u00e9carboxylases (ex: DOPA d\u00e9carboxylase pour la dopamine) et aux transaminases (m\u00e9tabolisme Phe/Tyr).", "128": "L'iode est capt\u00e9, oxyd\u00e9 par la thyroperoxydase, puis li\u00e9 \u00e0 la tyrosine (organification) pour former MIT/DIT, qui se couplent (DIT+DIT = T4).", "129": "Les hormones thyro\u00efdiennes stimulent le m\u00e9tabolisme basal, le d\u00e9veloppement (f\u0153tus, os), ont un effet hyperglyc\u00e9miant et hypocholest\u00e9rol\u00e9miant.", "130": "Le tryptophane est le pr\u00e9curseur de la S\u00e9rotonine, de la M\u00e9latonine, de la vitamine PP (B3) et du noyau Indole.", "131": "La s\u00e9rotonine (5-Hydroxytryptamine) est une amine vasoactive et un neurotransmetteur, issue de l'hydroxylation puis d\u00e9carboxylation du tryptophane.", "132": "L'Indole d\u00e9rive du Tryptophane (acide amin\u00e9 aromatique essentiel). Il peut former l'indican, physiologiquement \u00e9limin\u00e9 dans l'urine.", "133": "La Ph\u00e9nylc\u00e9tonurie, l'Alcaptonurie, la Tyrosin\u00e9mie type 1 et la Maladie du sirop d'\u00e9rable sont des maladies g\u00e9n\u00e9tiques li\u00e9es au m\u00e9tabolisme des acides amin\u00e9s.", "134": "Tryptophane ->(OH)-> 5-OH-Trp ->(D\u00e9carboxylation)-> S\u00e9rotonine ->(Ac\u00e9tylation puis M\u00e9thylation via SAM)-> M\u00e9latonine.", "135": "La synth\u00e8se de Cr\u00e9atine utilise Arginine et Glycine (transamidination dans le rein) puis M\u00e9thionine via SAM (m\u00e9thylation dans le foie).", "136": "La Cr\u00e9atine Kinase (surtout musculaire) catalyse la r\u00e9action r\u00e9versible : Cr\u00e9atine + ATP <-> Phosphocr\u00e9atine + ADP.", "137": "La cr\u00e9atinine est le produit final (d\u00e9chet) issu de la d\u00e9gradation spontan\u00e9e (non enzymatique) et cyclique de la phosphocr\u00e9atine. \u00c9limin\u00e9e par l'urine.", "138": "La phosphocr\u00e9atine est synth\u00e9tis\u00e9e par r\u00e9action r\u00e9versible, constitue la r\u00e9serve d'\u00e9nergie rapide du muscle, et se d\u00e9shydrate cycliquement en cr\u00e9atinine.", "139": "Sa synth\u00e8se n\u00e9cessite 3 acides amin\u00e9s (Gly, Arg, Met), commence dans le rein et se termine par une m\u00e9thylation dans le foie.", "140": "L'acide urique est le produit final du catabolisme des bases puriques (A, G), synth\u00e9tis\u00e9 dans le foie, poss\u00e8de des propri\u00e9t\u00e9s antioxydantes, et est \u00e9limin\u00e9 par l'urine.", "141": "Un exc\u00e8s d'acide urique pr\u00e9cipite sous forme de cristaux d'urate dans les articulations (tophi, goutte) ou les reins (n\u00e9phrolithiase).", "142": "La Xanthine oxydase d\u00e9grade l'hypoxanthine en xanthine puis en acide urique. Elle ins\u00e8re un atome d'oxyg\u00e8ne et est inhib\u00e9e par l'allopurinol.", "143": "L'acide urique (noyau purine oxyd\u00e9) est synth\u00e9tis\u00e9 dans le foie, \u00e9limin\u00e9 par les reins et d\u00e9rive de la d\u00e9gradation des nucl\u00e9oprot\u00e9ines (purines).", "144": "L'ammoniac (NH3) est tr\u00e8s toxique pour le syst\u00e8me nerveux. Il est transport\u00e9 sous forme de glutamine (amide) et \u00e9limin\u00e9 par l'urine (NH4+) ou via l'ur\u00e9e.", "145": "L'Asparagine est l'amide de l'acide aspartique, elle poss\u00e8de 2 atomes d'azote et sert au transport non toxique de l'ammoniac.", "146": "L'ur\u00e9e (foie) et l'ion ammonium NH4+ (rein) sont les deux formes majeures d'\u00e9limination de l'ammoniac, jouant un r\u00f4le de d\u00e9toxification.", "147": "Le cycle de l'ur\u00e9e consomme de l'Acide Aspartique (donneur du 2\u00e8me azote) et 3 ATP. Il comporte 2 r\u00e9actions mitochondriales et 3 cytoplasmiques.", "148": "L'OCT (Ornithine Carbamyl Transf\u00e9rase) agit dans la mitochondrie du foie : elle lie le carbamyl-phosphate \u00e0 l'ornithine (Acide Amin\u00e9 basique en C5) pour former la citrulline.", "149": "L'acide aspartique n'est pas un amide. Il fournit le 2\u00e8me NH2 de l'ur\u00e9e, se condense avec la citrulline, et son squelette est lib\u00e9r\u00e9 sous forme de fumarate.", "150": "L'Arginase, enzyme finale et exclusivement h\u00e9patique (cytoplasmique), hydrolyse l'Arginine pour lib\u00e9rer l'Ur\u00e9e et reformer l'Ornithine.", "151": "Le cycle a deux \u00e9tapes mitochondriales (CPS-I consommatrice d'ATP et OCT) et trois cytoplasmiques. Il restaure des interm\u00e9diaires via l'argininosuccinate lyase.", "152": "Le foie est le centre du m\u00e9tabolisme : synth\u00e8se/d\u00e9gradation du glycog\u00e8ne, synth\u00e8se de l\u00e9cithine, des acides biliaires, des lipoprot\u00e9ines endog\u00e8nes (VLDL/HDL).", "153": "Dans le foie s'effectuent : conjugaison de la bilirubine, synth\u00e8ses de l'acide cholique et des lipoprot\u00e9ines, m\u00e9thylations (SAM) et d\u00e9gradation des purines.", "154": "La Glycine (AA non essentiel) est pr\u00e9curseur de l'h\u00e8me (via d-ALA), de la cr\u00e9atine, de l'acide urique (purines) et s'associe aux acides biliaires.", "155": "L'acide delta-aminol\u00e9vulinique (d-ALAS) est le premier interm\u00e9diaire de l'h\u00e8me. Synth\u00e9tis\u00e9 par l'ALA Synthase (avec PLP) \u00e0 partir de Succinyl-CoA et Glycine.", "156": "4 mol\u00e9cules de Porphobilinog\u00e8ne (PBG) se condensent via la PBG d\u00e9saminase (cytoplasmique) pour former l'uroporphyrinog\u00e8ne (cyclique).", "157": "Le coproporphyrinog\u00e8ne III r\u00e9sulte de la d\u00e9carboxylation de l'uroporphyrinog\u00e8ne (perte des ac\u00e9tates en m\u00e9thyles). Il sera oxyd\u00e9 en protoporphyrinog\u00e8ne.", "158": "La CPOX (Coproporphyrinog\u00e8ne Oxydase) est mitochondriale. Elle oxyde les radicaux propionates en vinyles, formant le protoporphyrinog\u00e8ne.", "159": "La Protoporphyrine IX est la mol\u00e9cule cyclique finale avant l'insertion du fer. Elle est form\u00e9e dans la mitochondrie (PPOX).", "160": "La Ferroch\u00e9latase (mitochondriale) ins\u00e8re l'ion ferreux (Fe2+) au centre de la protoporphyrine IX pour former l'H\u00e8me. Le fer est r\u00e9duit par la Vitamine C.", "161": "L'enzyme ALAS1 est r\u00e9prim\u00e9e par l'H\u00e8me (feedback n\u00e9gatif) et induite par certains m\u00e9dicaments (barbituriques, \u0153strog\u00e8nes).", "162": "Les porphyries primaires sont des maladies g\u00e9n\u00e9tiques (d\u00e9ficit d'une enzyme de synth\u00e8se de l'h\u00e8me), causant accumulation et excr\u00e9tion urinaire de porphyrines.", "163": "Dans la rate (macrophages), la destruction des vieux \u00e9rythrocytes d\u00e9bute par l'h\u00e8me oxyg\u00e9nase ouvrant le cycle (lib\u00e9rant fer, CO) formant la biliverdine.", "164": "La biliverdine est l'interm\u00e9diaire vert (sans fer ni globine). Elle est r\u00e9duite par la biliverdine r\u00e9ductase en bilirubine non conjugu\u00e9e.", "165": "La bilirubine non conjugu\u00e9e (indirecte) est liposoluble, toxique, produite dans la rate, et voyage dans le sang li\u00e9e \u00e0 l'albumine vers le foie.", "166": "Avant la glucuronoconjugaison h\u00e9patique, l'h\u00e8me est oxyd\u00e9 (h\u00e8me oxyg\u00e9nase), le fer et la globine lib\u00e9r\u00e9s, et la biliverdine r\u00e9duite.", "167": "Avant l'UDP-glucuronyl transf\u00e9rase, il faut former la bilirubine indirecte, la transporter li\u00e9e \u00e0 l'albumine, et la faire capter par l'h\u00e9patocyte.", "168": "La biliverdine r\u00e9ductase r\u00e9duit la biliverdine (sans fer/globine) en bilirubine liposoluble (non conjugu\u00e9e) en consommant du NADPH.", "169": "L'h\u00e8me oxyg\u00e9nase et la biliverdine r\u00e9ductase n\u00e9cessitent toutes deux du NADPH comme coenzyme r\u00e9ducteur.", "170": "La bilirubine indirecte est liposoluble, libre (li\u00e9e albumine, non conjugu\u00e9e), et cause l'ict\u00e8re physiologique ou nucl\u00e9aire du nouveau-n\u00e9 en cas d'exc\u00e8s.", "171": "La bilirubine directe est conjugu\u00e9e \u00e0 l'acide glucuronique (mono- ou diglucuronide) dans le foie, ce qui la rend hydrosoluble et non toxique.", "172": "L'urobilinog\u00e8ne est form\u00e9 dans l'intestin (c\u00f4lon) par la r\u00e9duction bact\u00e9rienne de la bilirubine directe. Une partie est r\u00e9absorb\u00e9e, l'autre \u00e9limin\u00e9e.", "173": "Le stercobilinog\u00e8ne est aussi form\u00e9 dans le c\u00f4lon par la flore intestinale \u00e0 partir de la bilirubine directe, et est \u00e9limin\u00e9 en stercobiline (f\u00e8ces).", "174": "L'UDP-glucuronyl transf\u00e9rase h\u00e9patique conjugue la bilirubine avec l'UDP-glucuronate (forme active), la rendant hydrosoluble (diglucuronide).", "175": "Cette r\u00e9action de conjugaison par transf\u00e9rase a lieu dans l'h\u00e9patocyte. Un d\u00e9ficit partiel donne le Syndrome de Gilbert.", "176": "Le syndrome de Crigler-Najjar est un d\u00e9ficit s\u00e9v\u00e8re/total en UDP-glucuronyl transf\u00e9rase, emp\u00eachant la conversion en bilirubine directe (hyperbilirubin\u00e9mie indirecte s\u00e9v\u00e8re).", "177": "Le syndrome de Gilbert est un d\u00e9ficit g\u00e9n\u00e9tique b\u00e9nin (partiel) de l'UDP-glucuronyl transf\u00e9rase, causant un ict\u00e8re l\u00e9ger \u00e0 bilirubine indirecte.", "178": "L'ict\u00e8re \u00e0 bilirubine indirecte (liposoluble) survient par exc\u00e8s de production (h\u00e9molyse, incompatibilit\u00e9, h\u00e9matome) ou d\u00e9faut de conjugaison.", "179": "L'ict\u00e8re \u00e0 bilirubine directe (hydrosoluble) indique un probl\u00e8me post-conjugaison h\u00e9patique : maladies h\u00e9patiques, syndromes de Rotor/Dubin-Johnson, ou cholestase.", "180": "L'\u00e9l\u00e9vation de bilirubine hydrosoluble (conjugu\u00e9e) est typique des obstructions biliaires (calculs, tumeurs) ou d\u00e9faut d'excr\u00e9tion (Dubin-Johnson, Rotor)."};
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `Q${q.id} - ${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const optContainer = document.createElement('div');
+                    optContainer.className = 'option-container';
+
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    const explDiv = document.createElement('div');
+                    explDiv.className = 'explanation-box';
+                    explDiv.id = 'expl-' + opt.id;
+                    
+                    let specific_expl = explanations[q.id.toString()] || "Vérifiez vos cours sur ce sujet.";
+                    
+                    if (opt.correct) {
+                        explDiv.innerHTML = `<strong>✅ VRAI :</strong> ${specific_expl}`;
+                        explDiv.classList.add('expl-correct');
+                    } else {
+                        explDiv.innerHTML = `<strong>❌ FAUX :</strong> Ce distracteur est incorrect. <em>Rappel :</em> ${specific_expl}`;
+                        explDiv.classList.add('expl-incorrect');
+                    }
+
+                    optContainer.appendChild(label);
+                    optContainer.appendChild(explDiv);
+                    optionsGrid.appendChild(optContainer);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    const explDiv = document.getElementById(`expl-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        explDiv.style.display = 'block';
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                            explDiv.style.display = 'block';
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

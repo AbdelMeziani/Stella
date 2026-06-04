@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Biochimie S2 - Module 1 (Q1 à Q20)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Clean correct/incorrect styles: NO text boxes, just colors */
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Quiz Biochimie S2 - Module 1 (Q1 à Q20)<a href="quiz_biochimie_simplifie_M2.html">>></a></h1>
+        </header>
+        
+        <div class="revision-box">
+            <h3>📝 Fiche de révision : Glycolyse et Cycle de Krebs (Questions 1 à 20)</h3><p><strong>Glycolyse :</strong> Oxydation du glucose en pyruvate. Bilan : 2 ATP nets en anaérobie.<br><strong>Cycle de Krebs :</strong> Voie mitochondriale, carrefour catabolique final. Produit NADH, FADH2, 1 ATP/GTP et CO2.</p>
+        </div>
+
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer les questions 🔄</button>
+        </form>
+    </div>
+    <script>
+        const quizData = [{"id": 1, "question": "Hexose kinase :", "options": [{"id": "1_A", "text": "C'est une enzyme sp\u00e9cifique du galactose", "correct": false}, {"id": "1_B", "text": "Elle agit dans de nombreux tissus", "correct": true}, {"id": "1_C", "text": "Elle peut \u00eatre inhib\u00e9e par un ester de glucose phosphoryl\u00e9", "correct": true}, {"id": "1_D", "text": "Elle ne fonctionne que dans des conditions hyperglyc\u00e9miques", "correct": false}, {"id": "1_E", "text": "Elle n'agit pas dans le foie", "correct": false}, {"id": "1_F", "text": "Agit dans des conditions normo glyc\u00e9miques", "correct": true}, {"id": "1_G", "text": "Elle peut catalyser la phosphorylation du galactose", "correct": false}, {"id": "1_H", "text": "Il ne peut pas catalyser la phosphorylation du galactose", "correct": false}, {"id": "1_I", "text": "C'est une enzyme r\u00e9gulable", "correct": true}, {"id": "1_J", "text": "Elle est stimul\u00e9 par la G-6-P", "correct": false}]}, {"id": 2, "question": "Glucose kinase :", "options": [{"id": "2_A", "text": "Elle catalyse le transfert sp\u00e9cifique du phosphate au glucose", "correct": true}, {"id": "2_B", "text": "Elle peut \u00eatre synth\u00e9tis\u00e9 par le foie", "correct": true}, {"id": "2_C", "text": "Elle agit dans une r\u00e9action consommatrice d'\u00e9nergie", "correct": false}, {"id": "2_D", "text": "Fournit la formation d'acide glucuronique \u00e0 partir de G-6-P", "correct": false}, {"id": "2_E", "text": "Elle ne peut pas agir sur le foie", "correct": false}, {"id": "2_F", "text": "Elle agit principalement dans les conditions hypoglyc\u00e9miques", "correct": false}, {"id": "2_G", "text": "C'est une enzyme cl\u00e9 dans la voie des pentoses phosphates", "correct": false}, {"id": "2_H", "text": "Fournit Contribue \u00e0 la consommation de glucose apr\u00e8s la prise alimentaire", "correct": true}, {"id": "2_I", "text": "Elle agit dans des conditions hyperglyc\u00e9miques", "correct": true}, {"id": "2_J", "text": "C'est une enzyme de la voie de la glucon\u00e9ogen\u00e8se", "correct": false}]}, {"id": 3, "question": "Choisissez le(s) bon(s) \u00e9nonc\u00e9(s) concernant la glycolyse:", "options": [{"id": "3_A", "text": "Elle conduit \u00e0 la formation d'acide glucuronique", "correct": false}, {"id": "3_B", "text": "Elle se d\u00e9roule dans le cytoplasme", "correct": true}, {"id": "3_C", "text": "Elle peut conduire \u00e0 la production d'un acide hydroxyl\u00e9.", "correct": false}, {"id": "3_D", "text": "Elle a lieu dans les mitochondries/Cela se passe dans les mitochondries", "correct": false}, {"id": "3_E", "text": "Son but est d'obtenir de l'\u00e9nergie", "correct": true}, {"id": "3_F", "text": "Elle peut \u00eatre obtenue en l'absence d'oxyg\u00e8ne", "correct": true}, {"id": "3_G", "text": "Elle peut conduire \u00e0 la formation d'acide pyruvique en ana\u00e9robiose.", "correct": true}, {"id": "3_H", "text": "Assure la formation de mucopolysaccharides", "correct": false}, {"id": "3_I", "text": "C\u2019est un processus dans lequel les glycosaminoglycanes sont form\u00e9s", "correct": false}, {"id": "3_J", "text": "Elle peut conduire \u00e0 la formation d'acide pyruvique en a\u00e9robiose.", "correct": true}]}, {"id": 4, "question": "En ce qui concerne le processus de d\u00e9gradation du glucose, il est vrai que:", "options": [{"id": "4_A", "text": "Elle peut \u00eatre contr\u00f4l\u00e9 exclusivement par un m\u00e9canisme allost\u00e9rique", "correct": false}, {"id": "4_B", "text": "Comprend quatre enzymes r\u00e9glables", "correct": false}, {"id": "4_C", "text": "Elle ne montre pas les r\u00e9actions r\u00e9versibles catalys\u00e9es par les kinases.", "correct": false}, {"id": "4_D", "text": "Elle comprend l'action r\u00e9versible d'une kinase", "correct": true}, {"id": "4_E", "text": "Elle implique deux r\u00e9actions de phosphorylation au niveau du substrat", "correct": true}, {"id": "4_F", "text": "Elle comprend des \u00e9tapes de phosphorylation", "correct": true}, {"id": "4_G", "text": "Elle se produit dans le cytoplasme &27,130;R41 caaen 1,3PGKinast Isene1,346 PPEP-> PyR PK 4 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 2/64", "correct": true}, {"id": "4_H", "text": "Elle pr\u00e9sente deux stades mitochondriaux", "correct": false}, {"id": "4_I", "text": "Elle comprend une r\u00e9action dans laquelle deux isom\u00e8res sont g\u00e9n\u00e9r\u00e9s", "correct": false}, {"id": "4_J", "text": "Elle peut \u00eatre contr\u00f4l\u00e9 exclusivement par un m\u00e9canisme de contr\u00f4le quantitatif", "correct": false}]}, {"id": 5, "question": "L'\u00e9tape de la glycolyse qui consomme de l'\u00e9nergie:", "options": [{"id": "5_A", "text": "Elle comprend deux \u00e9tapes au cours desquelles l'ATP est utilis\u00e9e", "correct": true}, {"id": "5_B", "text": "Comprend uniquement les r\u00e9actions irr\u00e9versibles", "correct": false}, {"id": "5_C", "text": "Ne comprend pas les r\u00e9actions de lyse", "correct": false}, {"id": "5_D", "text": "Cela se passe dans les mitochondries", "correct": true}, {"id": "5_E", "text": "Elle se termine par l'interconversion de certains isom\u00e8res", "correct": false}, {"id": "5_F", "text": "Elle ne se produit pas dans les mitochondries", "correct": false}, {"id": "5_G", "text": "Comprend deux enzymes r\u00e9glables", "correct": false}, {"id": "5_H", "text": "Elle contient une \u00e9tape interm\u00e9diaire dans la formation du ribose 5 phosphate", "correct": true}, {"id": "5_I", "text": "Elle est compl\u00e9t\u00e9 par l'obtention de trioses phosphoryl\u00e9s", "correct": false}, {"id": "5_J", "text": "Elle contient une \u00e9tape interm\u00e9diaire de phosphorylation au niveau du substrat", "correct": false}]}, {"id": 6, "question": "En glycolyse ana\u00e9robie:", "options": [{"id": "6_A", "text": "Un processus de r\u00e9duction de l'acide pyruvique a lieu", "correct": true}, {"id": "6_B", "text": "Deux \u00e9tapes de m\u00e9thylation sont impliqu\u00e9es", "correct": false}, {"id": "6_C", "text": "Aucune r\u00e9action de r\u00e9duction n'a lieu", "correct": false}, {"id": "6_D", "text": "6 moles d'ATP sont obtenues par le passage du NADH dans la cha\u00eene respiratoire", "correct": false}, {"id": "6_E", "text": "8 moles d'ATP sont g\u00e9n\u00e9r\u00e9es \u00e0 partir d'une mole de glucose", "correct": false}, {"id": "6_F", "text": "Actes LDH", "correct": true}, {"id": "6_G", "text": "Formation d'acide pyruvique/L'acide pyruvique se forme", "correct": false}, {"id": "6_H", "text": "2 moles d'ATP sont obtenues \u00e0 partir d'une mole de glucose", "correct": true}, {"id": "6_I", "text": "Le produit final est un hydroxy acide avec trois atomes de carbone", "correct": false}, {"id": "6_J", "text": "Une r\u00e9action de thiolyse se produit", "correct": false}]}, {"id": 7, "question": "La glycolyse est r\u00e9gul\u00e9e par:", "options": [{"id": "7_A", "text": "Facteurs allost\u00e9riques qui contr\u00f4lent la vitesse enzymatique de certaines enzymes", "correct": true}, {"id": "7_B", "text": "Nor\u00e9pin\u00e9phrine ayant pour effet de r\u00e9duire la production de phosphofructose kinase", "correct": false}, {"id": "7_C", "text": "Adr\u00e9naline avec effet stimulant sur le pyruvate kinase", "correct": true}, {"id": "7_D", "text": "Facteurs allost\u00e9riques qui contr\u00f4lent les enzymes qui catalysant des r\u00e9actions r\u00e9versibles", "correct": false}, {"id": "7_E", "text": "Insuline ayant un effet r\u00e9pressif sur le glucose kinase", "correct": false}, {"id": "7_F", "text": "Hormones qui contr\u00f4lent les r\u00e9actions r\u00e9versibles", "correct": false}, {"id": "7_G", "text": "AMP, par contr\u00f4le n\u00e9gatif de la phosphofructose kinase", "correct": true}, {"id": "7_H", "text": "G-6-P agissant par r\u00e9troaction n\u00e9gative sur le glucose hexose kinase", "correct": true}, {"id": "7_I", "text": "ATP, par contr\u00f4le n\u00e9gatif de la pyruvate kinase", "correct": true}, {"id": "7_J", "text": "Insuline qui agit en induisant l'hexose kinase", "correct": false}]}, {"id": 8, "question": "Les tissus et compos\u00e9s importants impliqu\u00e9s dans la r\u00e9gulation de la glyc\u00e9mie sont les suivants:", "options": [{"id": "8_A", "text": "Insuline", "correct": true}, {"id": "8_B", "text": "Stercobiline OK/PFK GABP/AHA 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 3/64", "correct": false}, {"id": "8_C", "text": "Coproporphyrine", "correct": false}, {"id": "8_D", "text": "Rate", "correct": false}, {"id": "8_E", "text": "Glucose Hexose kinase", "correct": true}, {"id": "8_F", "text": "Rein", "correct": false}, {"id": "8_G", "text": "Muscle", "correct": false}, {"id": "8_H", "text": "Foie", "correct": true}, {"id": "8_I", "text": "Acide urique", "correct": false}, {"id": "8_J", "text": "G-6 Phosphatase", "correct": true}]}, {"id": 9, "question": "Dans l'\u00e9tape de production d'\u00e9nergie de la voie de la glycolyse:", "options": [{"id": "9_A", "text": "Les r\u00e9actions de phosphorylation au niveau du substrat pr\u00e9dominent", "correct": true}, {"id": "9_B", "text": "Les r\u00e9actions consommant de l'ATP pr\u00e9dominent", "correct": false}, {"id": "9_C", "text": "Il en r\u00e9sulte des conditions a\u00e9robies 10 moles d'ATP", "correct": true}, {"id": "9_D", "text": "Les r\u00e9actions de phosphorylation pr\u00e9dominent", "correct": false}, {"id": "9_E", "text": "Il en r\u00e9sulte dans des conditions a\u00e9robies 8 moles d'ATP", "correct": false}, {"id": "9_F", "text": "3 moles d'ATP sont directement obtenues", "correct": false}, {"id": "9_G", "text": "6 moles d'ATP peuvent \u00eatre g\u00e9n\u00e9r\u00e9es indirectement", "correct": false}, {"id": "9_H", "text": "Un c\u00e9toacide peut \u00eatre obtenu", "correct": true}, {"id": "9_I", "text": "Les trioses phosphates sont obtenus", "correct": true}, {"id": "9_J", "text": "Une r\u00e9action irr\u00e9versible se produit", "correct": false}]}, {"id": 10, "question": "DHAP (dihydroxy-ac\u00e9tone-phosphate):", "options": [{"id": "10_A", "text": "Il peut \u00eatre obtenu \u00e0 partir d'un monosaccharide diphosphoryl\u00e9", "correct": true}, {"id": "10_B", "text": "Il peut \u00eatre impliqu\u00e9 dans l'action d'une isom\u00e9rase", "correct": true}, {"id": "10_C", "text": "Il peut r\u00e9sulter d'un monosaccharide monophosphoryl\u00e9", "correct": false}, {"id": "10_D", "text": "C\u2019est un oligomonosaccharide phosphoryl\u00e9", "correct": false}, {"id": "10_E", "text": "Il/Elle\u00a0?? peut en r\u00e9sulter l'\u00e9tape de la glycolyse, qui consomme de l'\u00e9nergie", "correct": false}, {"id": "10_F", "text": "Il est obtenu sous l'action d'une phosphatase", "correct": true}, {"id": "10_G", "text": "Il r\u00e9sulte d'une r\u00e9action de phosphorylation d'un aldose", "correct": false}, {"id": "10_H", "text": "Il peut \u00eatre obtenu sous l'action d'une enzyme commune \u00e0 la voie de la glucon\u00e9ogen\u00e8se", "correct": false}, {"id": "10_I", "text": "C\u2019est une mol\u00e9cule issue du pyruvate", "correct": false}, {"id": "10_J", "text": "Il peut r\u00e9sulter d'une r\u00e9action r\u00e9versible", "correct": false}]}, {"id": 11, "question": "Pyruvate kinase:", "options": [{"id": "11_A", "text": "Elle agit sur un substrat phosphoryl\u00e9", "correct": true}, {"id": "11_B", "text": "Sa synth\u00e8se peut \u00eatre induite par l'insuline", "correct": true}, {"id": "11_C", "text": "Elle conduit \u00e0 la formation de pyruvate", "correct": true}, {"id": "11_D", "text": "Elle catalyse une r\u00e9action de phosphorylation au niveau du substrat", "correct": true}, {"id": "11_E", "text": "Elle catalyse une r\u00e9action de d\u00e9phosphorylation", "correct": false}, {"id": "11_F", "text": "C\u2019est une enzyme pr\u00e9sente dans la glucon\u00e9ogen\u00e8se", "correct": false}, {"id": "11_G", "text": "Elle peut \u00eatre stimul\u00e9e par l'ATP", "correct": false}, {"id": "11_H", "text": "Elle agit sur le pyruvate", "correct": false}, {"id": "11_I", "text": "Covertir le pyruvate en lactate Reabs. GPsubs 14ox1 F1,b Asac sanmoins3fetsalwo 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 4/64", "correct": false}, {"id": "11_J", "text": "Peut \u00eatre inhib\u00e9 par l'ATP", "correct": false}]}, {"id": 12, "question": "En ce qui concerne la r\u00e9gulation hormonale de la glycolyse:", "options": [{"id": "12_A", "text": "Il est obtenu par un retour d'information n\u00e9gatif", "correct": false}, {"id": "12_B", "text": "Il agit en liant des hormones \u00e0 des sites allost\u00e9riques \u00e0 la surface des enzymes.", "correct": false}, {"id": "12_C", "text": "L'adr\u00e9naline induit la PFK (phospho-fructo-kinase)", "correct": true}, {"id": "12_D", "text": "Effectue un contr\u00f4le quantitatif sur des enzymes sp\u00e9cifiques", "correct": true}, {"id": "12_E", "text": "L'adr\u00e9naline agit par r\u00e9pression de la pyruvate kinase", "correct": true}, {"id": "12_F", "text": "Il est obtenu en agissant sur des enzymes qui catalysent des r\u00e9actions r\u00e9versibles.", "correct": false}, {"id": "12_G", "text": "L'insuline induit la synth\u00e8se de l'hexose kinase", "correct": false}, {"id": "12_H", "text": "Il s'effectue au niveau de 3 enzymes", "correct": false}, {"id": "12_I", "text": "Il est obtenue par l'induction et la r\u00e9pression", "correct": true}, {"id": "12_J", "text": "Il module la vitesse des r\u00e9actions irr\u00e9versibles", "correct": true}]}, {"id": 13, "question": "\u03b1 keto glutarate d\u00e9shydrog\u00e9nase:", "options": [{"id": "13_A", "text": "Elle catalyse la transformation du succinyl ~ ScoA en succinate", "correct": false}, {"id": "13_B", "text": "Elle conduit \u00e0 la formation indirecte de 3 mol\u00e9cules d'ATP", "correct": false}, {"id": "13_C", "text": "Elle conduit \u00e0 la formation de succinyl ~ SCoA", "correct": true}, {"id": "13_D", "text": "C\u2019est enzyme d\u00e9pendante de la P-5-P", "correct": false}, {"id": "13_E", "text": "Elle agit sur un acide c\u00e9to dicarboxylique", "correct": false}, {"id": "13_F", "text": "C\u2019est une enzyme impliqu\u00e9e dans le cycle de Krebs", "correct": true}, {"id": "13_G", "text": "Elle conduit \u00e0 l'obtention directe de 2 mol\u00e9cules d'ATP", "correct": false}, {"id": "13_H", "text": "Elle catalyse une r\u00e9action de phosphorylation au niveau du substrat", "correct": false}, {"id": "13_I", "text": "Elle provoque la lib\u00e9ration de dioxyde de carbone", "correct": true}, {"id": "13_J", "text": "C'est une enzyme sp\u00e9cifique de la glycolyse", "correct": false}]}, {"id": 14, "question": "La voie du 2,3 diphosphoglyc\u00e9rate:", "options": [{"id": "14_A", "text": "Elle implique l'action de l'UDP glucuronyl transf\u00e9rase", "correct": false}, {"id": "14_B", "text": "Elle est fabriqu\u00e9 dans la rate", "correct": false}, {"id": "14_C", "text": "Il conduit \u00e0 la g\u00e9n\u00e9ration de 2,3 DPG avec un r\u00f4le dans la diminution de l'affinit\u00e9 de l'Hb pour l'oxyg\u00e8ne.", "correct": true}, {"id": "14_D", "text": "Elle repr\u00e9sente une glycolyse indirecte", "correct": true}, {"id": "14_E", "text": "Assure la continuit\u00e9 de la glycolyse en laissant une plus grande quantit\u00e9 d'ADP disponible, par rapport \u00e0 la glycolyse extra-\u00e9rythrocytaire", "correct": false}, {"id": "14_F", "text": "Elle se d\u00e9roule dans l'\u00e9rythrocyte", "correct": true}, {"id": "14_G", "text": "Elle se d\u00e9roule dans l'h\u00e9patocyte", "correct": false}, {"id": "14_H", "text": "Elle comprend les r\u00e9actions de thiolyse", "correct": false}, {"id": "14_I", "text": "Elle conduit \u00e0 la g\u00e9n\u00e9ration d'un compos\u00e9 ayant un r\u00f4le dans l'oxyg\u00e9nation des tissus", "correct": true}, {"id": "14_J", "text": "Elle a lieu dans toutes les cellules \u00e0 l'exception des \u00e9rythrocytes", "correct": false}]}, {"id": 15, "question": "Les mol\u00e9cules suivantes peuvent \u00eatre synth\u00e9tis\u00e9es directement \u00e0 partir du pyruvate:", "options": [{"id": "15_A", "text": "Acide oxaloac\u00e9tique", "correct": true}, {"id": "15_B", "text": "Acide lactique", "correct": true}, {"id": "15_C", "text": "Citrate", "correct": false}, {"id": "15_D", "text": "Glucose =>liberationaccue do Yonggere 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 5/64", "correct": false}, {"id": "15_E", "text": "Ac\u00e9tyle coenzyme A", "correct": true}, {"id": "15_F", "text": "Acide dicarboxylique \u00e0 quatre atomes de carbone", "correct": false}, {"id": "15_G", "text": "Glyc\u00e9rol", "correct": false}, {"id": "15_H", "text": "ALT", "correct": false}, {"id": "15_I", "text": "Acide amin\u00e9 aliphatique \u00e0 trois atomes de carbone", "correct": true}, {"id": "15_J", "text": "Acide glucuronique", "correct": false}]}, {"id": 16, "question": "Parmi les mol\u00e9cules suivantes, lesquelles sont des coenzymes du complexe pyruvate d\u00e9shydrog\u00e9nase ?", "options": [{"id": "16_A", "text": "Carboxybiotine", "correct": false}, {"id": "16_B", "text": "TPP", "correct": true}, {"id": "16_C", "text": "Acide lipo\u00efque", "correct": true}, {"id": "16_D", "text": "FAD", "correct": true}, {"id": "16_E", "text": "HS-CoA", "correct": true}, {"id": "16_F", "text": "Pyridoxal 5 phosphate", "correct": false}, {"id": "16_G", "text": "Ad\u00e9nosylcobalamine", "correct": false}, {"id": "16_H", "text": "M\u00e9thylcobalamine", "correct": false}, {"id": "16_I", "text": "NAD", "correct": true}, {"id": "16_J", "text": "NADPH", "correct": false}]}, {"id": 17, "question": "Choisissez les af\ufb01rmations correctes concernant le cycle de Krebs:", "options": [{"id": "17_A", "text": "Elle comprend quatre r\u00e9actions de d\u00e9carboxylation", "correct": false}, {"id": "17_B", "text": "Elle est fabriqu\u00e9 avec la restauration de l'oxaloac\u00e9tate, \u00e9galement utilis\u00e9 dans son initiation.", "correct": true}, {"id": "17_C", "text": "C'est exclusivement une voie catabolique", "correct": false}, {"id": "17_D", "text": "Elle se d\u00e9roule dans le cytoplasme", "correct": false}, {"id": "17_E", "text": "Elle produit un total de 12 mol\u00e9cules d'ATP \u00e0 partir de chaque mole d'ac\u00e9tyl- coenzyme A.", "correct": true}, {"id": "17_F", "text": "Elle est initi\u00e9e par l'ac\u00e9tyl-coenzyme A", "correct": true}, {"id": "17_G", "text": "Elle n'inclut pas les r\u00e9actions de phosphorylation au niveau du substrat", "correct": false}, {"id": "17_H", "text": "Elle se d\u00e9roule dans les mitochondries", "correct": true}, {"id": "17_I", "text": "Elle comporte une premi\u00e8re \u00e9tape, celle de la formation du citrate", "correct": false}, {"id": "17_J", "text": "Elle implique deux r\u00e9actions de carboxylation", "correct": false}]}, {"id": 18, "question": "Les enzymes suivantes catalysent les r\u00e9actions d'oxydation au cours du cycle de Krebs:", "options": [{"id": "18_A", "text": "Succinyl DH", "correct": true}, {"id": "18_B", "text": "Malate DH", "correct": true}, {"id": "18_C", "text": "Alpha Ketoglutarate DH", "correct": false}, {"id": "18_D", "text": "Isocitrate DH", "correct": true}, {"id": "18_E", "text": "Succinyl CoA thiokinase", "correct": false}, {"id": "18_F", "text": "Glucose kinase", "correct": false}, {"id": "18_G", "text": "Arginase", "correct": false}, {"id": "18_H", "text": "Glucose oxydase", "correct": false}, {"id": "18_I", "text": "L'enzyme qui convertit l'acide isocitrique en acide alpha-c\u00e9toglutarique 0AA ALA B1 BaBr By RAA-dep 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 6/64", "correct": true}, {"id": "18_J", "text": "Citrate synth\u00e9tase", "correct": false}]}, {"id": 19, "question": "Parmi les enzymes suivantes, lesquelles sont impliqu\u00e9es dans le processus m\u00e9tabolique de d\u00e9gradation totale de l'ac\u00e9tyl-coenzyme A en CO2 et H2O?", "options": [{"id": "19_A", "text": "Alfacetoglutarate DH", "correct": true}, {"id": "19_B", "text": "Malate synth\u00e9tase", "correct": false}, {"id": "19_C", "text": "Succine thiokinase", "correct": false}, {"id": "19_D", "text": "Glucose oxydase", "correct": false}, {"id": "19_E", "text": "Citrate synth\u00e9tase", "correct": true}, {"id": "19_F", "text": "Isocitrate DH", "correct": true}, {"id": "19_G", "text": "Succinique carboxylase", "correct": false}, {"id": "19_H", "text": "Malate DH", "correct": true}, {"id": "19_I", "text": "Fumarate oxydase", "correct": false}, {"id": "19_J", "text": "Hexose kinase", "correct": false}]}, {"id": 20, "question": "Parmi les r\u00e9actions du cycle de Krebs, celles dans lesquelles le substrat et le produit de la r\u00e9action sont des mol\u00e9cules \u00e0 quatre carbones sont:", "options": [{"id": "20_A", "text": "R\u00e9action au malate DH", "correct": true}, {"id": "20_B", "text": "R\u00e9action du succinate DH", "correct": true}, {"id": "20_C", "text": "Formation de succinate", "correct": false}, {"id": "20_D", "text": "R\u00e9action de formation de l'acide fumarique", "correct": false}, {"id": "20_E", "text": "D\u00e9carboxylation du fumarate", "correct": true}, {"id": "20_F", "text": "Conversion de l'acide malique en oxaloac\u00e9tate", "correct": true}, {"id": "20_G", "text": "Oxydation du citrate", "correct": false}, {"id": "20_H", "text": "Carboxylation de l'acide succinique", "correct": true}, {"id": "20_I", "text": "La r\u00e9action de la succine thiokinase", "correct": false}, {"id": "20_J", "text": "Synth\u00e8se du citrate", "correct": false}]}];
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `Q${q.id} - ${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    optionsGrid.appendChild(label);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

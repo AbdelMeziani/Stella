@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Biochimie S2 - Module 6 (Q101 à Q120)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-container { display: flex; flex-direction: column; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .explanation-box { display: none; margin-top: 5px; padding: 12px 15px; border-radius: 6px; font-size: 0.95em; line-height: 1.5; animation: fadeIn 0.4s ease; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); }
+        .expl-correct { background-color: #e8f5e9; color: #1b5e20; border-left: 5px solid #4caf50; }
+        .expl-incorrect { background-color: #ffebee; color: #b71c1c; border-left: 5px solid #f44336; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="quiz_biochimie_Q81_100.html"><<</a>Quiz Biochimie S2 - Module 6 (Q101 à Q120)<a href="quiz_biochimie_Q121_140.html">>></a></h1>
+        </header>
+        
+        <div class="revision-box">
+            <h3>📝 Fiche de révision : Digestion, Hormones et Métabolisme AA (Questions 101 à 120)</h3>
+    <p><strong>Lipoprotéines :</strong> Les Chylomicrons (Apo B48) transportent les lipides intestinaux. Les VLDL (Apo B100) exportent les triglycérides hépatiques. Les HDL assurent le retour du cholestérol vers le foie grâce à l'enzyme LCAT.<br>
+    <strong>Hormones stéroïdiennes :</strong> Synthétisées à partir du cholestérol. Minéralocorticoïdes (Aldostérone : rétention Na+, fuite K+). Glucocorticoïdes (Cortisol : hyperglycémiant, anti-inflammatoire). Androgènes et Œstrogènes.<br>
+    <strong>Acides Aminés :</strong> La Tyrosine dérive de la Phénylalanine (via la phénylalanine hydroxylase). Elle est le précurseur universel de la DOPA, de la Mélanine, des Catécholamines et des hormones thyroïdiennes (T3/T4 fixées sur la Thyroglobuline).</p>
+        </div>
+
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses et afficher les explications</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer les 20 questions 🔄</button>
+        </form>
+    </div>
+    <script>
+        const quizData = [{"id": 101, "question": "Les acides biliaires ont les r\u00f4les suivants :", "options": [{"id": "101_A", "text": "Dans la stimulation de la lipase pancr\u00e9atique", "correct": true}, {"id": "101_B", "text": "Stimule la synth\u00e8se des TG", "correct": false}, {"id": "101_C", "text": "Les secondaires ont un r\u00f4le dans le m\u00e9tabolisme des glucides", "correct": false}, {"id": "101_D", "text": "Dans l'\u00e9mulsification des graisses", "correct": true}, {"id": "101_E", "text": "Ils stimulent l'action de la lipase hormono-sensible", "correct": false}, {"id": "101_F", "text": "Dans le contr\u00f4le de la synth\u00e8se du cholest\u00e9rol", "correct": true}, {"id": "101_G", "text": "Ils favorisent la fluidit\u00e9 des membranes cellulaires", "correct": false}, {"id": "101_H", "text": "Ils interviennent dans la synth\u00e8se de la vitamine D", "correct": false}, {"id": "101_I", "text": "Ils interviennent dans la digestion des lipides", "correct": true}, {"id": "101_J", "text": "Dans la d\u00e9sintoxication", "correct": true}]}, {"id": 102, "question": "Parmi les mol\u00e9cules suivantes, lesquelles contiennent des cycles d'atomes de carbone ?", "options": [{"id": "102_A", "text": "Pyrophosphate de g\u00e9ranyle", "correct": false}, {"id": "102_B", "text": "Taurochenod\u00e9oxycholate de sodium", "correct": true}, {"id": "102_C", "text": "Acide m\u00e9valonique", "correct": false}, {"id": "102_D", "text": "Cortisol", "correct": true}, {"id": "102_E", "text": "Glyc\u00e9rol", "correct": false}, {"id": "102_F", "text": "Acide ch\u00e9nod\u00e9soxycholique", "correct": true}, {"id": "102_G", "text": "Lanost\u00e9rol", "correct": true}, {"id": "102_H", "text": "Squal\u00e8ne", "correct": false}, {"id": "102_I", "text": "Testosterone", "correct": true}, {"id": "102_J", "text": "Pyrophosphate de farn\u00e9syle", "correct": false}]}, {"id": 103, "question": "Laquelle des mol\u00e9cules suivantes est synth\u00e9tis\u00e9e exclusivement dans le foie ?", "options": [{"id": "103_A", "text": "Insuline", "correct": false}, {"id": "103_B", "text": "Acide b\u00eata-hydroxybutyrique", "correct": false}, {"id": "103_C", "text": "Acide cholique", "correct": true}, {"id": "103_D", "text": "Acide lithocholique", "correct": false}, {"id": "103_E", "text": "Acide ac\u00e9toac\u00e9tique", "correct": true}, {"id": "103_F", "text": "Acide ch\u00e9nod\u00e9soxycholique", "correct": true}, {"id": "103_G", "text": "Acide d\u00e9soxycholique", "correct": false}, {"id": "103_H", "text": "Bilirubine directe", "correct": true}, {"id": "103_I", "text": "Urobilinog\u00e8ne", "correct": false}, {"id": "103_J", "text": "1.3 DPG", "correct": false}]}, {"id": 104, "question": "La lithiase biliaire peut \u00eatre caus\u00e9e par :", "options": [{"id": "104_A", "text": "Malabsorption des triglyc\u00e9rides", "correct": false}, {"id": "104_B", "text": "Dysfonctionnement h\u00e9patique grave", "correct": false}, {"id": "104_C", "text": "Exc\u00e8s de LDL", "correct": false}, {"id": "104_D", "text": "Ict\u00e8re h\u00e9molytique", "correct": false}, {"id": "104_E", "text": "Malabsorption des acides biliaires", "correct": true}, {"id": "104_F", "text": "Exc\u00e8s de cholest\u00e9rol dans la bile", "correct": true}, {"id": "104_G", "text": "D\u00e9ficit en Apo B48", "correct": false}, {"id": "104_H", "text": "Exc\u00e8s de phospholipides", "correct": false}, {"id": "104_I", "text": "Carence en sels biliaires", "correct": false}, {"id": "104_J", "text": "Obstruction des voies biliaires", "correct": false}]}, {"id": 105, "question": "En ce qui concerne les min\u00e9ralocortico\u00efdes, on peut affirmer que :", "options": [{"id": "105_A", "text": "Leur hypos\u00e9cr\u00e9tion peut affecter la fonction cardiaque", "correct": true}, {"id": "105_B", "text": "Leur hypers\u00e9cr\u00e9tion peut induire un exc\u00e8s de potassium dans le sang", "correct": true}, {"id": "105_C", "text": "Ils sont produits dans la zone r\u00e9ticulaire des glandes surr\u00e9nales", "correct": false}, {"id": "105_D", "text": "Leur hypers\u00e9cr\u00e9tion peut conduire \u00e0 un exc\u00e8s de sodium dans le sang", "correct": true}, {"id": "105_E", "text": "Ils sont produits dans la zone fasciculaire des glandes surr\u00e9nales", "correct": false}, {"id": "105_F", "text": "Leur hypos\u00e9cr\u00e9tion peut entra\u00eener une fatigue musculaire", "correct": true}, {"id": "105_G", "text": "Leur hypos\u00e9cr\u00e9tion peut conduire \u00e0 un exc\u00e8s de sodium dans le sang", "correct": false}, {"id": "105_H", "text": "Leur hypos\u00e9cr\u00e9tion peut conduire \u00e0 un exc\u00e8s de potassium dans le sang", "correct": false}, {"id": "105_I", "text": "Leur hypers\u00e9cr\u00e9tion peut affecter la fonction cardiaque", "correct": true}, {"id": "105_J", "text": "Ils sont produits dans la zone glom\u00e9rulaire des glandes surr\u00e9nales", "correct": true}]}, {"id": 106, "question": "En ce qui concerne les min\u00e9ralocortico\u00efdes, on peut affirmer que :", "options": [{"id": "106_A", "text": "Ils influencent la composition de la salive", "correct": true}, {"id": "106_B", "text": "Leur hypos\u00e9cr\u00e9tion peut provoquer le Syndrome de Dubin-Johnson", "correct": false}, {"id": "106_C", "text": "Elles sont repr\u00e9sent\u00e9es par le cortisol", "correct": false}, {"id": "106_D", "text": "Ils stimulent l'excr\u00e9tion du sodium", "correct": true}, {"id": "106_E", "text": "Leur hypers\u00e9cr\u00e9tion peut provoquer le Syndrome de Conn", "correct": true}, {"id": "106_F", "text": "Ils r\u00e9gulent la cholest\u00e9rol\u00e9mie", "correct": false}, {"id": "106_G", "text": "Leur hypers\u00e9cr\u00e9tion peut provoquer un \u0153d\u00e8me", "correct": false}, {"id": "106_H", "text": "Ils peuvent influencer la quantit\u00e9 d'urine excr\u00e9t\u00e9e", "correct": true}, {"id": "106_I", "text": "Ils sont repr\u00e9sent\u00e9s par l'aldost\u00e9rone", "correct": true}, {"id": "106_J", "text": "Ils ont un effet anti-inflammatoire", "correct": false}]}, {"id": 107, "question": "En ce qui concerne les glucocortico\u00efdes, on peut affirmer que:", "options": [{"id": "107_A", "text": "Ils sont produits dans la zone glom\u00e9rulaire de la glande surr\u00e9nale", "correct": false}, {"id": "107_B", "text": "Ils sont repr\u00e9sent\u00e9s par l'aldost\u00e9rone", "correct": false}, {"id": "107_C", "text": "Leur hypos\u00e9cr\u00e9tion peut \u00eatre \u00e0 l'origine du Syndrome de Conn", "correct": false}, {"id": "107_D", "text": "Leur hypers\u00e9cr\u00e9tion peut affecter la fonction cardiaque", "correct": false}, {"id": "107_E", "text": "Ils influencent la mobilisation des TG du tissu adipeux", "correct": false}, {"id": "107_F", "text": "Leur hypos\u00e9cr\u00e9tion peut provoquer le Syndrome de Dubin-Johnson", "correct": false}, {"id": "107_G", "text": "Ils r\u00e9duisent l'inflammation", "correct": true}, {"id": "107_H", "text": "Ils augmentent la quantit\u00e9 de glucose dans le sang", "correct": true}, {"id": "107_I", "text": "Ils ont un effet hypoglyc\u00e9miant", "correct": false}, {"id": "107_J", "text": "Ils ont comme repr\u00e9sentant, le cortisol", "correct": true}]}, {"id": 108, "question": "En ce qui concerne les glucocortico\u00efdes, on peut affirmer que :", "options": [{"id": "108_A", "text": "Ils agissent dans le foie", "correct": true}, {"id": "108_B", "text": "Leur hypers\u00e9cr\u00e9tion peut induire un exc\u00e8s de potassium dans le sang", "correct": false}, {"id": "108_C", "text": "R\u00e9gule la cholest\u00e9rol\u00e9mie", "correct": false}, {"id": "108_D", "text": "Ils sont transport\u00e9s par des prot\u00e9ines plasmatiques sp\u00e9cifiques", "correct": true}, {"id": "108_E", "text": "Ils agissent dans les muscles squelettiques", "correct": true}, {"id": "108_F", "text": "Ils stimulent la glucon\u00e9ogen\u00e8se", "correct": true}, {"id": "108_G", "text": "Ils sont produits dans la zone fasciculaire de la glande surr\u00e9nale", "correct": true}, {"id": "108_H", "text": "Ils stimulent l'absorption de Ca2+", "correct": false}, {"id": "108_I", "text": "Ils ont comme repr\u00e9sentant l'estradiol", "correct": false}, {"id": "108_J", "text": "Leur hypos\u00e9cr\u00e9tion peut conduire \u00e0 un exc\u00e8s de sodium dans le sang", "correct": false}]}, {"id": 109, "question": "En ce qui concerne les hormones \u00e6strog\u00e8nes, on peut dire ce qui suit :", "options": [{"id": "109_A", "text": "Ils r\u00e9gulent la cholest\u00e9rol\u00e9mie", "correct": true}, {"id": "109_B", "text": "Ils sont produits dans la zone fasciculaire des glandes surr\u00e9nales", "correct": false}, {"id": "109_C", "text": "Ils ont une structure polycyclique", "correct": true}, {"id": "109_D", "text": "Ils sont impliqu\u00e9s dans le m\u00e9tabolisme du tissu osseux", "correct": true}, {"id": "109_E", "text": "Ils ont une structure aliphatique", "correct": false}, {"id": "109_F", "text": "Ils r\u00e9duisent l'inflammation", "correct": false}, {"id": "109_G", "text": "Ils ont comme repr\u00e9sentant l'estradiol", "correct": true}, {"id": "109_H", "text": "Ils sont produits dans la zone glom\u00e9rulaire des glandes surr\u00e9nales", "correct": false}, {"id": "109_I", "text": "Ils conservent des caract\u00e9ristiques sexuelles secondaires f\u00e9minines", "correct": true}, {"id": "109_J", "text": "Ils stimulent la glucon\u00e9ogen\u00e8se", "correct": false}]}, {"id": 110, "question": "En ce qui concerne les hormones androg\u00e8nes, on peut affirmer que:", "options": [{"id": "110_A", "text": "Ils stimulent l'absorption de Ca2+", "correct": false}, {"id": "110_B", "text": "Ils sont repr\u00e9sent\u00e9s par l'aldost\u00e9rone", "correct": false}, {"id": "110_C", "text": "Leur hypers\u00e9cr\u00e9tion peut induire un exc\u00e8s de potassium dans le sang", "correct": false}, {"id": "110_D", "text": "Leur hypos\u00e9cr\u00e9tion peut \u00eatre \u00e0 l'origine du Syndrome de Conn", "correct": false}, {"id": "110_E", "text": "Ils influencent la mobilisation du glycog\u00e8ne du tissu adipeux", "correct": false}, {"id": "110_F", "text": "Leur hypos\u00e9cr\u00e9tion peut conduire \u00e0 un exc\u00e8s de sodium dans le sang", "correct": false}, {"id": "110_G", "text": "Ils stimulent la synth\u00e8se des prot\u00e9ines", "correct": true}, {"id": "110_H", "text": "Ils influencent la mobilisation des TG du tissu adipeux", "correct": false}, {"id": "110_I", "text": "Ils conservent des caract\u00e9ristiques sexuelles secondaires masculines", "correct": true}, {"id": "110_J", "text": "Ils sont repr\u00e9sent\u00e9s par la testost\u00e9rone", "correct": true}]}, {"id": 111, "question": "En ce qui concerne les hormones androg\u00e8nes, on peut affirmer que:", "options": [{"id": "111_A", "text": "Ils sont prods dans la zone fasciculaire des glandes surr\u00e9nales", "correct": false}, {"id": "111_B", "text": "Ils stimulent la synth\u00e8se des prot\u00e9ines", "correct": true}, {"id": "111_C", "text": "Ils maintiennent l'\u00e9quilibre mental et nerveux", "correct": false}, {"id": "111_D", "text": "Ils sont synth\u00e9tis\u00e9s dans les testicules", "correct": true}, {"id": "111_E", "text": "Ils sont synth\u00e9tis\u00e9s dans la zone r\u00e9ticulaire des glandes surr\u00e9nales", "correct": true}, {"id": "111_F", "text": "Ils r\u00e9duisent l'inflammation", "correct": false}, {"id": "111_G", "text": "Ils sont hydrosolubles", "correct": false}, {"id": "111_H", "text": "Ils ont un r\u00f4le anabolisant", "correct": true}, {"id": "111_I", "text": "Leur hypers\u00e9cr\u00e9tion peut entra\u00eener une fatigue musculaire", "correct": false}, {"id": "111_J", "text": "Ils sont repr\u00e9sent\u00e9s par l'estradiol", "correct": false}]}, {"id": 112, "question": "En ce qui concerne les hormones st\u00e9ro\u00efdiennes, on peut dire que :", "options": [{"id": "112_A", "text": "Ils peuvent \u00eatre conjugu\u00e9s \u00e0 l'acide glucuronique", "correct": true}, {"id": "112_B", "text": "Ils influencent la formation de l'ARN", "correct": false}, {"id": "112_C", "text": "Ils sont transport\u00e9s par les lipoprot\u00e9ines", "correct": false}, {"id": "112_D", "text": "Ils agissent par l'interm\u00e9diaire de r\u00e9cepteurs intracellulaires", "correct": true}, {"id": "112_E", "text": "La d\u00e9shydrog\u00e9nation permet d'obtenir des t\u00e9trahydro d\u00e9riv\u00e9s", "correct": false}, {"id": "112_F", "text": "Ils peuvent \u00eatre m\u00e9tabolis\u00e9s dans les reins", "correct": false}, {"id": "112_G", "text": "Ils ont un effet hypoglyc\u00e9miant", "correct": false}, {"id": "112_H", "text": "Ils peuvent \u00eatre hydrog\u00e9n\u00e9s en t\u00e9trahydrod\u00e9riv\u00e9s", "correct": true}, {"id": "112_I", "text": "Ils sont m\u00e9tabolis\u00e9s exclusivement par voie h\u00e9patique", "correct": false}, {"id": "112_J", "text": "Ils se lient de mani\u00e8re r\u00e9versible \u00e0 l'ADN", "correct": false}]}, {"id": 113, "question": "En ce qui concerne les hormones st\u00e9ro\u00efdiennes, on peut dire ce qui suit :", "options": [{"id": "113_A", "text": "La d\u00e9shydrog\u00e9nation produit des dihydrod\u00e9riv\u00e9s", "correct": true}, {"id": "113_B", "text": "Ils peuvent \u00eatre synth\u00e9tis\u00e9s par sulfoconjugaison et Glucurono coyu genter", "correct": true}, {"id": "113_C", "text": "Ils sont synth\u00e9tis\u00e9s dans le cortex surr\u00e9nalien", "correct": true}, {"id": "113_D", "text": "Ils se lient de mani\u00e8re r\u00e9versible \u00e0 l'ARN", "correct": false}, {"id": "113_E", "text": "Ils peuvent \u00eatre \u00e9limin\u00e9s sous forme de 17-c\u00e9tost\u00e9ro\u00efdes", "correct": true}, {"id": "113_F", "text": "Ils sont synth\u00e9tis\u00e9s dans la m\u00e9dullosurr\u00e9nale", "correct": false}, {"id": "113_G", "text": "Ils se lient de mani\u00e8re irr\u00e9versible \u00e0 l'ADN", "correct": false}, {"id": "113_H", "text": "Ils peuvent influencer la synth\u00e8se de certaines enzymes", "correct": true}, {"id": "113_I", "text": "Ils peuvent \u00eatre m\u00e9tabolis\u00e9s dans la rate", "correct": false}, {"id": "113_J", "text": "Ils ont e cholest\u00e9rol comme pr\u00e9curseur", "correct": true}]}, {"id": 114, "question": "VLDL:", "options": [{"id": "114_A", "text": "Ils peuvent augmenter dans le sang en cas de famine", "correct": false}, {"id": "114_B", "text": "Transporte les TG synth\u00e9tis\u00e9s dans le foie", "correct": true}, {"id": "114_C", "text": "Ils ont une enzyme LCAT (l\u00e9cithine-cholest\u00e9rol acyl transf\u00e9rase) \u00e0 leur surface", "correct": false}, {"id": "114_D", "text": "Transport du cholest\u00e9rol synth\u00e9tis\u00e9 dans le foie", "correct": false}, {"id": "114_E", "text": "Ils contiennent une grande quantit\u00e9 de lipides", "correct": true}, {"id": "114_F", "text": "Transporte les TG synth\u00e9tis\u00e9s dans l'intestin", "correct": false}, {"id": "114_G", "text": "Ils contiennent de l'Apo B100", "correct": true}, {"id": "114_H", "text": "Ils augmentent dans le sang apr\u00e8s un r\u00e9gime riche en graisses", "correct": false}, {"id": "114_I", "text": "Ils ne contiennent pas d'Ap\u043e \u0412", "correct": false}, {"id": "114_J", "text": "Augmente dans le sang apr\u00e8s un repas riche en glucides", "correct": true}]}, {"id": 115, "question": "Concernant les structures qui transportent le cholest\u00e9rol des tissus extra-h\u00e9patiques vers le foie, on peut affirmer que:", "options": [{"id": "115_A", "text": "Ils contiennent de l'Apo E", "correct": true}, {"id": "115_B", "text": "Ils contiennent CAT I", "correct": false}, {"id": "115_C", "text": "Ils contiennent des PL", "correct": true}, {"id": "115_D", "text": "Ils peuvent avoir une forme disco\u00efdale", "correct": true}, {"id": "115_E", "text": "Ils contiennent de l'Apo B48", "correct": false}, {"id": "115_F", "text": "Ils contiennent de l'Apo B100", "correct": false}, {"id": "115_G", "text": "Ils ont une enzyme appel\u00e9e LCAT \u00e0 leur surface", "correct": true}, {"id": "115_H", "text": "Ils contiennent de porphyrine", "correct": false}, {"id": "115_I", "text": "Ils contiennent du LPL", "correct": false}, {"id": "115_J", "text": "Ils contiennent de l'Apo A", "correct": true}]}, {"id": 116, "question": "Lesquels des compos\u00e9s suivants sont des interm\u00e9diaires m\u00e9taboliques courants obtenus \u00e0 partir de la conversion du squelette carbon\u00e9 des acides amin\u00e9s ?", "options": [{"id": "116_A", "text": "Cr\u00e9atinine", "correct": false}, {"id": "116_B", "text": "Fumarate", "correct": true}, {"id": "116_C", "text": "CH3-CO~SCOA", "correct": true}, {"id": "116_D", "text": "Cr\u00e9atine", "correct": false}, {"id": "116_E", "text": "Globine", "correct": false}, {"id": "116_F", "text": "Ac\u00e9tyl coenzyme A", "correct": false}, {"id": "116_G", "text": "H\u00e9moglobine", "correct": false}, {"id": "116_H", "text": "Cytochromes", "correct": false}, {"id": "116_I", "text": "Ac\u00e9toac\u00e9tate", "correct": true}, {"id": "116_J", "text": "Acide fumarique", "correct": true}]}, {"id": 117, "question": "Synth\u00e8se de la tyrosine :", "options": [{"id": "117_A", "text": "Elle est r\u00e9alis\u00e9e \u00e0 l'aide d'une enzyme NAD-d\u00e9pendante", "correct": false}, {"id": "117_B", "text": "Elle n\u00e9cessite la tyrosine hydroxylase", "correct": true}, {"id": "117_C", "text": "Elle n\u00e9cessite de l'oxyg\u00e8ne mol\u00e9culaire", "correct": true}, {"id": "117_D", "text": "Elle se produit uniquement dans les cellules thyro\u00efdiennes", "correct": false}, {"id": "117_E", "text": "Elle part de la ph\u00e9nylalanine", "correct": true}, {"id": "117_F", "text": "Elle se produit sous l'action d'une transaminase", "correct": false}, {"id": "117_G", "text": "Elle n\u00e9cessite un coenzyme g\u00e9n\u00e9r\u00e9 dans la voie des pentoses phosphates", "correct": false}, {"id": "117_H", "text": "Elle ne d\u00e9pend pas d'une coenzyme d\u00e9riv\u00e9e d'une vitamine hydrosoluble", "correct": false}, {"id": "117_I", "text": "Elle a un acide amin\u00e9 essentiel aromatique comme pr\u00e9curseur", "correct": true}, {"id": "117_J", "text": "Elle se produit en pr\u00e9sence d'une hydroxylase", "correct": true}]}, {"id": 118, "question": "La ph\u00e9nylalanine et la tyrosine peuvent \u00eatre des pr\u00e9curseurs des compos\u00e9s suivants :", "options": [{"id": "118_A", "text": "Indican", "correct": false}, {"id": "118_B", "text": "M\u00e9latonine", "correct": false}, {"id": "118_C", "text": "DOPA", "correct": true}, {"id": "118_D", "text": "M\u00e9lanine", "correct": true}, {"id": "118_E", "text": "Histamine", "correct": false}, {"id": "118_F", "text": "Triiodo-thyronine", "correct": true}, {"id": "118_G", "text": "Indole", "correct": false}, {"id": "118_H", "text": "Dopamine", "correct": true}, {"id": "118_I", "text": "S\u00e9rotonine", "correct": false}, {"id": "118_J", "text": "DIT, \u00e0 partir de laquelle les hormones thyro\u00efdiennes sont ensuite form\u00e9es", "correct": true}]}, {"id": 119, "question": "Les hormones thyro\u00efdiennes :", "options": [{"id": "119_A", "text": "Jouent un r\u00f4le important dans la synth\u00e8se de la m\u00e9latonine", "correct": false}, {"id": "119_B", "text": "Jouent un r\u00f4le important dans la synth\u00e8se des cat\u00e9cholamines", "correct": false}, {"id": "119_C", "text": "S\u00e9cr\u00e9t\u00e9 en exc\u00e8s, ils peuvent entra\u00eener un raccourcissement des os", "correct": false}, {"id": "119_D", "text": "Leur s\u00e9cr\u00e9tion excessive est associ\u00e9e \u00e0 l'hypocholest\u00e9rol\u00e9mie", "correct": true}, {"id": "119_E", "text": "Jouent un r\u00f4le dans le d\u00e9veloppement du f\u0153tus", "correct": true}, {"id": "119_F", "text": "N\u00e9cessite un nucl\u00e9otide pour la synth\u00e8se", "correct": false}, {"id": "119_G", "text": "Stimulent l'activation du m\u00e9tabolisme basal", "correct": true}, {"id": "119_H", "text": "Sont synth\u00e9tis\u00e9s \u00e0 partir d'un thio-aminoacide", "correct": false}, {"id": "119_I", "text": "Sont synth\u00e9tis\u00e9s sur un support prot\u00e9ique", "correct": true}, {"id": "119_J", "text": "Jouent un r\u00f4le dans le m\u00e9tabolisme du calcium", "correct": true}]}, {"id": 120, "question": "Thyroglobuline :", "options": [{"id": "120_A", "text": "Favorise le processus d'oxydation des cellules thyro\u00efdiennes", "correct": false}, {"id": "120_B", "text": "Est une prot\u00e9ine qui a un r\u00f4le dans la capture de l'iode dans le plasma", "correct": false}, {"id": "120_C", "text": "Se trouve dans les cellules thyro\u00efdiennes", "correct": true}, {"id": "120_D", "text": "Repr\u00e9sente le support de synth\u00e8se de T3 et T4", "correct": true}, {"id": "120_E", "text": "Catalyse le processus d'oxydation de l'iode dans les cellules thyro\u00efdiennes", "correct": false}, {"id": "120_F", "text": "Est une prot\u00e9ine qui contient des acides amin\u00e9s au niveau desquels se d\u00e9roulent les processus d'iodation", "correct": true}, {"id": "120_G", "text": "Est une prot\u00e9ine fibrillaire jouant un r\u00f4le dans la contraction musculaire", "correct": false}, {"id": "120_H", "text": "Catalyse l'iodation des r\u00e9sidus de tyrosine dans les cellules thyro\u00efdiennes", "correct": false}, {"id": "120_I", "text": "Est une prot\u00e9ine globulaire", "correct": true}, {"id": "120_J", "text": "Contient des r\u00e9sidus de tyrosine", "correct": true}]}];
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `Q${q.id} - ${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const optContainer = document.createElement('div');
+                    optContainer.className = 'option-container';
+
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    const explDiv = document.createElement('div');
+                    explDiv.className = 'explanation-box';
+                    explDiv.id = 'expl-' + opt.id;
+                    
+                    if (opt.correct) {
+                        explDiv.innerHTML = `<strong>✅ VRAI :</strong> ${opt.explanation}`;
+                        explDiv.classList.add('expl-correct');
+                    } else {
+                        explDiv.innerHTML = `<strong>❌ FAUX :</strong> Ce distracteur est incorrect. <em>Rappel :</em> ${opt.explanation}`;
+                        explDiv.classList.add('expl-incorrect');
+                    }
+
+                    optContainer.appendChild(label);
+                    optContainer.appendChild(explDiv);
+                    optionsGrid.appendChild(optContainer);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    const explDiv = document.getElementById(`expl-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        explDiv.style.display = 'block';
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                            explDiv.style.display = 'block';
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

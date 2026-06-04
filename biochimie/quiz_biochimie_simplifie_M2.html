@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Biochimie S2 - Module 2 (Q21 à Q40)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Clean correct/incorrect styles: NO text boxes, just colors */
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="quiz_biochimie_simplifie_M1.html"><<</a>Quiz Biochimie S2 - Module 2 (Q21 à Q40)<a href="quiz_biochimie_simplifie_M3.html">>></a></h1>
+        </header>
+        
+        <div class="revision-box">
+            <h3>📝 Fiche de révision : Néoglucogenèse et Pentoses Phosphates (Questions 21 à 40)</h3><p><strong>Néoglucogenèse :</strong> Synthèse hépatique de glucose.<br><strong>Voie des Pentoses Phosphates :</strong> Génère NADPH (pour les synthèses réductrices) et Ribose-5-P.</p>
+        </div>
+
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer les questions 🔄</button>
+        </form>
+    </div>
+    <script>
+        const quizData = [{"id": 21, "question": "Substrats pour la glucon\u00e9ogen\u00e8se:", "options": [{"id": "21_A", "text": "Acide pyruvique", "correct": true}, {"id": "21_B", "text": "Acide st\u00e9arique", "correct": false}, {"id": "21_C", "text": "Acide phosphorique", "correct": false}, {"id": "21_D", "text": "Acide lactique", "correct": true}, {"id": "21_E", "text": "Leucine", "correct": false}, {"id": "21_F", "text": "Lysine", "correct": false}, {"id": "21_G", "text": "Acide palmitique", "correct": false}, {"id": "21_H", "text": "Alanine", "correct": false}, {"id": "21_I", "text": "Acides gras avec un nombre impair de carbones", "correct": true}, {"id": "21_J", "text": "Glyc\u00e9rol", "correct": true}]}, {"id": 22, "question": "Parmi les transformations suivantes, lesquelles sont catalys\u00e9es par des enzymes sp\u00e9ci\ufb01ques de la glucon\u00e9ogen\u00e8se?", "options": [{"id": "22_A", "text": "La r\u00e9action de la pyruvate carboxylase", "correct": true}, {"id": "22_B", "text": "R\u00e9action de la phosphatase G-6", "correct": true}, {"id": "22_C", "text": "Phosphorylation du glucose GuirsMitoohordiale(NADH->3ATP) 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 7/64", "correct": false}, {"id": "22_D", "text": "R\u00e9action de conversion de l'OAA en acide phospho\u00e9nol pyruvique", "correct": true}, {"id": "22_E", "text": "Formation de l'OAA", "correct": false}, {"id": "22_F", "text": "La r\u00e9action F1,6 diphosphatase", "correct": true}, {"id": "22_G", "text": "R\u00e9action au succinate DH", "correct": false}, {"id": "22_H", "text": "La r\u00e9action de la fumarate oxydase", "correct": false}, {"id": "22_I", "text": "Formation du diphosphate F1,6", "correct": false}, {"id": "22_J", "text": "Interconversion entre G-6-P et F-6-P", "correct": false}]}, {"id": 23, "question": "Au cours de la glucon\u00e9ogen\u00e8se \u00e0 partir des acides gras:", "options": [{"id": "23_A", "text": "Formation d'un interm\u00e9diaire, l'oxaloac\u00e9tate", "correct": false}, {"id": "23_B", "text": "Une mol\u00e9cule est form\u00e9e qui entre ensuite dans le cycle de l'acide tricarboxylique.", "correct": false}, {"id": "23_C", "text": "Les acides gras avec un nombre pair de carbones participent", "correct": false}, {"id": "23_D", "text": "Le processus commence par la carboxylation de la mol\u00e9cule propionyle de SCoA.", "correct": true}, {"id": "23_E", "text": "Le processus est initi\u00e9 par un compos\u00e9 actif avec deux atomes de carbone", "correct": false}, {"id": "23_F", "text": "Aucun acide gras de nombre pair ne participe/ Les acides gras de nombre pair de carbone ne participent pas", "correct": false}, {"id": "23_G", "text": "Une mutation peut survenir", "correct": true}, {"id": "23_H", "text": "Les acides gras avec/ayant un nombre impair d'atomes de carbone sont form\u00e9s", "correct": true}, {"id": "23_I", "text": "Les enzymes de type isom\u00e9rase n'interviennent pas/aucune enzyme isom\u00e9rase n'est impliqu\u00e9e", "correct": false}, {"id": "23_J", "text": "Les interm\u00e9diaires du cycle de Krebs n'interviennent pas", "correct": false}]}, {"id": 24, "question": "Parmi les enzymes suivantes, lesquelles interviennent dans la glucon\u00e9ogen\u00e8se \u00e0 partir de l'acide pyruvique?", "options": [{"id": "24_A", "text": "Glucose 6 phosphatase", "correct": true}, {"id": "24_B", "text": "GGT (gamma-glutamyl transf\u00e9rase)", "correct": false}, {"id": "24_C", "text": "Pyruvate kinase", "correct": false}, {"id": "24_D", "text": "Pyruvate carboxylase", "correct": true}, {"id": "24_E", "text": "Fructose 1,6 diphosphatase", "correct": true}, {"id": "24_F", "text": "Aldolase", "correct": true}, {"id": "24_G", "text": "UDP glucuronyl transf\u00e9rase", "correct": false}, {"id": "24_H", "text": "Alanine synth\u00e9tase", "correct": false}, {"id": "24_I", "text": "Glucose kinase", "correct": false}, {"id": "24_J", "text": "Glyc\u00e9rald\u00e9hyde phosphate d\u00e9shydrog\u00e9nase", "correct": false}]}, {"id": 25, "question": "La glucon\u00e9ogen\u00e8se \u00e0 partir du glyc\u00e9rol implique:", "options": [{"id": "25_A", "text": "Formation interm\u00e9diaire de DHAP (dihydroxy-ac\u00e9tone phosphate)", "correct": true}, {"id": "25_B", "text": "R\u00e9actions d\u00e9pendantes du FAD", "correct": false}, {"id": "25_C", "text": "Activit\u00e9 P-5-P", "correct": false}, {"id": "25_D", "text": "Action AST", "correct": false}, {"id": "25_E", "text": "Enzymes d\u00e9pendantes du NADPH", "correct": false}, {"id": "25_F", "text": "R\u00e9actions \u00e0 la consommation d'ATP", "correct": true}, {"id": "25_G", "text": "R\u00e9actions d'oxydation", "correct": true}, {"id": "25_H", "text": "R\u00e9actions de phosphorylation du glyc\u00e9rol proprioriCA -antlyminget <PhosphtoxY) 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 8/64", "correct": true}, {"id": "25_I", "text": "L'action de la thyroglobuline", "correct": false}, {"id": "25_J", "text": "Activit\u00e9 de la thyroperoxydase", "correct": false}]}, {"id": 26, "question": "Parmi les effets suivants, lesquels sont m\u00e9di\u00e9s par l'insuline?", "options": [{"id": "26_A", "text": "Augmentation de la production de G-6-phosphatase", "correct": false}, {"id": "26_B", "text": "R\u00e9pression de la pyruvate carboxylase", "correct": false}, {"id": "26_C", "text": "Induction d'enzymes sp\u00e9cifiques de la glycolyse", "correct": true}, {"id": "26_D", "text": "Stimulation de la gen\u00e8se de la forme active de la glycog\u00e8ne synth\u00e9tase", "correct": true}, {"id": "26_E", "text": "Activation de la d\u00e9gradation du glycog\u00e8ne", "correct": false}, {"id": "26_F", "text": "Stimulation de la glucon\u00e9ogen\u00e8se", "correct": false}, {"id": "26_G", "text": "Stimulation de la gen\u00e8se de la forme inactive de la glycog\u00e8ne phosphorylase", "correct": false}, {"id": "26_H", "text": "Formation d'acide cholique", "correct": false}, {"id": "26_I", "text": "R\u00e9pression de la pyruvate kinase", "correct": false}, {"id": "26_J", "text": "Entr\u00e9e du glucose dans les cellules", "correct": true}]}, {"id": 27, "question": "Parmi les actions suivantes, lesquelles sont m\u00e9di\u00e9es par la noradr\u00e9naline?", "options": [{"id": "27_A", "text": "Activation de la pyruvate kinase", "correct": false}, {"id": "27_B", "text": "Formation de l'acide lithocholique", "correct": false}, {"id": "27_C", "text": "Synth\u00e8se de l'acide glucuronique", "correct": false}, {"id": "27_D", "text": "Induction de la glucose kinase", "correct": false}, {"id": "27_E", "text": "Induction de l'hexose kinase", "correct": false}, {"id": "27_F", "text": "L'\u00e9tape de carboxylation de l'acide pyruvique", "correct": false}, {"id": "27_G", "text": "La voie des pentoses phosphates", "correct": true}, {"id": "27_H", "text": "Induction de la glucose 6 phosphatase", "correct": true}, {"id": "27_I", "text": "L'\u00e9tape de transformation de l'oxaloac\u00e9tate en phospho\u00e9nol pyruvate", "correct": true}, {"id": "27_J", "text": "Induction de la F1,6 diphosphatase", "correct": true}]}, {"id": 28, "question": "Glycog\u00e9nogen\u00e8se:", "options": [{"id": "28_A", "text": "Elle ne peut pas \u00eatre fait dans le muscle", "correct": false}, {"id": "28_B", "text": "Cela peut se produire au niveau du foie", "correct": true}, {"id": "28_C", "text": "Elle ne conduit pas \u00e0 la formation de glycogenglycosides.", "correct": false}, {"id": "28_D", "text": "Elle entra\u00eene une augmentation du taux de sucre dans le sang", "correct": false}, {"id": "28_E", "text": "Assure la d\u00e9polym\u00e9risation du glycog\u00e8ne", "correct": false}, {"id": "28_F", "text": "C\u2019est un processus hypoglyc\u00e9mique", "correct": false}, {"id": "28_G", "text": "Elle conduit \u00e0 la formation de r\u00e9serves utilisables de glucides", "correct": true}, {"id": "28_H", "text": "Elle a une \u00e9tape interm\u00e9diaire de formation de G-1-P", "correct": true}, {"id": "28_I", "text": "Elle se produit au niveau r\u00e9nal", "correct": false}, {"id": "28_J", "text": "Cela peut se produire au niveau musculaire", "correct": true}]}, {"id": 29, "question": "Glycog\u00e8ne synth\u00e9tase:", "options": [{"id": "29_A", "text": "Elle agit principalement au niveau des reins", "correct": false}, {"id": "29_B", "text": "Elle peut \u00eatre contr\u00f4l\u00e9 par une r\u00e9gulation covalente", "correct": true}, {"id": "29_C", "text": "Elle peut avoir deux formes, dont la phosphoryl\u00e9e est active", "correct": false}, {"id": "29_D", "text": "Elle a une forme phosphoryl\u00e9e inactive", "correct": false}, {"id": "29_E", "text": "Impliqu\u00e9 dans la r\u00e9absorption r\u00e9nale du glucose X 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 9/64", "correct": false}, {"id": "29_F", "text": "Elle ne peut pas agir sur le foie", "correct": false}, {"id": "29_G", "text": "Elle agit sur UDP-G", "correct": true}, {"id": "29_H", "text": "Elle pr\u00e9sente une forme sans phosphate qui est active", "correct": true}, {"id": "29_I", "text": "C'est l'enzyme cl\u00e9 de la synth\u00e8se du glycog\u00e8ne", "correct": true}, {"id": "29_J", "text": "C\u2019est une enzyme de la voie qui convertit le glycog\u00e8ne en glucose", "correct": false}]}, {"id": 30, "question": "Lors de la synth\u00e8se du glycog\u00e8ne \u00e0 partir du glucose, les \u00e9tapes/compos\u00e9s suivants sont impliqu\u00e9s:", "options": [{"id": "30_A", "text": "SAM", "correct": false}, {"id": "30_B", "text": "Thyroperoxydase", "correct": false}, {"id": "30_C", "text": "Formation de 1 \u00e0 4 liaisons glycosidiques", "correct": true}, {"id": "30_D", "text": "CTP", "correct": false}, {"id": "30_E", "text": "R\u00e9action de la glycog\u00e8ne synthase", "correct": true}, {"id": "30_F", "text": "Cr\u00e9atinine", "correct": false}, {"id": "30_G", "text": "Une r\u00e9action d'isom\u00e9rase", "correct": false}, {"id": "30_H", "text": "Enzyme de ramification", "correct": true}, {"id": "30_I", "text": "R\u00e9action de la DOPA d\u00e9carboxylase", "correct": false}, {"id": "30_J", "text": "R\u00e9action de la glucose kinase", "correct": true}]}, {"id": 31, "question": "D\u00e9gradation du glycog\u00e8ne:", "options": [{"id": "31_A", "text": "Il conduit \u00e0 la formation de glucose dans le foie", "correct": true}, {"id": "31_B", "text": "Il peut \u00eatre stimul\u00e9e par l'insuline", "correct": false}, {"id": "31_C", "text": "Cela peut se produire dans le foie", "correct": true}, {"id": "31_D", "text": "Il est inhib\u00e9 par l'adr\u00e9naline", "correct": false}, {"id": "31_E", "text": "Provoque l'hypoglyc\u00e9mie", "correct": false}, {"id": "31_F", "text": "Il n\u00e9cessite \u00e9galement une enzyme qui clive 1 \u00e0 6 liaisons glycosidiques", "correct": true}, {"id": "31_G", "text": "Il n\u00e9cessite la formation de glucose, une enzyme qui est absente au niveau musculaire", "correct": false}, {"id": "31_H", "text": "Il conduit \u00e0 la formation de G-6-P dans les muscles", "correct": true}, {"id": "31_I", "text": "Il n\u00e9cessite la cr\u00e9ation de 1 \u00e0 6 liaisons glycosidiques sous l'action de la glycog\u00e8ne synthase.", "correct": false}, {"id": "31_J", "text": "Il se produit principalement dans les cellules thyro\u00efdiennes", "correct": false}]}, {"id": 32, "question": "Glycog\u00e8ne phosphorylase:", "options": [{"id": "32_A", "text": "Elle est active sous la forme d\u00e9phosphoryl\u00e9e", "correct": false}, {"id": "32_B", "text": "Elle peut \u00eatre contr\u00f4l\u00e9 par un m\u00e9canisme de r\u00e9gulation covalent", "correct": true}, {"id": "32_C", "text": "Elle catalyse la lib\u00e9ration du phosphate de la mol\u00e9cule de glycog\u00e8ne", "correct": true}, {"id": "32_D", "text": "Elle intervient dans la ramification du glycog\u00e8ne", "correct": false}, {"id": "32_E", "text": "Elle conduit \u00e0 la g\u00e9n\u00e9ration de G-1-P comme produit principal de la r\u00e9action de clivage", "correct": true}, {"id": "32_F", "text": "C'est l'enzyme cl\u00e9 de la d\u00e9gradation du glycog\u00e8ne", "correct": true}, {"id": "32_G", "text": "Elle catalyse le clivage des 1 \u00e0 6 liaisons glycosidiques", "correct": false}, {"id": "32_H", "text": "Catalyse la formation de 1 \u00e0 4 liaisons glycosidiques", "correct": false}, {"id": "32_I", "text": "Elle a une forme active, qui est phosphoryl\u00e9e", "correct": true}, {"id": "32_J", "text": "Elle catalyse le clivage de 1 \u00e0 4 liaisons glycosidiques pRospitale 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 10/64", "correct": true}]}, {"id": 33, "question": "L'enzyme cl\u00e9 dans la voie de d\u00e9gradation du glycog\u00e8ne:", "options": [{"id": "33_A", "text": "Elle ne peut pas \u00eatre r\u00e9gul\u00e9 par un m\u00e9canisme covalent", "correct": false}, {"id": "33_B", "text": "Elle est activ\u00e9 par l'adr\u00e9naline", "correct": true}, {"id": "33_C", "text": "Agit sur le foie et les muscles", "correct": true}, {"id": "33_D", "text": "Elle est actif sous la forme phosphoryl\u00e9e", "correct": true}, {"id": "33_E", "text": "Elle ne peut pas agir au niveau des muscles", "correct": false}, {"id": "33_F", "text": "Elle peut \u00eatre contr\u00f4l\u00e9 par le m\u00e9canisme de phosphorylation-d\u00e9phosphorylation", "correct": true}, {"id": "33_G", "text": "Elle est r\u00e9gul\u00e9 par un m\u00e9canisme de prot\u00e9olyse limit\u00e9", "correct": false}, {"id": "33_H", "text": "Elle est inactif sous forme d\u00e9phosphoryl\u00e9e", "correct": true}, {"id": "33_I", "text": "Elle est activ\u00e9 par l'insuline", "correct": false}, {"id": "33_J", "text": "Elle catalyse le clivage de 1 \u00e0 6 liaisons glycosidiques", "correct": false}]}, {"id": 34, "question": "Glucose 6 phosphatase:", "options": [{"id": "34_A", "text": "C\u2019est une enzyme irr\u00e9versible", "correct": true}, {"id": "34_B", "text": "Elle agit principalement au niveau des muscles", "correct": false}, {"id": "34_C", "text": "Elle assure la lib\u00e9ration du phosphate de G-6-P avec la g\u00e9n\u00e9ration de glucose dans les muscles", "correct": false}, {"id": "34_D", "text": "Elle peut assurer la formation de glucose dans le foie", "correct": true}, {"id": "34_E", "text": "Elle est absente au niveau musculaire", "correct": false}, {"id": "34_F", "text": "Assure la formation de glucose", "correct": true}, {"id": "34_G", "text": "Elle agit par un m\u00e9canisme de phosphorolyse", "correct": false}, {"id": "34_H", "text": "Catalyse la conversion de G en G-6-P", "correct": false}, {"id": "34_I", "text": "C\u2019est une enzyme importante dans la r\u00e9gulation de la glyc\u00e9mie", "correct": true}, {"id": "34_J", "text": "Elle fonctionne avec la consommation d'\u00e9nergie", "correct": false}]}, {"id": 35, "question": "Voie des pentoses phosphate:", "options": [{"id": "35_A", "text": "Contient des enzymes communes \u00e0 la glucon\u00e9ogen\u00e8se", "correct": false}, {"id": "35_B", "text": "Elle comprend deux \u00e9tapes principales", "correct": true}, {"id": "35_C", "text": "Elle pr\u00e9sente une \u00e9tape interm\u00e9diaire avec le processus de formation de l'acide glucuronique", "correct": false}, {"id": "35_D", "text": "Elle peut \u00eatre contr\u00f4l\u00e9 par un m\u00e9canisme de r\u00e9gulation covalent", "correct": false}, {"id": "35_E", "text": "Elle assure la g\u00e9n\u00e9ration de NADPH", "correct": true}, {"id": "35_F", "text": "Elle montre les \u00e9tapes de l'isom\u00e9risation", "correct": true}, {"id": "35_G", "text": "Elle comprend des r\u00e9actions catalys\u00e9es par les transf\u00e9rases", "correct": false}, {"id": "35_H", "text": "Elle comprend \u00e9galement une \u00e9tape d'oxydation", "correct": true}, {"id": "35_I", "text": "Fournit un substrat pour la glycolyse", "correct": false}, {"id": "35_J", "text": "Elle est contr\u00f4l\u00e9 par un m\u00e9canisme allost\u00e9rique", "correct": false}]}, {"id": 36, "question": "Au cours de la voie des pentoses phosphates, les r\u00e9actions de:", "options": [{"id": "36_A", "text": "Phosphorylation", "correct": false}, {"id": "36_B", "text": "Carboxylase", "correct": false}, {"id": "36_C", "text": "D\u00e9phosphorylation", "correct": false}, {"id": "36_D", "text": "Transc\u00e9tolisation", "correct": true}, {"id": "36_E", "text": "Phosphorolyse 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 11/64", "correct": false}, {"id": "36_F", "text": "D\u00e9carboxylation", "correct": true}, {"id": "36_G", "text": "Hydrolyse", "correct": false}, {"id": "36_H", "text": "Transm\u00e9thylation", "correct": false}, {"id": "36_I", "text": "Oxydation", "correct": true}, {"id": "36_J", "text": "Isom\u00e9risation", "correct": true}]}, {"id": 37, "question": "La premi\u00e8re \u00e9tape de la voie des pentoses phosphates:", "options": [{"id": "37_A", "text": "Elle s'agit de r\u00e9actions catalys\u00e9es par des transf\u00e9rases", "correct": false}, {"id": "37_B", "text": "Elle ne contient pas de r\u00e9actions de phosphorylation", "correct": false}, {"id": "37_C", "text": "Elle g\u00e9n\u00e8re un c\u00e9tose phosphoryl\u00e9", "correct": false}, {"id": "37_D", "text": "Elle conduit \u00e0 la g\u00e9n\u00e9ration de NAD qui s'engage ensuite dans la cha\u00eene respiratoire.", "correct": true}, {"id": "37_E", "text": "Comprend les r\u00e9actions de transfert de groupe c\u00e9tol", "correct": false}, {"id": "37_F", "text": "D\u00e9but/Commencer \u00e0 G-6-P", "correct": false}, {"id": "37_G", "text": "Elle pr\u00e9sente deux r\u00e9actions d'oxydation", "correct": true}, {"id": "37_H", "text": "Elle comprend les r\u00e9actions d'isom\u00e9risation", "correct": false}, {"id": "37_I", "text": "Elle est initi\u00e9 par la G-6-P DH", "correct": true}, {"id": "37_J", "text": "Elle comprend des r\u00e9actions d\u00e9pendantes du FAD", "correct": false}]}, {"id": 38, "question": "Au cours de la premi\u00e8re \u00e9tape de la voie des pentoses phosphates:", "options": [{"id": "38_A", "text": "Formation de coenzymes utiles \u00e0 la synth\u00e8se du cholest\u00e9rol/Des coenzymes utiles \u00e0 la synth\u00e8se du cholest\u00e9rol sont form\u00e9es", "correct": true}, {"id": "38_B", "text": "Les enzymes transf\u00e9rases sont impliqu\u00e9es", "correct": false}, {"id": "38_C", "text": "Des r\u00e9actions de transaldolisation se produisent", "correct": false}, {"id": "38_D", "text": "Il s'agit d'une enzyme dont le d\u00e9faut peut entra\u00eener une an\u00e9mie h\u00e9molytique.", "correct": true}, {"id": "38_E", "text": "Aucun CO2 n'est g\u00e9n\u00e9r\u00e9", "correct": false}, {"id": "38_F", "text": "Aucun triose phosphate n'est g\u00e9n\u00e9r\u00e9", "correct": false}, {"id": "38_G", "text": "Deux types de pentoses phosphoryl\u00e9s sont form\u00e9s", "correct": true}, {"id": "38_H", "text": "Des r\u00e9actions r\u00e9versibles se produisent", "correct": true}, {"id": "38_I", "text": "Deux r\u00e9actions de d\u00e9shydrog\u00e9nation sont impliqu\u00e9es", "correct": true}, {"id": "38_J", "text": "Des r\u00e9actions de r\u00e9duction se produisent", "correct": false}]}, {"id": 39, "question": "G-6-P DH:", "options": [{"id": "39_A", "text": "Elle intervient dans la glucon\u00e9ogen\u00e8se", "correct": false}, {"id": "39_B", "text": "Elle n'intervient pas dans la glycolyse", "correct": false}, {"id": "39_C", "text": "C\u2019est une enzyme de la voie de synth\u00e8se du glycog\u00e8ne", "correct": false}, {"id": "39_D", "text": "Elle catalyse une r\u00e9action d\u00e9pendante du FAD", "correct": false}, {"id": "39_E", "text": "C'est l'enzyme qui assure la formation du G-6-P \u00e0 partir du glucose", "correct": false}, {"id": "39_F", "text": "Elle assure la g\u00e9n\u00e9ration de NADPH utile \u00e0 la synth\u00e8se des corps c\u00e9toniques", "correct": true}, {"id": "39_G", "text": "C\u2019est une enzyme d\u00e9pendante du NADP", "correct": true}, {"id": "39_H", "text": "C'est la premi\u00e8re enzyme de la voie des pentoses phosphates", "correct": true}, {"id": "39_I", "text": "Elle catalyse une r\u00e9action dans laquelle le 6-phospho gluconolactone est obtenue", "correct": true}, {"id": "39_J", "text": "Elle intervient dans la d\u00e9gradation du glycog\u00e8ne", "correct": false}]}, {"id": 40, "question": "Il est vrai que les pentoses phosphoryl\u00e9s:", "options": [{"id": "40_A", "text": "Ils ne peuvent pas avoir de r\u00e9actions de transc\u00e9tolisation Ribecose5P C-b-PDH 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 12/64", "correct": false}, {"id": "40_B", "text": "Ils peuvent \u00eatre utiles dans la synth\u00e8se du FAD", "correct": true}, {"id": "40_C", "text": "Peut se former dans l'\u00e9tape oxydative de la voie des pentoses phosphates", "correct": true}, {"id": "40_D", "text": "Ils jouent/ont un r\u00f4le dans la formation des mononucl\u00e9otides", "correct": false}, {"id": "40_E", "text": "Ils peuvent \u00eatre utiles dans la synth\u00e8se du NAD", "correct": true}, {"id": "40_F", "text": "Ils peuvent \u00eatre form\u00e9s lors/dans de l'\u00e9tape non oxydative de la voie des pentoses phosphates", "correct": false}, {"id": "40_G", "text": "Les hexoses phosphoryl\u00e9s ne peuvent pas \u00eatre g\u00e9n\u00e9r\u00e9s \u00e0 partir de l'\u00e9pic\u00e9a", "correct": false}, {"id": "40_H", "text": "Ils ne peuvent pas \u00eatre form\u00e9s \u00e0 partir de pr\u00e9curseurs \u00e0 la suite de r\u00e9actions de d\u00e9carboxylation", "correct": true}, {"id": "40_I", "text": "Leur carence peut entra\u00eener une an\u00e9mie h\u00e9molytique", "correct": false}, {"id": "40_J", "text": "Ils peuvent former des hexoses phosphoryl\u00e9s par le processus de carboxylation", "correct": false}]}];
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `Q${q.id} - ${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    optionsGrid.appendChild(label);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

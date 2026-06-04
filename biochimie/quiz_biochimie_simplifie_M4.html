@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Biochimie S2 - Module 4 (Q61 à Q80)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Clean correct/incorrect styles: NO text boxes, just colors */
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="quiz_biochimie_simplifie_M3.html"><<</a>Quiz Biochimie S2 - Module 4 (Q61 à Q80)<a href="quiz_biochimie_simplifie_M5.html">>></a></h1>
+        </header>
+        
+        <div class="revision-box">
+            <h3>📝 Fiche de révision : Cétogenèse et Lipides (Questions 61 à 80)</h3><p><strong>Cétogenèse :</strong> Foie. Acétoacétate, B-hydroxybutyrate et Acétone fournissent l'énergie en cas de jeûne.<br><strong>Synthèse AG :</strong> Cytoplasmique, nécessite Malonyl-CoA et NADPH.</p>
+        </div>
+
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer les questions 🔄</button>
+        </form>
+    </div>
+    <script>
+        const quizData = [{"id": 61, "question": "Dans les mitochondries du foie, l'ac\u00e9tyl-CoA peut g\u00e9n\u00e9rer :", "options": [{"id": "61_A", "text": "HMG-CoA", "correct": true}, {"id": "61_B", "text": "Carnitine", "correct": false}, {"id": "61_C", "text": "Ac\u00e9tyl-carnitine 3ATPsindirectentdit de NAAA C1819 asficei Cistasitekte C10 n - -1Boxy=>Boxy=fut Bioxydation8 = 16+2- 18 -AertycoA- NADH- FAAH - (-1P) =Autgicos+ (2-1)(NAH+FADA)- 1ATP 2-ATP+-1)(SATP+CAP)- 1AiP 2) GFoginse 1 + 1- Accroauty(cot,1 AMCCOA 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 18/64", "correct": false}, {"id": "61_D", "text": "B\u00eata-hydroxybutyrate", "correct": true}, {"id": "61_E", "text": "Propionyl-CoA", "correct": false}, {"id": "61_F", "text": "Citrate", "correct": false}, {"id": "61_G", "text": "Ac\u00e9toac\u00e9tate", "correct": true}, {"id": "61_H", "text": "Acide palmitique", "correct": false}, {"id": "61_I", "text": "Ac\u00e9tone", "correct": true}, {"id": "61_J", "text": "Glucose", "correct": false}]}, {"id": 62, "question": "Les corps c\u00e9toniques :", "options": [{"id": "62_A", "text": "Se forment dans le cytoplasme des h\u00e9patocytes", "correct": false}, {"id": "62_B", "text": "Sont form\u00e9s dans les mitochondries du foie", "correct": true}, {"id": "62_C", "text": "Peut provoquer une acidose m\u00e9tabolique", "correct": true}, {"id": "62_D", "text": "Ne se forment qu'en cas d'hyperglyc\u00e9mie", "correct": false}, {"id": "62_E", "text": "Peuvent se former dans des conditions d'hyperglyc\u00e9mie", "correct": false}, {"id": "62_F", "text": "Se forment en cas de carence en ac\u00e9toac\u00e9tate", "correct": false}, {"id": "62_G", "text": "Sont form\u00e9s en cas d'exc\u00e8s d'oxaloac\u00e9tate", "correct": false}, {"id": "62_H", "text": "Peuvent constituer une r\u00e9serve d'\u00e9nergie pour le cerveau", "correct": true}, {"id": "62_I", "text": "Peuvent se former dans des conditions de glyc\u00e9mie diminue", "correct": true}, {"id": "62_J", "text": "Peuvent \u00eatre form\u00e9s par une r\u00e9action de carboxylation", "correct": false}]}, {"id": 63, "question": "Concernant les corps c\u00e9toniques, on peut dire que\u00a0:", "options": [{"id": "63_A", "text": "Ils sont au nombre de trois et se forment dans le cytoplasme du foie", "correct": false}, {"id": "63_B", "text": "Le premier corps c\u00e9tonique form\u00e9 est l'ac\u00e9toac\u00e9tate", "correct": true}, {"id": "63_C", "text": "Ils peuvent appara\u00eetre chez le patient diab\u00e9tique par une d\u00e9gradation excessive des prot\u00e9ines", "correct": true}, {"id": "63_D", "text": "Les corps c\u00e9toniques se forment lorsque les mol\u00e9cules d'ac\u00e9tyl~SCoA sont en exc\u00e8s", "correct": true}, {"id": "63_E", "text": "En exc\u00e8s, ils peuvent entra\u00eener une alcalose m\u00e9tabolique", "correct": true}, {"id": "63_F", "text": "Ils sont form\u00e9es par la condensation des mol\u00e9cules de HMG-CoA", "correct": false}, {"id": "63_G", "text": "Leur repr\u00e9sentant est l'ac\u00e9tone obtenu par d\u00e9carboxylation de l'ac\u00e9toac\u00e9tate", "correct": true}, {"id": "63_H", "text": "Ils peuvent survenir chez les personnes atteintes de diab\u00e8te", "correct": true}, {"id": "63_I", "text": "Ils peuvent survenir en cas d'inanition", "correct": true}, {"id": "63_J", "text": "Ils sont form\u00e9s \u00e0 partir de mol\u00e9cules d'ac\u00e9tyl~SCoA dans les mitochondries de la cellule musculaire", "correct": false}]}, {"id": 64, "question": "Lors du transfert de l'ac\u00e9tyl-CoA dans le cytoplasme pour la synth\u00e8se des acides gras, se produit :", "options": [{"id": "64_A", "text": "Consommation d'ac\u00e9tyl-CoA dans les mitochondries", "correct": true}, {"id": "64_B", "text": "Production d'ac\u00e9tyl-CoA dans le cytoplasme", "correct": true}, {"id": "64_C", "text": "Production de fumarate dans les mitochondries", "correct": false}, {"id": "64_D", "text": "Consommation de coenzyme A dans le cytoplasme", "correct": true}, {"id": "64_E", "text": "Production d'acide citrique", "correct": true}, {"id": "64_F", "text": "Production d'ac\u00e9tyl-carnitine", "correct": false}, {"id": "64_G", "text": "Consommation d'ac\u00e9tyl-CoA dans le cytoplasme", "correct": false}, {"id": "64_H", "text": "Production d'acyl-CoA dans les mitochondries mitontre CH--c AutylcA+OHA Chutegrisee soie*APPmaryEcAAalyicABiotine 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 19/64", "correct": false}, {"id": "64_I", "text": "Production de coenzyme A dans les mitochondries", "correct": false}, {"id": "64_J", "text": "Production d'acyl-carnitine", "correct": false}]}, {"id": 65, "question": "En ce qui concerne la AG synthase, on peut af\ufb01rmer que :", "options": [{"id": "65_A", "text": "Elle agit dans le cytoplasme des cellules", "correct": true}, {"id": "65_B", "text": "Elle consomme du malonyl-CoA", "correct": true}, {"id": "65_C", "text": "Elle a un r\u00f4le important dans la production des compos\u00e9e macroergique", "correct": false}, {"id": "65_D", "text": "Elle consomme du NADPH", "correct": true}, {"id": "65_E", "text": "Elle comporte plusieurs domaines porteurs", "correct": true}, {"id": "65_F", "text": "Elle consomme du citrate", "correct": false}, {"id": "65_G", "text": "Elle consomme des AAO", "correct": false}, {"id": "65_H", "text": "Agit dans les mitochondries", "correct": false}, {"id": "65_I", "text": "Elle n'agit dans les mitochondries", "correct": false}, {"id": "65_J", "text": "Elle poss\u00e8de plusieurs domaines catalytiques", "correct": true}]}, {"id": 66, "question": "L'\u00e9tape de r\u00e9gulation de la synth\u00e8se des acides gras implique :", "options": [{"id": "66_A", "text": "Action d'une carboxylase", "correct": true}, {"id": "66_B", "text": "Consommation de CTP", "correct": false}, {"id": "66_C", "text": "Consommation d'ac\u00e9tyl-CoA", "correct": true}, {"id": "66_D", "text": "Action d'une thiolase", "correct": false}, {"id": "66_E", "text": "CO2 consommation", "correct": false}, {"id": "66_F", "text": "Consommation d'un nucl\u00e9otide purique", "correct": true}, {"id": "66_G", "text": "Action d'une d\u00e9carboxylase", "correct": false}, {"id": "66_H", "text": "Action de la citrate lyase", "correct": false}, {"id": "66_I", "text": "Lib\u00e9ration d'un nucl\u00e9otide purique", "correct": false}, {"id": "66_J", "text": "Lib\u00e9ration de CO2", "correct": false}]}, {"id": 67, "question": "Lors de la synth\u00e8se de l'acide palmitique il peut \u00eatre se produit:", "options": [{"id": "67_A", "text": "NADP", "correct": false}, {"id": "67_B", "text": "H2O", "correct": true}, {"id": "67_C", "text": "NADH", "correct": false}, {"id": "67_D", "text": "Le radical butyryle", "correct": false}, {"id": "67_E", "text": "FADH2", "correct": false}, {"id": "67_F", "text": "NADPH", "correct": true}, {"id": "67_G", "text": "Isocitrate", "correct": false}, {"id": "67_H", "text": "ATP", "correct": false}, {"id": "67_I", "text": "Palmitoyl-CoA", "correct": true}, {"id": "67_J", "text": "Malonyl-CoA", "correct": false}]}, {"id": 68, "question": "Atteindre la limite maximale de la synth\u00e8se d'un acide gras dans le cytoplasme implique :", "options": [{"id": "68_A", "text": "Consommation de 14 mol\u00e9cules de NADPH", "correct": true}, {"id": "68_B", "text": "Synth\u00e8se d'un acide gras \u00e0 16 atomes de carbone", "correct": true}, {"id": "68_C", "text": "Lib\u00e9ration de 7 mol\u00e9cules d'eau", "correct": true}, {"id": "68_D", "text": "Consommation de 14 mol\u00e9cules de NADP", "correct": false}, {"id": "68_E", "text": "Consommation de 14 mol\u00e9cules de NADH synth.Ale \u2466Risy(818decitrates Activation ADP+Pi \u2467 \u00b72 mangentHeetyCoA Biofie geteteElpect\u00e9eset cieAb Loge ACCChainec.qualitation itfun7Rgaet 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 20/64", "correct": false}, {"id": "68_F", "text": "Consommation de 8 mol\u00e9cules d'ac\u00e9tyl-CoA", "correct": false}, {"id": "68_G", "text": "Synth\u00e8se de l'acide palmitol\u00e9ique", "correct": false}, {"id": "68_H", "text": "Synth\u00e8se d'un acide gras \u00e0 14 atomes de carbone", "correct": false}, {"id": "68_I", "text": "Synth\u00e8se de l'acide palmitique", "correct": false}, {"id": "68_J", "text": "Synth\u00e8se de l'acide st\u00e9arique", "correct": false}]}, {"id": 69, "question": "Lors de la synth\u00e8se de l'acide ol\u00e9ique, les ph\u00e9nom\u00e8nes suivants peuvent se produire :", "options": [{"id": "69_A", "text": "Consommation de NADH", "correct": true}, {"id": "69_B", "text": "Synth\u00e8se de l'acide arachidonique", "correct": false}, {"id": "69_C", "text": "Synth\u00e8se de l'acide st\u00e9arique", "correct": false}, {"id": "69_D", "text": "Consommation de H2O", "correct": false}, {"id": "69_E", "text": "Consommation de NADP", "correct": false}, {"id": "69_F", "text": "Consommation de NADPH", "correct": true}, {"id": "69_G", "text": "Lib\u00e9ration de H2O", "correct": false}, {"id": "69_H", "text": "Synth\u00e8se de l'acide palmitol\u00e9ique", "correct": false}, {"id": "69_I", "text": "Formation d'une double liaison entre deux atomes de carbone", "correct": true}, {"id": "69_J", "text": "L'action d'une d\u00e9saturase", "correct": true}]}, {"id": 70, "question": "Synth\u00e8se des eicosano\u00efdes :", "options": [{"id": "70_A", "text": "Elle n\u00e9cessite de l'acide arachidique", "correct": false}, {"id": "70_B", "text": "Consomme de la phosphatidyl-choline", "correct": true}, {"id": "70_C", "text": "Elle n\u00e9cessite de l'acide arachidonique", "correct": true}, {"id": "70_D", "text": "Elle n\u00e9cessite un acide gras avec un nombre impair d'atomes de carbone", "correct": false}, {"id": "70_E", "text": "Elle n\u00e9cessite un acide gras avec un nombre pair d'atomes de carbone", "correct": false}, {"id": "70_F", "text": "Elle n\u00e9cessite l'action des oxyg\u00e9nases", "correct": true}, {"id": "70_G", "text": "Elle n\u00e9cessite l'action de la phospholipase A2", "correct": true}, {"id": "70_H", "text": "Consomme la phospho-choline", "correct": false}, {"id": "70_I", "text": "Elle n\u00e9cessite l'action de d\u00e9shydrog\u00e9nases", "correct": false}, {"id": "70_J", "text": "Elle n\u00e9cessite l'action de la phospholipase C", "correct": false}]}, {"id": 71, "question": "Concernant les prostaglandines, il est vrai que :", "options": [{"id": "71_A", "text": "Leur synth\u00e8se implique des r\u00e9actions catalys\u00e9es par l'angiotensine", "correct": false}, {"id": "71_B", "text": "Leur synth\u00e8se implique des r\u00e9actions catalys\u00e9es par la cyclo-oxyg\u00e9nase", "correct": true}, {"id": "71_C", "text": "Leur synth\u00e8se implique des r\u00e9actions catalys\u00e9es par l'adr\u00e9naline", "correct": false}, {"id": "71_D", "text": "Leur synth\u00e8se n\u00e9cessite de l'acide arachidique", "correct": false}, {"id": "71_E", "text": "La phospholipase A2 agit pour leur synth\u00e8se", "correct": false}, {"id": "71_F", "text": "Elles peuvent \u00eatre impliqu\u00e9s dans la reproduction", "correct": false}, {"id": "71_G", "text": "Leur synth\u00e8se n\u00e9cessite de l'acide arachidonique", "correct": true}, {"id": "71_H", "text": "Elles peuvent s'opposer \u00e0 l'action de certains eicosano\u00efdes", "correct": true}, {"id": "71_I", "text": "Leur synth\u00e8se implique des r\u00e9actions catalys\u00e9es par la lipo-oxyg\u00e9nase", "correct": false}, {"id": "71_J", "text": "Lors de leur synth\u00e8se, la phospholipase D c'est n\u00e9cessaire", "correct": false}]}, {"id": 72, "question": "Leucotri\u00e8nes :", "options": [{"id": "72_A", "text": "Leur synth\u00e8se peut \u00eatre inhib\u00e9e par des agents pro-inflammatoires", "correct": false}, {"id": "72_B", "text": "Leur synth\u00e8se peut \u00eatre inhib\u00e9e par des agents anti-inflammatoires Synth=>Ac. Statique B-2Hy-cHy-wol enttAsterieCNADP 1adesFauss AA LOX 1AINSL +2TSpoxyCON ecosezote- Plprostacyclins Aa 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 21/64", "correct": true}, {"id": "72_C", "text": "Peut induire une vasoconstriction", "correct": false}, {"id": "72_D", "text": "Peut induire une bronchoconstriction", "correct": true}, {"id": "72_E", "text": "Leur synth\u00e8se implique des r\u00e9actions catalys\u00e9es par la cyclo-oxyg\u00e9nase", "correct": false}, {"id": "72_F", "text": "Leur synth\u00e8se implique des r\u00e9actions catalys\u00e9es par la lipo-oxyg\u00e9nase", "correct": true}, {"id": "72_G", "text": "Elles ont besoin d'ADP pour leur action", "correct": false}, {"id": "72_H", "text": "Leur pr\u00e9curseur est l'acide arachidonique.", "correct": false}, {"id": "72_I", "text": "Elles sont produits par les \u00e9rythrocytes", "correct": false}, {"id": "72_J", "text": "Elles sont produites par les leucocytes", "correct": true}]}, {"id": 73, "question": "Synth\u00e8se d'une mol\u00e9cule de TG dans l'intestin :", "options": [{"id": "73_A", "text": "Elle n\u00e9cessite la pr\u00e9sence de coenzyme A", "correct": true}, {"id": "73_B", "text": "Elle est produite avec une consommation d'\u00e9nergie", "correct": true}, {"id": "73_C", "text": "Elle est initi\u00e9e par un diglyc\u00e9ride", "correct": false}, {"id": "73_D", "text": "Son pr\u00e9curseur peut provenir du glucose", "correct": false}, {"id": "73_E", "text": "N\u00e9cessite 2 acides gras libres activ\u00e9s", "correct": false}, {"id": "73_F", "text": "Elle n\u00e9cessite 3 acides gras libres", "correct": false}, {"id": "73_G", "text": "Son pr\u00e9curseur est une mol\u00e9cule de MAG (monoacylglyc\u00e9rol)", "correct": true}, {"id": "73_H", "text": "Elle est suivie par leur incorporation dans les chylomicrons", "correct": true}, {"id": "73_I", "text": "Son pr\u00e9curseur est constitu\u00e9 de 2 mol\u00e9cules de MAG (monoacylglyc\u00e9rol)", "correct": false}, {"id": "73_J", "text": "Elle n\u00e9cessite la pr\u00e9sence de chylomicrons", "correct": false}]}, {"id": 74, "question": "Les triglyc\u00e9rides synth\u00e9tis\u00e9s dans l'intestin sont transport\u00e9s dans le sang par des structures qui :", "options": [{"id": "74_A", "text": "Elles contiennent de la LPL (lipoprot\u00e9ine lipase)", "correct": false}, {"id": "74_B", "text": "Elles ont une teneur \u00e9lev\u00e9e en lipides", "correct": true}, {"id": "74_C", "text": "Elles contiennent l'apoprot\u00e9ine B48", "correct": true}, {"id": "74_D", "text": "Ce sont de petites lipoprot\u00e9ines", "correct": false}, {"id": "74_E", "text": "Ils ont tr\u00e8s peu de prot\u00e9ines", "correct": true}, {"id": "74_F", "text": "Elles contiennent de l'apoprot\u00e9ine E", "correct": false}, {"id": "74_G", "text": "Ce sont des lipoprot\u00e9ines de grande taille", "correct": true}, {"id": "74_H", "text": "Ce sont des apoprot\u00e9ines sph\u00e9riques", "correct": false}, {"id": "74_I", "text": "Ce sont de lipoprot\u00e9ines de haute densit\u00e9", "correct": false}, {"id": "74_J", "text": "Elles contiennent des phospholipides", "correct": false}]}, {"id": 75, "question": "Les triglyc\u00e9rides synth\u00e9tis\u00e9s dans le foie ont un pr\u00e9curseur qui peut \u00eatre produit :", "options": [{"id": "75_A", "text": "Par l'action d'une phosphorylase", "correct": false}, {"id": "75_B", "text": "Par une r\u00e9action qui produit de l'ATP", "correct": true}, {"id": "75_C", "text": "Avec consommation de NADH", "correct": true}, {"id": "75_D", "text": "D'un polyalcool", "correct": true}, {"id": "75_E", "text": "Avec consommation de NADPH", "correct": false}, {"id": "75_F", "text": "De la DHAP", "correct": true}, {"id": "75_G", "text": "Par une r\u00e9action de transamination", "correct": false}, {"id": "75_H", "text": "Par l'action d'une kinase", "correct": true}, {"id": "75_I", "text": "Par une r\u00e9action d'oxydo-r\u00e9duction coAS ATP\u22a5synthenR-CO-SCAR-CO- I ApoAetBK8 8re T Ginlost -A Y:biymot- DGoyaro 1, 1cateNADANAAt GigaroieI T6/92 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 22/64", "correct": true}, {"id": "75_J", "text": "Par une r\u00e9action de d\u00e9phosphorylation", "correct": false}]}, {"id": 76, "question": "Triglyc\u00e9rides synth\u00e9tis\u00e9s dans le foie :", "options": [{"id": "76_A", "text": "Elles sont incorpor\u00e9es dans les VLDL", "correct": true}, {"id": "76_B", "text": "Elles ont le monoglyc\u00e9rol comme pr\u00e9curseur", "correct": false}, {"id": "76_C", "text": "Elles sont stock\u00e9es \u00e0 ce niveau", "correct": false}, {"id": "76_D", "text": "Elles ont comme pr\u00e9curseur une mol\u00e9cule phosphoryl\u00e9e", "correct": false}, {"id": "76_E", "text": "Elles peuvent \u00eatre export\u00e9s vers les tissus extra-h\u00e9patiques", "correct": true}, {"id": "76_F", "text": "Elles sont transport\u00e9es vers les tissus extra-h\u00e9patiques \u00e0 l'aide des chylomicrons", "correct": false}, {"id": "76_G", "text": "Elles sont transport\u00e9es vers les tissus extra-h\u00e9patiques \u00e0 l'aide de lipoprot\u00e9ines de haute densit\u00e9", "correct": false}, {"id": "76_H", "text": "Elles ont un pr\u00e9curseur commun avec la synthese des les TG du tissu adipeux", "correct": true}, {"id": "76_I", "text": "Elles ont comme pr\u00e9curseur le GA3P (glyc\u00e9rald\u00e9hyde 3 phosphate)", "correct": false}, {"id": "76_J", "text": "Contrairement \u00e0 celles du tissu adipeux, elles ne peuvent pas \u00eatre stock\u00e9es \u00e0 ce niveau", "correct": false}]}, {"id": 77, "question": "Triglyc\u00e9rides synth\u00e9tis\u00e9s dans le tissu adipeux :", "options": [{"id": "77_A", "text": "Elles peuvent \u00eatre stock\u00e9s \u00e0 ce niveau", "correct": true}, {"id": "77_B", "text": "Elles ont un pr\u00e9curseur commun avec le synth\u00e9se des TG dans le foie", "correct": true}, {"id": "77_C", "text": "Elles ont un pr\u00e9curseur commun avec les TG synth\u00e9tis\u00e9s dans l'intestin", "correct": false}, {"id": "77_D", "text": "Elles ont un pr\u00e9curseur produit \u00e0 partir d'un interm\u00e9diaire de la glycolyse", "correct": true}, {"id": "77_E", "text": "Elles ont un pr\u00e9curseur synth\u00e9tis\u00e9 avec une consommation de coenzymes r\u00e9duite", "correct": false}, {"id": "77_F", "text": "Elles sont transport\u00e9es dans le sang par les chylomicrons", "correct": false}, {"id": "77_G", "text": "Elles sont d\u00e9grad\u00e9es par la lipase hormono-sensible", "correct": true}, {"id": "77_H", "text": "Elles sont d\u00e9grad\u00e9es par une enzyme non phosphoryl\u00e9e", "correct": false}, {"id": "77_I", "text": "Elles ont un pr\u00e9curseur synth\u00e9tis\u00e9 \u00e0 ce niveau par l'action directe d'une kinase", "correct": false}, {"id": "77_J", "text": "Elles sont d\u00e9grad\u00e9es par la lipoprot\u00e9ine lipase", "correct": false}]}, {"id": 78, "question": "Lipolyse :", "options": [{"id": "78_A", "text": "Elle lib\u00e8re des AG et le glyc\u00e9rol dans le sang", "correct": true}, {"id": "78_B", "text": "Dans le sang, elle est produite sous l'action de la lipoprot\u00e9ine lipase", "correct": true}, {"id": "78_C", "text": "Elle est m\u00e9di\u00e9e par des enzymes r\u00e9gul\u00e9es diff\u00e9remment dans l'intestin et dans le tissu adipeux", "correct": false}, {"id": "78_D", "text": "Dans l'intestin, elle n\u00e9cessite une enzyme dont l'activit\u00e9 d\u00e9pend des acides biliaires", "correct": false}, {"id": "78_E", "text": "Dans l'intestin, elle s'effectue sous l'action de la LPL (lipoprot\u00e9ine lipase)", "correct": false}, {"id": "78_F", "text": "Dans le tissu adipeux, elle n\u00e9cessite une enzyme qui peut \u00eatre stimul\u00e9e par l'adr\u00e9naline", "correct": true}, {"id": "78_G", "text": "Elle est fabriqu\u00e9e par la m\u00eame enzyme dans l'intestin et le tissu adipeux", "correct": false}, {"id": "78_H", "text": "Elle est effectu\u00e9e uniquement dans l'intestin et le tissu adipeux", "correct": false}, {"id": "78_I", "text": "Dans l'intestin, elle n\u00e9cessite une enzyme sous deux formes", "correct": true}, {"id": "78_J", "text": "Dans l'adipocyte, elle n\u00e9cessite une enzyme dont la forme active est d\u00e9phosphoryl\u00e9e", "correct": true}]}, {"id": 79, "question": "Phospholipides :", "options": [{"id": "79_A", "text": "Elles sont pr\u00e9sentes en petites quantit\u00e9s dans les membranes cellulaires", "correct": false}, {"id": "79_B", "text": "Elles g\u00e9n\u00e8rent du thromboxane sous l'action directe de la cyclo-oxyg\u00e9nase synth.Ice ->Dutestin/Poie/P.A\u00b7 Augestation -> Etudess 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 23/64", "correct": false}, {"id": "79_C", "text": "Elles ont le PAF comme repr\u00e9sentant", "correct": false}, {"id": "79_D", "text": "Ce sont des inhibiteurs d'enzymes", "correct": false}, {"id": "79_E", "text": "Sous l'action du PLA1, elles lib\u00e8rent de l'acide phosphatidique", "correct": false}, {"id": "79_F", "text": "Peut contenir des acides gras pr\u00e9curseurs des thromboxanes", "correct": true}, {"id": "79_G", "text": "Peut contenir un alcool amin\u00e9", "correct": true}, {"id": "79_H", "text": "Elles peuvent entrer dans la composition du surfactant pulmonaire", "correct": true}, {"id": "79_I", "text": "Peut contenir trois acides gras satur\u00e9s", "correct": false}, {"id": "79_J", "text": "Elles sont importantes pour la solubilisation du cholest\u00e9rol", "correct": true}]}, {"id": 80, "question": "En ce qui concerne la l\u00e9cithine, on peut dire que :", "options": [{"id": "80_A", "text": "Peut \u00eatre n\u00e9cessaire pour l'activit\u00e9 COX", "correct": false}, {"id": "80_B", "text": "Peut \u00eatre un substrat pour la LCAT", "correct": true}, {"id": "80_C", "text": "Peut \u00eatre n\u00e9cessaire pour l'activit\u00e9 LOX", "correct": false}, {"id": "80_D", "text": "Peut \u00eatre un substrat pour CAT II", "correct": true}, {"id": "80_E", "text": "Peut \u00eatre un substrat pour PLC", "correct": true}, {"id": "80_F", "text": "Peut \u00eatre n\u00e9cessaire pour l'activit\u00e9 de XO (xanthin oxidase)", "correct": false}, {"id": "80_G", "text": "Peut \u00eatre n\u00e9cessaire pour l'activit\u00e9 SAM", "correct": false}, {"id": "80_H", "text": "Peut \u00eatre un substrat pour LPL", "correct": false}, {"id": "80_I", "text": "Peut \u00eatre un substrat pour le CTP", "correct": false}, {"id": "80_J", "text": "Peut \u00eatre un substrat pour PLD", "correct": true}]}];
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `Q${q.id} - ${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    optionsGrid.appendChild(label);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

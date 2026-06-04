@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Biochimie S2 - Module 10 (Q181 à Q200)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Clean correct/incorrect styles: NO text boxes, just colors */
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="quiz_biochimie_simplifie_M9.html"><<</a>Quiz Biochimie S2 - Module 10 (Q181 à Q200)<a href="quiz_biochimie_simplifie_M11.html">>></a></h1>
+        </header>
+        
+        <div class="revision-box">
+            <h3>📝 Fiche de révision : Biochimie Sanguine et Calcium (Questions 181 à 200)</h3><p><strong>Calcium :</strong> Régulé par la PTH (hyper), le Calcitriol (augmente absorption) et la Calcitonine (hypo). Rôles : contraction, coagulation, minéralisation.</p>
+        </div>
+
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer les questions 🔄</button>
+        </form>
+    </div>
+    <script>
+        const quizData = [{"id": 180, "question": "L'augmentation du niveau de bilirubine hydrosoluble dans le sang peuvent survenir dans\u00a0:", "options": [{"id": "180_A", "text": "Obstruction par des calculs biliaires", "correct": true}, {"id": "180_B", "text": "St\u00e9noses dans les voies biliaires", "correct": true}, {"id": "180_C", "text": "Syndrome du Rotor", "correct": true}, {"id": "180_D", "text": "Tumeurs des voies biliaires", "correct": true}, {"id": "180_E", "text": "Hyperthyro\u00efdie", "correct": false}, {"id": "180_F", "text": "Hyperammoni\u00e9mie", "correct": false}, {"id": "180_G", "text": "D\u00e9faut d'acide glucuronique", "correct": false}, {"id": "180_H", "text": "D\u00e9ficit acquis de l'UDP glucuronyl transf\u00e9rase", "correct": false}, {"id": "180_I", "text": "D\u00e9faut de capture de la bilirubine dans le foie par d\u00e9faut de r\u00e9cepteurs sp\u00e9cifiques", "correct": false}, {"id": "180_J", "text": "Syndrome de Dubin-Johnson", "correct": true}]}, {"id": 181, "question": "Les conditions suivantes sont des causes d\u2019ict\u00e8re pr\u00e9h\u00e9patique :", "options": [{"id": "181_A", "text": "Thalass\u00e9mie", "correct": true}, {"id": "181_B", "text": "D\u00e9faut de thyroglobuline", "correct": false}, {"id": "181_C", "text": "Exc\u00e8s de thyroperoxydase", "correct": false}, {"id": "181_D", "text": "D\u00e9ficit en glutathion", "correct": true}, {"id": "181_E", "text": "D\u00e9ficit h\u00e9patique en UDP glucuronyl transf\u00e9rase", "correct": false}, {"id": "181_F", "text": "Erythropo\u00ef\u00e8se inefficace", "correct": true}, {"id": "181_G", "text": "D\u00e9ficit en thyroperoxydase", "correct": false}, {"id": "181_H", "text": "Exc\u00e8s d'uroporphyrinog\u00e8ne d\u00e9carboxylase", "correct": false}, {"id": "181_I", "text": "H\u00e9molyse auto-immune", "correct": true}, {"id": "181_J", "text": "An\u00e9mie m\u00e9galoblastique", "correct": true}]}, {"id": 182, "question": "Les conditions suivantes sont des causes de h\u00e9pato-cellulaire jaunisse:", "options": [{"id": "182_A", "text": "D\u00e9faut d'absorption de la bilirubine, d\u00fb \u00e0 une d\u00e9ficience des r\u00e9cepteurs h\u00e9patiques", "correct": true}, {"id": "182_B", "text": "H\u00e9molyse auto-immune", "correct": false}, {"id": "182_C", "text": "D\u00e9ficit en glutathion", "correct": false}, {"id": "182_D", "text": "An\u00e9mie m\u00e9galoblastique", "correct": false}, {"id": "182_E", "text": "Ict\u00e8re n\u00e9onatal", "correct": true}, {"id": "182_F", "text": "Maladie de Gilbert", "correct": true}, {"id": "182_G", "text": "Thalass\u00e9mie", "correct": false}, {"id": "182_H", "text": "Syndrome du Rotor", "correct": false}, {"id": "182_I", "text": "D\u00e9faut de l'UDP glucuronyl transf\u00e9rase", "correct": true}, {"id": "182_J", "text": "Erythropo\u00ef\u00e8se inefficace", "correct": false}]}, {"id": 183, "question": "Ict\u00e8re h\u00e9pato-cellulaire :", "options": [{"id": "183_A", "text": "Il peut survenir chez les sujets atteints de la maladie de Gilbert", "correct": true}, {"id": "183_B", "text": "Survient chez les patients pr\u00e9sentant un d\u00e9ficit en G-6-P DH", "correct": false}, {"id": "183_C", "text": "Il peut se caract\u00e9riser par une \u00e9l\u00e9vation de la bilirubine indirecte", "correct": true}, {"id": "183_D", "text": "Survient chez les sujets pr\u00e9sentant une h\u00e9molyse massive", "correct": false}, {"id": "183_E", "text": "Il est fr\u00e9quente chez les sujets avec des transfusions incompatibles . GiletetReglerunachatganet\u00b7 RotoretAubineBiliaires=)TBA etNagassdefactd'UPGouclony etAustinesobstructicCarterentes. 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 52/64", "correct": false}, {"id": "183_F", "text": "Il se caract\u00e9rise par de faibles valeurs de bilirubine liposoluble", "correct": false}, {"id": "183_G", "text": "Il se caract\u00e9rise par de faibles valeurs de bilirubine soluble dans l'eau", "correct": false}, {"id": "183_H", "text": "Il peut se caract\u00e9riser par une \u00e9l\u00e9vation de la bilirubine directe", "correct": true}, {"id": "183_I", "text": "Peut survenir en cas d'empoisonnement au CCl4", "correct": false}, {"id": "183_J", "text": "Il est aussi appel\u00e9 biphasique", "correct": true}]}, {"id": 184, "question": "L'ict\u00e8re obstructif est caract\u00e9ris\u00e9 par :", "options": [{"id": "184_A", "text": "Augmentation de la bilirubine hydrosoluble dans le sang", "correct": true}, {"id": "184_B", "text": "Mati\u00e8res f\u00e9cales non color\u00e9es", "correct": true}, {"id": "184_C", "text": "Augmentation le niveau de s\u00e9rotonine dans le sang", "correct": false}, {"id": "184_D", "text": "Urine hyperchromique", "correct": true}, {"id": "184_E", "text": "R\u00e9duction des niveaux plasmatiques de transaminases", "correct": false}, {"id": "184_F", "text": "Diminution des niveau plasmatiques de phosphatase alcaline", "correct": false}, {"id": "184_G", "text": "Absence d'urobilinog\u00e8ne dans l'urine", "correct": false}, {"id": "184_H", "text": "\u00c9limination de la bilirubine dans l'urine", "correct": true}, {"id": "184_I", "text": "Diminution de la bilirubine liposoluble dans le sang", "correct": false}, {"id": "184_J", "text": "Mati\u00e8res f\u00e9cales d\u00e9color\u00e9es", "correct": true}]}, {"id": 185, "question": "Les af\ufb01rmations suivantes sont caract\u00e9ristiques de la jaunisse h\u00e9molytique :", "options": [{"id": "185_A", "text": "Augmentation de l'activit\u00e9 de la sulf ad\u00e9nosyl m\u00e9thionine (SAM)", "correct": false}, {"id": "185_B", "text": "\u00c9limination de la bilirubine dans l'urine", "correct": false}, {"id": "185_C", "text": "Absence d'urobilinog\u00e8ne dans l'urine", "correct": true}, {"id": "185_D", "text": "Absence de bilirubine dans les urines", "correct": false}, {"id": "185_E", "text": "Selles acholiques", "correct": false}, {"id": "185_F", "text": "F\u00e8ces hyperchromique", "correct": false}, {"id": "185_G", "text": "D\u00e9gradation massive de l'h\u00e8me", "correct": true}, {"id": "185_H", "text": "Selles d\u00e9color\u00e9es", "correct": false}, {"id": "185_I", "text": "Des niveaux \u00e9lev\u00e9s de bilirubine non conjugu\u00e9e dans le plasma", "correct": true}, {"id": "185_J", "text": "Urine hyperchromique", "correct": true}]}, {"id": 186, "question": "Les principales prot\u00e9ines du sang sont:", "options": [{"id": "186_A", "text": "UDP glucuronyl transf\u00e9rase", "correct": false}, {"id": "186_B", "text": "Fibrinog\u00e8ne", "correct": true}, {"id": "186_C", "text": "Thyroperoxydase", "correct": false}, {"id": "186_D", "text": "Lipoprot\u00e9ines alpha", "correct": true}, {"id": "186_E", "text": "Enzyme qui converte les acides biliaires primaires en acides biliaires secondaires", "correct": false}, {"id": "186_F", "text": "Alpha 1 antitrypsine", "correct": true}, {"id": "186_G", "text": "L\u00e9cithine cholest\u00e9rol acyl transf\u00e9rase", "correct": false}, {"id": "186_H", "text": "Biliverdine r\u00e9ductase", "correct": false}, {"id": "186_I", "text": "Albumine", "correct": true}, {"id": "186_J", "text": "DOPA d\u00e9carboxylase", "correct": false}]}, {"id": 187, "question": "Choisissez parmi les mol\u00e9cules suivantes, qui sont des enzymes fonctionnelles dans le plasma :", "options": [{"id": "187_A", "text": "Pseudocholinest\u00e9rase \u2193Stercobilimage->dStulabilite Nicolore(PasUnosilitl X X etX X X 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 53/64", "correct": true}, {"id": "187_B", "text": "LDH", "correct": false}, {"id": "187_C", "text": "Amylase", "correct": false}, {"id": "187_D", "text": "L'enzyme qui se trouve \u00e0 la surface des lipoprot\u00e9ines alpha, et qui assure l'est\u00e9rification du cholest\u00e9rol", "correct": false}, {"id": "187_E", "text": "L\u00e9cithine cholest\u00e9rol acyl transf\u00e9rase", "correct": true}, {"id": "187_F", "text": "LPL (lipoprot\u00e9ine lipase)", "correct": true}, {"id": "187_G", "text": "Enzymes de coagulation", "correct": true}, {"id": "187_H", "text": "ALT", "correct": false}, {"id": "187_I", "text": "ALP", "correct": false}, {"id": "187_J", "text": "AST", "correct": false}]}, {"id": 188, "question": "Choisissez parmi les mol\u00e9cules suivantes, les prot\u00e9ines plasmatiques qui font partie de la cat\u00e9gorie des transf\u00e9rases :", "options": [{"id": "188_A", "text": "Gamma glutamyl transf\u00e9rase (GGT)", "correct": true}, {"id": "188_B", "text": "LDH", "correct": false}, {"id": "188_C", "text": "Cholinest\u00e9rase", "correct": false}, {"id": "188_D", "text": "Phosphatase alcaline", "correct": false}, {"id": "188_E", "text": "ALT", "correct": true}, {"id": "188_F", "text": "Phosphatase acide", "correct": false}, {"id": "188_G", "text": "Amylase", "correct": false}, {"id": "188_H", "text": "AST", "correct": true}, {"id": "188_I", "text": "OCT", "correct": true}, {"id": "188_J", "text": "Cr\u00e9atine Kinase", "correct": true}]}, {"id": 189, "question": "Choisissez les af\ufb01rmations correctes concernant la bilirubine directe :", "options": [{"id": "189_A", "text": "Elle se forme dans la rate", "correct": false}, {"id": "189_B", "text": "Elle est liposoluble", "correct": false}, {"id": "189_C", "text": "Elle est \u00e9limin\u00e9e par l'urine dans des conditions physiologiques", "correct": true}, {"id": "189_D", "text": "Elle ne provoque pas de kernicter", "correct": true}, {"id": "189_E", "text": "Elle subit une s\u00e9rie de r\u00e9ductions successives dans l'intestin", "correct": true}, {"id": "189_F", "text": "Elle r\u00e9sulte d'un processus de conjugaison", "correct": true}, {"id": "189_G", "text": "Ce n'est pas toxique", "correct": false}, {"id": "189_H", "text": "Elle se combine \u00e0 l'albumine dans le sang", "correct": true}, {"id": "189_I", "text": "Augmente dans le sang pendant la jaunisse n\u00e9onatale", "correct": false}, {"id": "189_J", "text": "Peut conduire \u00e0 la formation d'urobilinog\u00e8ne", "correct": false}]}, {"id": 190, "question": "Bilirubine indirecte :", "options": [{"id": "190_A", "text": "Elle peut conduire \u00e0 l'ict\u00e8re nucl\u00e9aire (kernicterus), lorsqu'elle est form\u00e9e en exc\u00e8s chez les nouveau-n\u00e9s", "correct": true}, {"id": "190_B", "text": "Au niveau intestinal, peut se transformer en pigments biliaires", "correct": true}, {"id": "190_C", "text": "Elle est transport\u00e9e dans l'intestin par les voies biliaires", "correct": false}, {"id": "190_D", "text": "Elle est form\u00e9 dans le foie par conjugaison avec l'UDP-glucuronate", "correct": false}, {"id": "190_E", "text": "Elle est transport\u00e9e vers le foie sous la forme d'un complexe avec une prot\u00e9ine de transport 22PCHAL)et BLP(LAL Alt Aydo. Hydro. Clydrise) It. Nhe's 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 54/64", "correct": true}, {"id": "190_F", "text": "Elle forme, suite au processus de conjugaison, un compos\u00e9 toxique pour l'organisme", "correct": false}, {"id": "190_G", "text": "Elle se forme \u00e0 un stade pr\u00e9-h\u00e9patique, par une s\u00e9quence d'\u00e9tapes qui commencent par l'oxydation de l'h\u00e8me", "correct": true}, {"id": "190_H", "text": "Elle est photosensible", "correct": true}, {"id": "190_I", "text": "Elle peut \u00eatre conjugu\u00e9 au niveau du foie", "correct": false}, {"id": "190_J", "text": "Elle est soluble dans l'eau, conjugu\u00e9", "correct": false}]}, {"id": 191, "question": "Le calcium :", "options": [{"id": "191_A", "text": "Il a un r\u00f4le important dans l'h\u00e9mostase", "correct": true}, {"id": "191_B", "text": "Il est compl\u00e8tement li\u00e9 \u00e0 des prot\u00e9ines sp\u00e9cifiques formant du calcium non ionis\u00e9", "correct": false}, {"id": "191_C", "text": "On le trouve principalement dans l'hydroxyapatite", "correct": true}, {"id": "191_D", "text": "Il peut \u00eatre fix\u00e9 au niveau osseux au moyen d'une glycoprot\u00e9ine appel\u00e9e ost\u00e9ocalcine", "correct": false}, {"id": "191_E", "text": "Au niveau intracellulaire, il a une distribution uniforme", "correct": false}, {"id": "191_F", "text": "Avec le phosphore, il a un r\u00f4le plastique et fonctionnel", "correct": true}, {"id": "191_G", "text": "On le trouve principalement au niveau plasmatique", "correct": false}, {"id": "191_H", "text": "Celui ionis\u00e9 repr\u00e9sente la fraction physiologiquement inactive", "correct": false}, {"id": "191_I", "text": "Celui non ionis\u00e9 a un r\u00f4le particulier dans l'h\u00e9mostase, la r\u00e9gulation de l'excitabilit\u00e9 neuro-musculaire, l'ossification", "correct": false}, {"id": "191_J", "text": "Il peut \u00e9galement \u00eatre pr\u00e9sent dans les fluides extracellulaires", "correct": true}]}, {"id": 192, "question": "Le calcium a les r\u00f4les suivants :", "options": [{"id": "192_A", "text": "Il favorise la glycolyse", "correct": false}, {"id": "192_B", "text": "C'est un messager secondaire (avec cAMP, cGMP)", "correct": true}, {"id": "192_C", "text": "Dans l'excitabilit\u00e9 neuromusculaire", "correct": true}, {"id": "192_D", "text": "Il inhibe la lib\u00e9ration de certaines hormones", "correct": false}, {"id": "192_E", "text": "Dans l'agr\u00e9gation rapide des plaquettes sanguines", "correct": true}, {"id": "192_F", "text": "Il stimule la formation de calcitriol", "correct": false}, {"id": "192_G", "text": "Il contribue \u00e0 l'inactivation de certaines enzymes", "correct": false}, {"id": "192_H", "text": "Il inhibe la cascade de coagulation", "correct": false}, {"id": "192_I", "text": "En coagulation", "correct": true}, {"id": "192_J", "text": "En ossification", "correct": true}]}, {"id": 193, "question": "Concernant la r\u00e9gulation de la calc\u00e9mie, on peut af\ufb01rmer que :", "options": [{"id": "193_A", "text": "Elle peut \u00e9galement se produire au niveau r\u00e9nal", "correct": true}, {"id": "193_B", "text": "Le calcitriol augmente l'absorption intestinale du calcium", "correct": true}, {"id": "193_C", "text": "La calcitonine diminue l'excr\u00e9tion urinaire de calcium", "correct": false}, {"id": "193_D", "text": "La calcitonine diminue la concentration de calcium dans le plasma", "correct": true}, {"id": "193_E", "text": "Le calcitriol inhibe l'activit\u00e9 des ost\u00e9oclastes", "correct": false}, {"id": "193_F", "text": "La PTH diminue l'absorption intestinale du calcium", "correct": false}, {"id": "193_G", "text": "Elle se produit \u00e9galement dans le foie", "correct": false}, {"id": "193_H", "text": "La PTH diminue la r\u00e9absorption r\u00e9nale du calcium", "correct": false}, {"id": "193_I", "text": "La PTH augmente la calc\u00e9mie", "correct": true}, {"id": "193_J", "text": "La PTH agit sur les ost\u00e9oclastes", "correct": true}]}, {"id": 194, "question": "La r\u00e9gulation de la calc\u00e9mie : 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 55/64", "options": [{"id": "194_A", "text": "La PTH augmente l'excr\u00e9tion r\u00e9nale du calcium", "correct": false}, {"id": "194_B", "text": "En cas d'hypocalc\u00e9mie, la calcitonine est administr\u00e9e", "correct": false}, {"id": "194_C", "text": "Le calcitriol stimule l'activit\u00e9 des ost\u00e9oclastes", "correct": true}, {"id": "194_D", "text": "Elle peut \u00e9galement \u00eatre faite par l'hormone somatotrope", "correct": false}, {"id": "194_E", "text": "Elle est obtenue gr\u00e2ce \u00e0 l'action de 3 hormones", "correct": true}, {"id": "194_F", "text": "La calcitonine inhibe l'absorption intestinale du calcium", "correct": true}, {"id": "194_G", "text": "Elle est \u00e9galement obtenue avec l'apport de la vitamine D", "correct": true}, {"id": "194_H", "text": "Le calcitriol diminue l'absorption intestinale du calcium", "correct": false}, {"id": "194_I", "text": "La PTH agit en stimulant la r\u00e9absorption du calcium au niveau des reins", "correct": true}, {"id": "194_J", "text": "Elle est obtenue gr\u00e2ce \u00e0 l'action de l'insuline", "correct": false}]}, {"id": 195, "question": "La PTH (hormone parathyro\u00efdienne) :", "options": [{"id": "195_A", "text": "C'est une hormone hypercalc\u00e9mique", "correct": true}, {"id": "195_B", "text": "C'est une hormone s\u00e9cr\u00e9t\u00e9e par les parathyro\u00efdes", "correct": true}, {"id": "195_C", "text": "C'est une hormone s\u00e9cr\u00e9t\u00e9e par les glandes surr\u00e9nales", "correct": false}, {"id": "195_D", "text": "L'hypocalc\u00e9mie stimule la s\u00e9cr\u00e9tion de cette hormone", "correct": true}, {"id": "195_E", "text": "Elle d\u00e9termine la r\u00e9absorption du calcium au niveau des reins", "correct": true}, {"id": "195_F", "text": "Elle est d\u00e9riv\u00e9e de la vitamine D", "correct": false}, {"id": "195_G", "text": "Elle facilite l'\u00e9limination du calcium au niveau r\u00e9nal", "correct": false}, {"id": "195_H", "text": "Elle facilite l'\u00e9limination du phosphore au niveau des reins", "correct": true}, {"id": "195_I", "text": "Elle provoque une diminution de la calc\u00e9mie", "correct": false}, {"id": "195_J", "text": "Elle inhibe la s\u00e9cr\u00e9tion de calcitriol", "correct": false}]}, {"id": 196, "question": "Le calcitriol\u00a0:", "options": [{"id": "196_A", "text": "Il peut entra\u00eener une hypercalc\u00e9mie", "correct": true}, {"id": "196_B", "text": "Il se forme dans la peau \u00e0 partir du cholest\u00e9rol", "correct": false}, {"id": "196_C", "text": "Il augmente la r\u00e9absorption du calcium au niveau r\u00e9nal", "correct": true}, {"id": "196_D", "text": "Il inhibe l'activit\u00e9 des ost\u00e9oclastes", "correct": false}, {"id": "196_E", "text": "Il active les hormones thyro\u00efdiennes", "correct": false}, {"id": "196_F", "text": "Il diminue la synth\u00e8se de PTH dans les parathyro\u00efdes", "correct": false}, {"id": "196_G", "text": "Il est d\u00e9riv\u00e9 de la vitamine B6", "correct": false}, {"id": "196_H", "text": "Il repr\u00e9sente la forme active de la vitamine D3, produite dans les reins", "correct": true}, {"id": "196_I", "text": "Il stimule l'activit\u00e9 des ost\u00e9oclastes", "correct": true}, {"id": "196_J", "text": "Il provoque une baisse de la glyc\u00e9mie", "correct": false}]}, {"id": 197, "question": "L\u2019hypocalc\u00e9mie\u00a0:", "options": [{"id": "197_A", "text": "Elle peut survenir en cas d'insuffisance r\u00e9nale", "correct": true}, {"id": "197_B", "text": "Elle peut \u00eatre caus\u00e9e par une hypoparathyro\u00efdie", "correct": true}, {"id": "197_C", "text": "Chez les adultes, elle peut entra\u00eener une hyperglyc\u00e9mie", "correct": false}, {"id": "197_D", "text": "Elle peut \u00eatre caus\u00e9e par une hyperparathyro\u00efdie", "correct": false}, {"id": "197_E", "text": "Elle survient \u00e0 des valeurs inf\u00e9rieures \u00e0 8 mg%", "correct": false}, {"id": "197_F", "text": "Elle peut \u00eatre associ\u00e9e au rachitisme, chez les enfants", "correct": true}, {"id": "197_G", "text": "Elle peut \u00eatre associ\u00e9e \u00e0 la fluorose dentaire", "correct": false}, {"id": "197_H", "text": "Chez l'enfant, elle se caract\u00e9rise par une ost\u00e9omalacie defertPedaicithopquiagitsalictestie [9ng20 RachitiseOstermalisob \u246d AdEryt 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 56/64", "correct": false}, {"id": "197_I", "text": "Elle peut entra\u00eener une hypoplasie de l'\u00e9mail", "correct": true}, {"id": "197_J", "text": "Elle peut survenir chez les patients atteints de tumeurs qui s\u00e9cr\u00e8tent un exc\u00e8s de PTH", "correct": false}]}, {"id": 198, "question": "Le phosphore :", "options": [{"id": "198_A", "text": "Son absorption a lieu dans le foie", "correct": false}, {"id": "198_B", "text": "Il fait partie de la constitution des muscles", "correct": false}, {"id": "198_C", "text": "Il participe \u00e0 la stimulation de la contraction musculaire", "correct": true}, {"id": "198_D", "text": "Son absorption est inhib\u00e9e par la vitamine D", "correct": false}, {"id": "198_E", "text": "Son absorption ne d\u00e9pend pas de l'alimentation", "correct": false}, {"id": "198_F", "text": "Il est le plus facilement absorb\u00e9 sous forme de phosphates organiques", "correct": true}, {"id": "198_G", "text": "C'est un constituant principal des acides nucl\u00e9iques", "correct": true}, {"id": "198_H", "text": "Son absorption est favoris\u00e9e par un pH l\u00e9g\u00e8rement basique", "correct": true}, {"id": "198_I", "text": "C'est un composant de l'hydroxyapatite", "correct": true}, {"id": "198_J", "text": "Il remplit un r\u00f4le structurel", "correct": false}]}, {"id": 199, "question": "Concernant le \ufb02uor, on peut af\ufb01rmer que :", "options": [{"id": "199_A", "text": "L'exc\u00e8s de fluorure dans le corps peut entra\u00eener une alt\u00e9ration de l'\u00e9mail", "correct": true}, {"id": "199_B", "text": "Il peut entra\u00eener une alt\u00e9ration appel\u00e9e tartre dentaire", "correct": false}, {"id": "199_C", "text": "Il est \u00e9limin\u00e9 par les reins", "correct": true}, {"id": "199_D", "text": "La fr\u00e9quence des caries dentaires ne d\u00e9pend pas du niveau de fluorure dans le corps", "correct": false}, {"id": "199_E", "text": "Il est synth\u00e9tis\u00e9 au niveau r\u00e9nal", "correct": false}, {"id": "199_F", "text": "Il peut entraver le processus de coagulation du sang", "correct": false}, {"id": "199_G", "text": "La fr\u00e9quence des caries dentaires est proportionnelle au manque de F dans le corps", "correct": true}, {"id": "199_H", "text": "On le trouve en plus grande quantit\u00e9 dans le foie", "correct": false}, {"id": "199_I", "text": "Son niveau est corr\u00e9l\u00e9 \u00e0 la pr\u00e9sence de plaque bact\u00e9rienne", "correct": false}, {"id": "199_J", "text": "Il est absorb\u00e9 sous forme de sels solubles", "correct": false}]}];
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `Q${q.id} - ${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    optionsGrid.appendChild(label);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

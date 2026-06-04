@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Biochimie S2 - Module 3 (Q41 à Q60)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Clean correct/incorrect styles: NO text boxes, just colors */
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="quiz_biochimie_simplifie_M2.html"><<</a>Quiz Biochimie S2 - Module 3 (Q41 à Q60)<a href="quiz_biochimie_simplifie_M4.html">>></a></h1>
+        </header>
+        
+        <div class="revision-box">
+            <h3>📝 Fiche de révision : Bêta-Oxydation (Questions 41 à 60)</h3><p><strong>Bêta-oxydation :</strong> Dégradation mitochondriale des acides gras. Nécessite l'activation en Acyl-CoA et le transporteur Carnitine. Libère Acétyl-CoA, NADH et FADH2.</p>
+        </div>
+
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer les questions 🔄</button>
+        </form>
+    </div>
+    <script>
+        const quizData = [{"id": 41, "question": "Ribulose 5-P:", "options": [{"id": "41_A", "text": "Elle est impliqu\u00e9 dans les r\u00e9actions d'isom\u00e9risation de la voie des pentoses phosphates", "correct": true}, {"id": "41_B", "text": "Par carboxylation, il forme du F-6-P dans la voie des pentoses phosphates", "correct": false}, {"id": "41_C", "text": "Elle peut \u00eatre form\u00e9 indirectement \u00e0 partir d'un hexose phosphoryl\u00e9", "correct": false}, {"id": "41_D", "text": "Elle est g\u00e9n\u00e9r\u00e9 en tant qu'interm\u00e9diaire dans la glycolyse", "correct": true}, {"id": "41_E", "text": "Elle intervient comme substrat dans l'\u00e9tape non oxydative de la voie des pentoses phosphates", "correct": true}, {"id": "41_F", "text": "Elle ne participe pas directement aux r\u00e9actions de transaldolisation", "correct": false}, {"id": "41_G", "text": "C'est un substrat pour la transac\u00e9tolisation dans la voie des pentoses phosphates", "correct": false}, {"id": "41_H", "text": "C\u2019est un c\u00e9tohexose phosphoryl\u00e9", "correct": false}, {"id": "41_I", "text": "C'est un substrat pour la transaldolisation dans la voie des pentoses phosphates", "correct": false}, {"id": "41_J", "text": "Elle peut \u00eatre form\u00e9 directement par une r\u00e9action de d\u00e9carboxylation", "correct": true}]}, {"id": 42, "question": "Ribose 5-P:", "options": [{"id": "42_A", "text": "Elle peut \u00eatre form\u00e9 \u00e0 partir d'un c\u00e9topentose phosphoryl\u00e9, par isom\u00e9risation", "correct": true}, {"id": "42_B", "text": "Elle peut \u00eatre g\u00e9n\u00e9r\u00e9 au cours de la voie des pentoses phosphates", "correct": true}, {"id": "42_C", "text": "Lorsqu'il est g\u00e9n\u00e9r\u00e9 en faibles quantit\u00e9s, il conduit \u00e0 l'an\u00e9mie", "correct": false}, {"id": "42_D", "text": "Elle peut intervient dans la formation de l'ATP/ATP", "correct": true}, {"id": "42_E", "text": "Elle participe \u00e0 la r\u00e9action de transc\u00e9tolisation", "correct": false}, {"id": "42_F", "text": "C\u2019est un c\u00e9topentose phosphoryl\u00e9", "correct": false}, {"id": "42_G", "text": "Pas important dans la synth\u00e8se des acides nucl\u00e9iques/synth\u00e8se des acides nucl\u00e9iques", "correct": true}, {"id": "42_H", "text": "C'est un substrat dans la r\u00e9action de transaldolisation", "correct": false}, {"id": "42_I", "text": "Elle ne peut pas \u00eatre g\u00e9n\u00e9r\u00e9 par la voie des pentoses phosphates", "correct": false}, {"id": "42_J", "text": "En tant que substrat d'une r\u00e9action, il peut conduire \u00e0 la formation d'heptulose-7-P", "correct": false}]}, {"id": 43, "question": "NADPH:", "options": [{"id": "43_A", "text": "Il est form\u00e9 dans deux des r\u00e9actions de l'\u00e9tape oxydative de la voie des pentoses phosphates", "correct": true}, {"id": "43_B", "text": "C'est le substrat de la G-6-P DH", "correct": false}, {"id": "43_C", "text": "Il est form\u00e9 lors de l'\u00e9tape non oxydative de la voie du pentose phosphate", "correct": false}, {"id": "43_D", "text": "Sa formation d\u00e9ficiente peut \u00eatre associ\u00e9e \u00e0 une an\u00e9mie h\u00e9molytique CetopesFost ApdopenFose RiseiSt 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 13/64", "correct": true}, {"id": "43_E", "text": "Il est g\u00e9n\u00e9r\u00e9 dans les r\u00e9actions d'isom\u00e9risation", "correct": false}, {"id": "43_F", "text": "Il est g\u00e9n\u00e9r\u00e9 dans de la premi\u00e8re \u00e9tape de la voie des pentoses phosphates", "correct": true}, {"id": "43_G", "text": "Il intervient dans les r\u00e9actions de formation des hormones thyro\u00efdiennes", "correct": false}, {"id": "43_H", "text": "Il intervient dans les r\u00e9actions de transc\u00e9tolisation", "correct": false}, {"id": "43_I", "text": "Il intervient dans la formation de l'ATP", "correct": false}, {"id": "43_J", "text": "Il peut \u00eatre un substrat pour l\u2019HMG-SCoA r\u00e9ductase", "correct": true}]}, {"id": 44, "question": "La r\u00e9action de transc\u00e9tolisation:", "options": [{"id": "44_A", "text": "On le trouve dans la glycolyse", "correct": false}, {"id": "44_B", "text": "Il consiste en le transfert d'un radical \u00e0 deux ou trois atomes de carbone", "correct": true}, {"id": "44_C", "text": "Il consiste en le transfert d'un groupe contenant deux atomes d'oxyg\u00e8ne", "correct": false}, {"id": "44_D", "text": "Il peut conduire directement \u00e0 la formation de F-6-P", "correct": false}, {"id": "44_E", "text": "C'est une \u00e9tape importante dans la synth\u00e8se de l'acide glucuronique", "correct": false}, {"id": "44_F", "text": "Il se produit entre deux hexoses", "correct": true}, {"id": "44_G", "text": "C\u2019est une r\u00e9action catalys\u00e9e par une transf\u00e9rase", "correct": true}, {"id": "44_H", "text": "Peut conduire \u00e0 l'heptulose 7 P", "correct": false}, {"id": "44_I", "text": "Il se trouve dans l'\u00e9tape oxydative de la voie des pentoses phosphates", "correct": false}, {"id": "44_J", "text": "Il se trouve dans la voie des pentoses phosphates.", "correct": true}]}, {"id": 45, "question": "UDP-G pyrophosphorylas :", "options": [{"id": "45_A", "text": "Il intervient dans la r\u00e9gulation de la glyc\u00e9mie", "correct": false}, {"id": "45_B", "text": "Agit sur le G-6-P", "correct": false}, {"id": "45_C", "text": "En cas de carence, il entra\u00eene une oligophr\u00e9nie ph\u00e9nylpyruvique", "correct": false}, {"id": "45_D", "text": "Il intervient dans la synth\u00e8se de l'acide glucuronique", "correct": true}, {"id": "45_E", "text": "Il a une action pr\u00e9alable \u00e0 l'enzyme UDP glucuronyl transf\u00e9rase", "correct": true}, {"id": "45_F", "text": "Il intervient dans la voie des pentoses phosphates", "correct": false}, {"id": "45_G", "text": "C'est la premi\u00e8re enzyme dans la voie de synth\u00e8se du produit r\u00e9sultant de l'oxydation du glucose", "correct": false}, {"id": "45_H", "text": "Il conduit \u00e0 la synth\u00e8se directe de la forme active du glucose", "correct": false}, {"id": "45_I", "text": "Agit sur le G-1-P", "correct": true}, {"id": "45_J", "text": "Il provoque la lib\u00e9ration de pyrophosphate", "correct": true}]}, {"id": 46, "question": "UDP-G DH:", "options": [{"id": "46_A", "text": "Il se trouve dans la voie de synth\u00e8se de l'acide glucuronique", "correct": true}, {"id": "46_B", "text": "Il se trouve dans la voie de synth\u00e8se de l'acide urique", "correct": false}, {"id": "46_C", "text": "Il catalyse les r\u00e9actions d'oxydation par la voie des pentoses phosphates", "correct": false}, {"id": "46_D", "text": "Il a une action oxydante", "correct": true}, {"id": "46_E", "text": "Il intervient dans la synth\u00e8se des pentoses phosphoryl\u00e9s", "correct": false}, {"id": "46_F", "text": "Il est synth\u00e9tis\u00e9e dans les reins et intervient dans la r\u00e9absorption du glucose par les tubules r\u00e9naux", "correct": false}, {"id": "46_G", "text": "Il intervient dans la formation d'un compos\u00e9 utile \u00e0 la d\u00e9toxification", "correct": true}, {"id": "46_H", "text": "Il d\u00e9pend du FAD", "correct": false}, {"id": "46_I", "text": "Il a un compos\u00e9 diphosphoryl\u00e9 comme substrat", "correct": false}, {"id": "46_J", "text": "Il a NAD comme coenzyme coortyre (C)CHOA20duxycutose- I \u00e2PrythosedeI F1,b Surle CIP GIP UDPEPcUDEe 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 14/64", "correct": true}]}, {"id": 47, "question": "Parmi les mol\u00e9cules/structures suivantes, lesquelles contiennent des oligosaccharides et des prot\u00e9ines li\u00e9s de mani\u00e8re covalente ?", "options": [{"id": "47_A", "text": "Protoporphyrine", "correct": false}, {"id": "47_B", "text": "Ferritine", "correct": false}, {"id": "47_C", "text": "Immunoglobuline M", "correct": true}, {"id": "47_D", "text": "Membrane cellulaire", "correct": true}, {"id": "47_E", "text": "R\u00e9cepteurs membranaires", "correct": true}, {"id": "47_F", "text": "Uroporphyrine", "correct": false}, {"id": "47_G", "text": "Acide glucuronique", "correct": false}, {"id": "47_H", "text": "Glycosaminoglycanes", "correct": false}, {"id": "47_I", "text": "Acide urique", "correct": false}, {"id": "47_J", "text": "Fibrinog\u00e8ne", "correct": true}]}, {"id": 48, "question": "Les prot\u00e9oglycanes contiennent dans les structures :", "options": [{"id": "48_A", "text": "Prot\u00e9ines", "correct": true}, {"id": "48_B", "text": "Polymonosaccharides", "correct": true}, {"id": "48_C", "text": "Cholest\u00e9rol", "correct": false}, {"id": "48_D", "text": "Hexosamines", "correct": true}, {"id": "48_E", "text": "Sulfate", "correct": true}, {"id": "48_F", "text": "Na+", "correct": false}, {"id": "48_G", "text": "ADP", "correct": false}, {"id": "48_H", "text": "Mol\u00e9cule r\u00e9sultant de l'oxydation du glucose", "correct": false}, {"id": "48_I", "text": "Acide cholique", "correct": false}, {"id": "48_J", "text": "Acide urique", "correct": false}]}, {"id": 49, "question": "Ce sont des exemples de mucopolysaccharides:", "options": [{"id": "49_A", "text": "Glycosaminoglycanes", "correct": true}, {"id": "49_B", "text": "Sulfates de k\u00e9ratane", "correct": true}, {"id": "49_C", "text": "H\u00e9parine", "correct": true}, {"id": "49_D", "text": "Fibrinog\u00e8ne", "correct": false}, {"id": "49_E", "text": "Sulfates de dermatane", "correct": true}, {"id": "49_F", "text": "Acide hyaluronique", "correct": true}, {"id": "49_G", "text": "Uroporphyrinog\u00e8ne", "correct": false}, {"id": "49_H", "text": "St\u00e9rols", "correct": false}, {"id": "49_I", "text": "Immunoglobulines", "correct": false}, {"id": "49_J", "text": "Sulfates de chondro\u00eftine", "correct": true}]}, {"id": 50, "question": "Les enzymes suivantes peuvent \u00eatre r\u00e9gul\u00e9es par diff\u00e9rents m\u00e9canismes:", "options": [{"id": "50_A", "text": "Transaldolase", "correct": false}, {"id": "50_B", "text": "Phosphofructose kinase", "correct": true}, {"id": "50_C", "text": "G-6-P DH", "correct": true}, {"id": "50_D", "text": "LDH", "correct": false}, {"id": "50_E", "text": "Pyruvate carboxylase", "correct": true}, {"id": "50_F", "text": "Aldolase X GPycoplatines:OS+proteine Potiogoycame:P9+Proteine 95= (69-503H]a Hexosemine- AideGladurique A * X XX i V Profiogels V V avoirlequelines X op considerepasparla V GrefiV X X X ->GlycoproteineV 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 15/64", "correct": false}, {"id": "50_G", "text": "Pyruvate kinase", "correct": true}, {"id": "50_H", "text": "Transc\u00e9tolase", "correct": false}, {"id": "50_I", "text": "Hexose kinase", "correct": true}, {"id": "50_J", "text": "Glycog\u00e8ne phosphorylase", "correct": true}]}, {"id": 51, "question": "Activation des acides gras pour la b\u00eata-oxydation :", "options": [{"id": "51_A", "text": "Elle se fait par phosphorylation", "correct": false}, {"id": "51_B", "text": "Elle g\u00e9n\u00e8re un nucl\u00e9otide purique", "correct": false}, {"id": "51_C", "text": "Elle n\u00e9cessite un nucl\u00e9otide pyrimidique", "correct": false}, {"id": "51_D", "text": "Elle n\u00e9cessite un nucl\u00e9otide purique", "correct": true}, {"id": "51_E", "text": "Elle se produit dans les mitochondries", "correct": true}, {"id": "51_F", "text": "Elle g\u00e9n\u00e8re de l'ac\u00e9tyl-CoA", "correct": false}, {"id": "51_G", "text": "Elle est obtenue en r\u00e9agissant avec le coenzyme A", "correct": false}, {"id": "51_H", "text": "Elle g\u00e9n\u00e8re de l'acyl-CoA", "correct": true}, {"id": "51_I", "text": "Elle g\u00e9n\u00e8re un nucl\u00e9otide pyrimidique", "correct": false}, {"id": "51_J", "text": "Elle se produit dans le cytoplasme", "correct": false}]}, {"id": 52, "question": "Carnitine :", "options": [{"id": "52_A", "text": "Elle peut se lier transitoire \u00e0 l'ac\u00e9tyl-SCoA", "correct": false}, {"id": "52_B", "text": "Peut traverser les membranes mitochondriales", "correct": true}, {"id": "52_C", "text": "Elle peut subir l'action d'une transf\u00e9rase dans la membrane externe mitochondriale", "correct": true}, {"id": "52_D", "text": "C'est le transporteur sp\u00e9cifique de l'AG (acid gras) activ\u00e9", "correct": true}, {"id": "52_E", "text": "Elle peut \u00eatre activ\u00e9e pour le transport de l'AG \u00e0 travers la membrane mitochondriale", "correct": false}, {"id": "52_F", "text": "Elle peut se lier transitoire\u00a0au groupe acyle", "correct": true}, {"id": "52_G", "text": "Elle peut \u00eatre carboxyl\u00e9 pour former du malonyl-SCoA.", "correct": false}, {"id": "52_H", "text": "Fait partie de la structure des phospholipides", "correct": false}, {"id": "52_I", "text": "Elle peut subir l'action d'une transf\u00e9rase dans la membrane mitochondriale", "correct": true}]}, {"id": 53, "question": "L'acide palmitique traverse la membrane mitochondriale :", "options": [{"id": "53_A", "text": "Apr\u00e8s activation par l'OAA", "correct": false}, {"id": "53_B", "text": "Du cytoplasme \u00e0 la matrice mitochondriale, sous forme activ\u00e9e", "correct": true}, {"id": "53_C", "text": "Apr\u00e8s son activation par r\u00e9action avec la carnitine", "correct": false}, {"id": "53_D", "text": "De la matrice mitochondriale au cytoplasme", "correct": false}, {"id": "53_E", "text": "Avec l'aide d'une prot\u00e9ine appel\u00e9e translocase (transf\u00e9rase)", "correct": true}, {"id": "53_F", "text": "Sous forme de palmitoyl-CoA", "correct": false}, {"id": "53_G", "text": "Seulement s'il a \u00e9t\u00e9 activ\u00e9 avant", "correct": true}, {"id": "53_H", "text": "Pour entrer dans le cycle de Krebs", "correct": false}, {"id": "53_I", "text": "Sous forme de palmitoyl-carnitine", "correct": true}, {"id": "53_J", "text": "A l'aide d'un compos\u00e9 azot\u00e9", "correct": false}]}, {"id": 54, "question": "En ce qui concerne la d\u00e9gradation des acides gras, on peut af\ufb01rmer que :", "options": [{"id": "54_A", "text": "Il ne produit pas de FADH2, dans le cas des acides gras insatur\u00e9s", "correct": false}, {"id": "54_B", "text": "D\u00e9termine la lib\u00e9ration de l'eau", "correct": true}, {"id": "54_C", "text": "L'activation est aussi appel\u00e9e \u03b2-oxydation", "correct": false}, {"id": "54_D", "text": "Il peut conduire \u00e0 une mol\u00e9cule utile \u00e0 la synth\u00e8se du glucose 1-200- AmycoASyntheseAgirAt 7-AS-COAATPAPPAR Te c hATP -traspost- Boxydation pansport (centrain C = 6 R- CHa-2Hy-S-20A oxy->Hydotationeoxy=this -) propionyPCA \u246dY_clt-Sco-s 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 16/64", "correct": true}, {"id": "54_E", "text": "L'activation des AG se fait par l'ac\u00e9tyl~SCoA", "correct": false}, {"id": "54_F", "text": "C\u2019est un processus avec des \u00e9tapes mitochondriales", "correct": true}, {"id": "54_G", "text": "Il peut produire de l'ac\u00e9tyl-CoA \u00e0 partir des AG avec un nombre impair d'atomes de carbone", "correct": true}, {"id": "54_H", "text": "Produit du NADPH", "correct": false}, {"id": "54_I", "text": "La carnitine est impliqu\u00e9e dans le transfert de AG vers le site de d\u00e9gradation", "correct": true}, {"id": "54_J", "text": "Un compos\u00e9 azot\u00e9 est impliqu\u00e9 dans le transfert de AG vers le site de d\u00e9gradation", "correct": false}]}, {"id": 55, "question": "Le processus de d\u00e9gradation des acides gras satur\u00e9s implique des r\u00e9actions telles que :", "options": [{"id": "55_A", "text": "R\u00e9actions de transfert", "correct": true}, {"id": "55_B", "text": "M\u00e9thylation", "correct": false}, {"id": "55_C", "text": "Oxydation du FAD", "correct": true}, {"id": "55_D", "text": "Hydratation", "correct": true}, {"id": "55_E", "text": "Oxydation du radical ac\u00e9tyle", "correct": false}, {"id": "55_F", "text": "Carboxylation", "correct": false}, {"id": "55_G", "text": "R\u00e9duction du NADP +", "correct": false}, {"id": "55_H", "text": "R\u00e9actions consommant de l'ATP", "correct": false}, {"id": "55_I", "text": "R\u00e9duction du NAD+", "correct": true}, {"id": "55_J", "text": "Oxydation des radicaux acyles", "correct": true}]}, {"id": 56, "question": "Les r\u00e9actions dans l'\u00e9tape du b\u00eata oxydation des acides gras peuvent produire :", "options": [{"id": "56_A", "text": "Acyl-CoA", "correct": true}, {"id": "56_B", "text": "Acyl-carnitine", "correct": false}, {"id": "56_C", "text": "Ac\u00e9tyl-CoA", "correct": true}, {"id": "56_D", "text": "Raccourcissement \u00e0 2 atomes de carbone de la cha\u00eene d'acide gras avec un nombre pair d'atomes de carbone", "correct": true}, {"id": "56_E", "text": "H2O", "correct": false}, {"id": "56_F", "text": "ATP", "correct": false}, {"id": "56_G", "text": "NADPH", "correct": false}, {"id": "56_H", "text": "NADH", "correct": true}, {"id": "56_I", "text": "FADH2", "correct": true}, {"id": "56_J", "text": "Acid glutarique", "correct": false}]}, {"id": 57, "question": "Pendant la premi\u00e8re r\u00e9action d'oxydation au sein de la b\u00eata-oxydation des acides gras r\u00e9sulte :", "options": [{"id": "57_A", "text": "Une double liaison entre deux atomes de carbone dans le radical acyle", "correct": true}, {"id": "57_B", "text": "Une coenzyme sous forme r\u00e9duite", "correct": true}, {"id": "57_C", "text": "Une double liaison entre un atome de carbone et un atome d'oxyg\u00e8ne dans le radical acyle", "correct": false}, {"id": "57_D", "text": "2 mol\u00e9cules d'ATP directement", "correct": false}, {"id": "57_E", "text": "NADH", "correct": false}, {"id": "57_F", "text": "Une double liaison entre un atome de carbone et un atome d'oxyg\u00e8ne dans l'acide gras activ\u00e9", "correct": false}, {"id": "57_G", "text": "Un compos\u00e9 insatur\u00e9 JevonPechabsopue\"oui\"( 01/06/2023 11:49 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 17/64", "correct": true}, {"id": "57_H", "text": "FADH2", "correct": true}, {"id": "57_I", "text": "3 mol\u00e9cules d'ATP directement", "correct": false}, {"id": "57_J", "text": "2 mol\u00e9cules d'ATP indirectement", "correct": true}]}, {"id": 58, "question": "La d\u00e9gradation de l'acide ol\u00e9ique :", "options": [{"id": "58_A", "text": "Implique des \u00e9tapes au cours desquelles l'ATP est consomm\u00e9e", "correct": false}, {"id": "58_B", "text": "Ne produit de FADH2", "correct": true}, {"id": "58_C", "text": "Produit du NADPH", "correct": false}, {"id": "58_D", "text": "Produit du FADH2", "correct": true}, {"id": "58_E", "text": "N\u00e9cessite de la carnitine pour traverser la membrane mitochondriale", "correct": true}, {"id": "58_F", "text": "N\u00e9cessite l'action d'une thiolase", "correct": false}, {"id": "58_G", "text": "Aucune \u00e9tape d'activation n'est n\u00e9cessaire", "correct": false}, {"id": "58_H", "text": "Conduit \u00e0 la formation d'une mol\u00e9cule de propionyl-CoA", "correct": false}, {"id": "58_I", "text": "N\u00e9cessite l'action d'une d\u00e9saturase", "correct": true}, {"id": "58_J", "text": "N\u00e9cessite une isom\u00e9rase", "correct": true}]}, {"id": 59, "question": "Pour produire 8 mol\u00e9cules de NADH en b\u00eata-oxydation, il est n\u00e9cessaire :", "options": [{"id": "59_A", "text": "Acide st\u00e9arique", "correct": true}, {"id": "59_B", "text": "Acide ol\u00e9ique", "correct": false}, {"id": "59_C", "text": "Un acide gras satur\u00e9 avec 20 atomes de carbone", "correct": false}, {"id": "59_D", "text": "Un acide gras satur\u00e9 avec 19 atomes de carbone", "correct": true}, {"id": "59_E", "text": "Un acide gras insatur\u00e9 avec 18 atomes de carbone", "correct": false}, {"id": "59_F", "text": "Acide arachidonique", "correct": false}, {"id": "59_G", "text": "Un acide gras satur\u00e9 avec 22 atomes de carbone", "correct": false}, {"id": "59_H", "text": "Un acide gras satur\u00e9 avec 18 atomes de carbone", "correct": true}, {"id": "59_I", "text": "Un acide gras insatur\u00e9 avec 20 atomes de carbone", "correct": false}, {"id": "59_J", "text": "Acide palmitique", "correct": false}]}, {"id": 60, "question": "La production de 9 mol\u00e9cules d'ac\u00e9tyl-CoA par b\u00eata-oxydation, est possible \u00e0 partir de la degradation de :", "options": [{"id": "60_A", "text": "Un acide gras insatur\u00e9 \u00e0 20 atomes de carbone", "correct": false}, {"id": "60_B", "text": "Acide palmitique", "correct": false}, {"id": "60_C", "text": "Un acide gras satur\u00e9 avec 21 atomes de carbone", "correct": false}, {"id": "60_D", "text": "Acide st\u00e9arique", "correct": true}, {"id": "60_E", "text": "Un acide gras satur\u00e9 avec 18 atomes de carbone", "correct": true}, {"id": "60_F", "text": "Acide ol\u00e9ique", "correct": true}, {"id": "60_G", "text": "Un acide gras insatur\u00e9 \u00e0 18 atomes de carbone", "correct": true}, {"id": "60_H", "text": "Un acide gras satur\u00e9 \u00e0 19 atomes de carbone", "correct": false}, {"id": "60_I", "text": "Un acide gras satur\u00e9 \u00e0 20 atomes de carbone", "correct": false}, {"id": "60_J", "text": "Acide arachidonique", "correct": false}]}];
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `Q${q.id} - ${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    optionsGrid.appendChild(label);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
