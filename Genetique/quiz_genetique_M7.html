@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMF EXAMENE - Génétique M7</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .nav-links { display: flex; justify-content: space-between; margin-bottom: 30px; margin-top: 20px; }
+        .nav-links a { text-decoration: none; padding: 10px 20px; background-color: #2c3e50; color: white; border-radius: 5px; font-weight: bold; transition: background-color 0.2s; }
+        .nav-links a:hover { background-color: #1a252f; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-container { display: flex; flex-direction: column; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="quiz_genetique_M6.html">◄ Fichier Précédent</a>
+            <a href="quiz_genetique_M8.html">Fichier Suivant ►</a>
+        </div>
+        <header>
+            <h1>UMF EXAMENE - Génétique M7</h1>
+        </header>
+        
+        <div class="revision-box">
+            <h3>📝 Fiche de révision : Acides Aminés et Créatine (Questions 121 à 140)</h3><p><strong>Tyrosine/Tryptophane :</strong> Précurseurs des catécholamines, mélanine et sérotonine.<br><strong>Créatine :</strong> Synthétisée dans le foie/rein, stocke l'énergie musculaire (Phosphocréatine).</p>
+        </div>
+        
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer les questions 🔄</button>
+        </form>
+        
+        <div class="nav-links">
+            <a href="quiz_genetique_M6.html">◄ Fichier Précédent</a>
+            <a href="quiz_genetique_M8.html">Fichier Suivant ►</a>
+        </div>
+    </div>
+    
+    <script>
+        const quizData = [{"id": 121, "question": "Les indications pratiques de l'\u00e9tude des chromosomes humains visent :", "options": [{"id": "121_A", "text": "Couples avec infertilit\u00e9 primaire", "correct": true}, {"id": "121_B", "text": "Maladies traumatiques", "correct": false}, {"id": "121_C", "text": "Maladies mitochondriales", "correct": false}, {"id": "121_D", "text": "Syndromes plurimalformatifs", "correct": true}, {"id": "121_E", "text": "Maladies infectieuses", "correct": false}, {"id": "121_F", "text": "Maladies multifactorielles", "correct": false}, {"id": "121_G", "text": "Maladies monog\u00e9niques", "correct": false}, {"id": "121_H", "text": "\u00c9tats intersexu\u00e9s", "correct": true}, {"id": "121_I", "text": "D\u00e9veloppement anormal des caract\u00e8res sexuels secondaires", "correct": true}, {"id": "121_J", "text": "Parents d'enfants pr\u00e9sentant des anomalies chromosomiques structurelles", "correct": true}]}, {"id": 122, "question": "Lesquelles des anomalies structurelles ci-dessous sont d\u00e9s\u00e9quilibr\u00e9es, \u00e9tant impliqu\u00e9es dans la production de maladies chromosomiques\u00a0:", "options": [{"id": "122_A", "text": "Isochromosomes", "correct": true}, {"id": "122_B", "text": "Chromosomes dicentriques", "correct": true}, {"id": "122_C", "text": "Duplications", "correct": false}, {"id": "122_D", "text": "Translocations r\u00e9ciproques", "correct": false}, {"id": "122_E", "text": "Inversions paracentriques", "correct": false}, {"id": "122_F", "text": "Chromosomes en anneau", "correct": true}, {"id": "122_G", "text": "D\u00e9l\u00e9tions", "correct": true}, {"id": "122_H", "text": "Insertions", "correct": true}, {"id": "122_I", "text": "Translocations Robertsoniennes", "correct": false}, {"id": "122_J", "text": "Inversions p\u00e9ricentriques", "correct": false}]}, {"id": 123, "question": "Parmi les anomalies structurelles ci-dessous, lesquelles sont \u00e9quilibr\u00e9es, \u00e9tant impliqu\u00e9es dans la production de troubles de la reproduction d'origine chromosomique\u00a0:", "options": [{"id": "123_A", "text": "Duplications", "correct": false}, {"id": "123_B", "text": "Inversions p\u00e9ricentriques ", "correct": true}, {"id": "123_C", "text": "D\u00e9l\u00e9tions", "correct": false}, {"id": "123_D", "text": "Chromosomes en anneau", "correct": false}, {"id": "123_E", "text": "Inversions paracentriques", "correct": true}, {"id": "123_F", "text": "Translocations r\u00e9ciproques", "correct": true}, {"id": "123_G", "text": "Isochromosomes", "correct": true}, {"id": "123_H", "text": "Insertions", "correct": false}, {"id": "123_I", "text": "Translocations Robertsoniennes", "correct": true}, {"id": "123_J", "text": "Chromosomes dicentriques", "correct": false}]}, {"id": 124, "question": "Lesquelles des anomalies chromosomiques suivantes touchent au moins deux chromosomes:", "options": [{"id": "124_A", "text": "L'isochromosomes", "correct": false}, {"id": "124_B", "text": "Les chromosomes dicentriques", "correct": false}, {"id": "124_C", "text": "Les chromosomes en anneau", "correct": true}, {"id": "124_D", "text": "Les inversions", "correct": true}, {"id": "124_E", "text": "Les duplications", "correct": false}, {"id": "124_F", "text": "Les d\u00e9l\u00e9tions", "correct": false}, {"id": "124_G", "text": "Les translocations Robertsoniennes", "correct": true}, {"id": "124_H", "text": "Les chromosomes d\u00e9riv\u00e9s r\u00e9sultant de translocations r\u00e9ciproques \u00e9quilibr\u00e9es parentales", "correct": true}, {"id": "124_I", "text": "Les translocations r\u00e9ciproques", "correct": true}, {"id": "124_J", "text": "Les insertions", "correct": false}]}, {"id": 125, "question": "Parmi les anomalies chromosomiques suivantes, lesquelles sont toujours non viables\u00a0:", "options": [{"id": "125_A", "text": "T\u00e9trasomie X", "correct": false}, {"id": "125_B", "text": "Trisomie 13", "correct": true}, {"id": "125_C", "text": "T\u00e9trasomie 21", "correct": false}, {"id": "125_D", "text": "Trisomie X", "correct": false}, {"id": "125_E", "text": "Monosomie 8", "correct": true}, {"id": "125_F", "text": "T\u00e9traplo\u00efdie", "correct": true}, {"id": "125_G", "text": "Triplo\u00efdie", "correct": true}, {"id": "125_H", "text": "Monosomie 17", "correct": false}, {"id": "125_I", "text": "Trisomie 21", "correct": true}, {"id": "125_J", "text": "Trisomie 18", "correct": false}]}, {"id": 126, "question": "Le traitement du syndrome de Turner se caract\u00e9rise par :", "options": [{"id": "126_A", "text": "Le traitement n'induit pas la formation d'ovocytes", "correct": false}, {"id": "126_B", "text": "Le traitement des troubles psychiatriques n\u00e9cessite la collaboration d'un psychiatre et d'un psychologue", "correct": false}, {"id": "126_C", "text": "D\u00e8s la pubert\u00e9, une th\u00e9rapie de substitution aux hormones sexuelles f\u00e9minines (pr\u00e9parations contenant de l'\u0153strog\u00e8ne et de la progest\u00e9rone) est appliqu\u00e9e ;", "correct": true}, {"id": "126_D", "text": "Elle ne se fait qu'apr\u00e8s la pubert\u00e9 et consiste en l'administration d'androg\u00e8nes, dans le but d'induire le d\u00e9veloppement de caract\u00e8res sexuels secondaires sp\u00e9cifiques ", "correct": true}, {"id": "126_E", "text": "La gyn\u00e9comastie ne r\u00e9pond pas au traitement hormonal, mais n\u00e9cessite un traitement chirurgical, car elle s'accompagne d'un risque accru de cancer du sein.", "correct": false}, {"id": "126_F", "text": "Apr\u00e8s l'\u00e2ge du d\u00e9but de la pubert\u00e9 normale, un traitement \u00e0 l'oxandrolone (une hormone androg\u00e8ne faible) est administr\u00e9, ce qui stimule la croissance des os longs\u00a0;", "correct": true}, {"id": "126_G", "text": "La correction du d\u00e9ficit de f\u00e9minisation est obtenue par l'administration de m\u00e9langes d'oestrog\u00e8nes et de progest\u00e9rone ;", "correct": true}, {"id": "126_H", "text": "Le traitement androg\u00e9nique doit \u00eatre d\u00e9but\u00e9 \u00e0 la pubert\u00e9 et poursuivi, sous surveillance endocrinologique, tout au long de la vie reproductive active.", "correct": true}, {"id": "126_I", "text": "Le traitement induit la formation de spermatozo\u00efdes", "correct": false}, {"id": "126_J", "text": "L\u2019administration pendant l'enfance de surdosages de GH (hormone de croissance) ;", "correct": false}]}, {"id": 127, "question": "Le traitement du syndrome de Klinefelter se caract\u00e9rise par :", "options": [{"id": "127_A", "text": "Le traitement androg\u00e9nique doit \u00eatre d\u00e9but\u00e9 \u00e0 la pubert\u00e9 et poursuivi, sous surveillance endocrinologique, tout au long de la vie.", "correct": true}, {"id": "127_B", "text": "Apr\u00e8s l'\u00e2ge du d\u00e9but de la pubert\u00e9 normale, un traitement \u00e0 l'oxandrolone (une hormone androg\u00e8ne faible) est administr\u00e9, ce qui stimule la croissance des os longs\u00a0;", "correct": false}, {"id": "127_C", "text": "L\u2019administration pendant l'enfance de surdosages de GH (hormone de croissance)", "correct": false}, {"id": "127_D", "text": "Le traitement n'induit pas la formation de spermatozo\u00efdes", "correct": false}, {"id": "127_E", "text": "Le traitement induit la formation d'ovocytes", "correct": false}, {"id": "127_F", "text": "\u00c0 l'\u00e2ge adulte, il est utile de contr\u00f4ler l'ob\u00e9sit\u00e9 en stimulant les exercices physiques et en administrant des inhibiteurs de la s\u00e9rotonine pour am\u00e9liorer les troubles du comportement.", "correct": true}, {"id": "127_G", "text": "Le traitement des troubles psychiatriques n\u00e9cessite la collaboration d'un psychiatre et d'un psychologue", "correct": true}, {"id": "127_H", "text": "Elle ne se fait qu'apr\u00e8s la pubert\u00e9 et consiste en l'administration d'androg\u00e8nes, dans le but d'induire le d\u00e9veloppement de caract\u00e8res sexuels secondaires sp\u00e9cifiques", "correct": false}, {"id": "127_I", "text": "La gyn\u00e9comastie ne r\u00e9pond pas au traitement hormonal, mais n\u00e9cessite un traitement chirurgical, car elle s'accompagne d'un risque accru de cancer du sein.", "correct": true}, {"id": "127_J", "text": "\u00c0 la pubert\u00e9, une th\u00e9rapie de remplacement par des hormones sexuelles oestro- progestatives est appliqu\u00e9e", "correct": true}]}, {"id": 128, "question": "Le traitement du syndrome de Down se caract\u00e9rise par :", "options": [{"id": "128_A", "text": "Vise sp\u00e9cifiquement \u00e0 pr\u00e9venir les complications", "correct": true}, {"id": "128_B", "text": "Il n'y a pas de th\u00e9rapie sp\u00e9cifique", "correct": false}, {"id": "128_C", "text": "Comprend une th\u00e9rapie comportementale sous supervision psychoth\u00e9rapeutique", "correct": true}, {"id": "128_D", "text": "L\u2019administration pendant l'enfance de surdosages de GH (hormone de croissance) ;", "correct": false}, {"id": "128_E", "text": "Apr\u00e8s l'\u00e2ge du d\u00e9but de la pubert\u00e9 normale, un traitement \u00e0 l'oxandrolone (une hormone androg\u00e8ne faible) est administr\u00e9, ce qui stimule la croissance des os longs\u00a0;", "correct": false}, {"id": "128_F", "text": "Il est sp\u00e9cifiquement orient\u00e9 vers la correction cibl\u00e9e de certains probl\u00e8mes", "correct": true}, {"id": "128_G", "text": "\u00c0 l'\u00e2ge adulte, il n'est pas utile de contr\u00f4ler l'ob\u00e9sit\u00e9 en stimulant les exercices physiques.", "correct": true}, {"id": "128_H", "text": "Les d\u00e9ficits neurologiques ne n\u00e9cessitent pas de m\u00e9thodes physiques et professionnelles. ", "correct": false}, {"id": "128_I", "text": "En p\u00e9riode n\u00e9onatale, les besoins alimentaires ne doivent pas \u00eatre assur\u00e9s par des techniques particuli\u00e8res d'allaitement ou de gavage.", "correct": false}, {"id": "128_J", "text": "Comprend la correction orthophonique", "correct": true}]}, {"id": 129, "question": "Le risque de r\u00e9cidive du syndrome de Down est :", "options": [{"id": "129_A", "text": "Dans l\u2019absence des ant\u00e9c\u00e9dents familiaux, il d\u00e9pend de l'\u00e2ge avanc\u00e9 de la m\u00e8re", "correct": true}, {"id": "129_B", "text": "Non significatif dans les trisomies 21 en mosa\u00efques (<0,1%)", "correct": false}, {"id": "129_C", "text": "Mod\u00e9r\u00e9e (10%) dans la trisomie 21 par translocation Robertsonienne entre chromosomes homologues", "correct": true}, {"id": "129_D", "text": "R\u00e9duit dans la trisomie 21 libre homog\u00e8ne (environ 1%)", "correct": false}, {"id": "129_E", "text": "Les couples qui ont un enfant atteint de trisomie 21 par translocation Robertsonienne ont un risque d'environ 1% d'avoir un autre enfant atteint", "correct": true}, {"id": "129_F", "text": "Mod\u00e9r\u00e9 dans la trisomie 21 par translocation Robertsonienne entre chromosomes non homologues (10%)", "correct": true}, {"id": "129_G", "text": "Total (100%) dans la trisomie 21 par translocation Robertsonienne entre chromosomes homologues", "correct": true}, {"id": "129_H", "text": "Si les deux parents ont un caryotype normal, le risque d'avoir un autre enfant atteint est nul.", "correct": false}, {"id": "129_I", "text": "Total (100%) dans la trisomie 21 par translocation Robertsonienne entre chromosomes non homologues", "correct": false}, {"id": "129_J", "text": "D\u00e9pend de l'\u00e2ge avanc\u00e9 du p\u00e8re", "correct": false}]}, {"id": 130, "question": "Dans une famille o\u00f9 il existe une maladie autosomique dominante :", "options": [{"id": "130_A", "text": "Une personne malade peut avoir le g\u00e9notype Na", "correct": true}, {"id": "130_B", "text": "Une m\u00e8re en bonne sant\u00e9 peut avoir un fils malade", "correct": true}, {"id": "130_C", "text": "Un p\u00e8re malade peut avoir une fille en bonne sant\u00e9", "correct": false}, {"id": "130_D", "text": "Un p\u00e8re malade peut transmettre la maladie \u00e0 son fils", "correct": true}, {"id": "130_E", "text": "Deux parents malades ne peuvent pas avoir des enfants en bonne sant\u00e9", "correct": false}, {"id": "130_F", "text": "Une personne en bonne sant\u00e9 a le g\u00e9notype NN", "correct": false}, {"id": "130_G", "text": "Une personne malade peut avoir le g\u00e9notype An", "correct": true}, {"id": "130_H", "text": "Un p\u00e8re malade a toutes des filles malades", "correct": false}, {"id": "130_I", "text": "Deux parents malades peuvent avoir des filles en bonne sant\u00e9", "correct": true}, {"id": "130_J", "text": "Le risque que deux parents malades d\u2019avoir des enfants malades est toujours de 100%", "correct": false}]}, {"id": 131, "question": "Dans le cas d'une maladie transmise de mani\u00e8re dominante li\u00e9e \u00e0u chromosome X, une personne h\u00e9t\u00e9rozygote :", "options": [{"id": "131_A", "text": "Elle est malade", "correct": true}, {"id": "131_B", "text": "Elle peut h\u00e9riter le g\u00e8ne anormal de l'un de ses parents", "correct": false}, {"id": "131_C", "text": "Elle a le g\u00e9notype X Y", "correct": false}, {"id": "131_D", "text": "Elle a 50% de risque de transmettre la maladie \u00e0 sa prog\u00e9niture, si le mari est en bonne sant\u00e9", "correct": true}, {"id": "131_E", "text": "Elle a le g\u00e9notype An", "correct": false}, {"id": "131_F", "text": "Elle ne peut pas transmettre la condition \u00e0 la prog\u00e9niture", "correct": false}, {"id": "131_G", "text": "Elle a le g\u00e9notype X X", "correct": true}, {"id": "131_H", "text": "Si elle \u00e9pouse une personne malade, elle a 75% de risque d'avoir des enfants malades", "correct": true}, {"id": "131_I", "text": "S'il \u00e9pouse une personne malade, il a 100% de risque d'avoir des enfants malades", "correct": false}, {"id": "131_J", "text": "Elle a un risque de 25% de transmettre la maladie \u00e0 sa prog\u00e9niture", "correct": true}]}, {"id": 132, "question": "Les personnes avec le g\u00e9notype X Y\u00a0:", "options": [{"id": "132_A", "text": "Elles sont h\u00e9t\u00e9rozygotes", "correct": false}, {"id": "132_B", "text": "Elles ne peuvent pas transmettre le g\u00e8ne anormal aux gar\u00e7ons", "correct": true}, {"id": "132_C", "text": "Elles ont un risque de 50% de transmettre le g\u00e8ne anormal dominant trouv\u00e9 sur le chromosome X \u00e0 leurs fils", "correct": false}, {"id": "132_D", "text": "Elles ont un risque de 25% d'avoir des filles malades", "correct": false}, {"id": "132_E", "text": "Elles sont malades", "correct": false}, {"id": "132_F", "text": "Elles sont h\u00e9mizygotes", "correct": true}, {"id": "132_G", "text": "Elles ont un risque de 100% d'avoir des filles malades", "correct": true}, {"id": "132_H", "text": "Elles ont une maladie transmissible li\u00e9e \u00e0 chromosome Y", "correct": true}, {"id": "132_I", "text": "Elles souffrent d'une maladie \u00e0 transmission dominante", "correct": true}, {"id": "132_J", "text": "Elles sont des porteuses saines", "correct": false}]}, {"id": 133, "question": "\u00c0 propos des personnes ayant le g\u00e9notype Na, nous pouvons dire que\u00a0:", "options": [{"id": "133_A", "text": "Si elles \u00e9pousent une personne malade, elles ont un risque de 100% d'avoir des enfants malades", "correct": true}, {"id": "133_B", "text": "Si elles \u00e9pousent une personne ayant le g\u00e9notype NN, ils ne peuvent pas avoir d'enfants malades", "correct": false}, {"id": "133_C", "text": "Elles sont h\u00e9t\u00e9rozygotes", "correct": true}, {"id": "133_D", "text": "Elles souffrent d'une maladie h\u00e9r\u00e9ditaire li\u00e9e au chromosome X", "correct": false}, {"id": "133_E", "text": "Elles souffrent d'une maladie \u00e0 transmission dominante", "correct": false}, {"id": "133_F", "text": "Elles peuvent h\u00e9riter le g\u00e8ne anormal de l'un de leurs parents", "correct": true}, {"id": "133_G", "text": "Elles ont une chance de 50% de transmettre le g\u00e8ne anormal \u00e0 leur prog\u00e9niture", "correct": true}, {"id": "133_H", "text": "Elles ont un risque de 75 % de transmettre le g\u00e8ne anormal \u00e0 leurs fils", "correct": true}, {"id": "133_I", "text": "Elles sont h\u00e9mizygotes", "correct": false}, {"id": "133_J", "text": "Elles sont en bonne sant\u00e9", "correct": false}]}, {"id": 134, "question": "Dans les maladies dominantes on peut rencontrer les g\u00e9notypes suivants :", "options": [{"id": "134_A", "text": "Na", "correct": true}, {"id": "134_B", "text": "X Y", "correct": false}, {"id": "134_C", "text": "X X", "correct": true}, {"id": "134_D", "text": "aa", "correct": false}, {"id": "134_E", "text": "X X", "correct": false}, {"id": "134_F", "text": "X X", "correct": true}, {"id": "134_G", "text": "An", "correct": false}, {"id": "134_H", "text": "X X", "correct": true}, {"id": "134_I", "text": "NN", "correct": false}, {"id": "134_J", "text": "AA", "correct": true}]}, {"id": 135, "question": "Les maladies dominantes li\u00e9es au chromosome X se caract\u00e9risent par\u00a0:", "options": [{"id": "135_A", "text": "Les hommes malades ont un risque de 50% d'avoir des filles malades", "correct": true}, {"id": "135_B", "text": "Les hommes malades ne peuvent pas avoir de filles en bonne sant\u00e9", "correct": false}, {"id": "135_C", "text": "Deux parents malades peuvent avoir des enfants sains exclusivement des gar\u00e7ons", "correct": false}, {"id": "135_D", "text": "Deux parents malades ne peuvent avoir que des enfants malades", "correct": false}, {"id": "135_E", "text": "Les femmes h\u00e9t\u00e9rozygotes ne peuvent pas avoir de filles en bonne sant\u00e9", "correct": true}, {"id": "135_F", "text": "Les femmes malades ne peuvent pas transmettre la maladie \u00e0 leurs fils", "correct": false}, {"id": "135_G", "text": "Ils sont la cons\u00e9quence de mutations g\u00e9n\u00e9tiques localis\u00e9es sur le chromosome X", "correct": false}, {"id": "135_H", "text": "Le risque de r\u00e9cidive de la maladie chez la prog\u00e9niture d'une femme h\u00e9t\u00e9rozygote mari\u00e9e \u00e0 un homme en bonne sant\u00e9 sera de 50%", "correct": true}, {"id": "135_I", "text": "Les hommes malades ne peuvent pas transmettre la maladie \u00e0 leurs fils (lorsque la femme est en bonne sant\u00e9)", "correct": true}, {"id": "135_J", "text": "Le risque de r\u00e9cidive de la maladie chez la prog\u00e9niture d'une femme h\u00e9t\u00e9rozygote mari\u00e9e \u00e0 un homme en bonne sant\u00e9 sera de 25%", "correct": true}]}, {"id": 136, "question": "\u00c0 propos des maladies monog\u00e9niques, nous pouvons dire ce qui suit\u00a0:", "options": [{"id": "136_A", "text": "Elles sont produites par des accidents de s\u00e9gr\u00e9gation du mat\u00e9riel g\u00e9n\u00e9tique lors de la m\u00e9iose (non-disjonction)", "correct": true}, {"id": "136_B", "text": "Elles sont d\u00e9termin\u00e9es exclusivement par des facteurs environnementaux", "correct": false}, {"id": "136_C", "text": "Elles se caract\u00e9risent par la pr\u00e9sence dans une cellule somatique d'un seul chromosome au lieu d'une paire de chromosomes", "correct": false}, {"id": "136_D", "text": "Elles peuvent \u00eatre diagnostiqu\u00e9es par analyse chromosomique", "correct": true}, {"id": "136_E", "text": "Elles sont produites par l'accumulation de mutations somatiques au fil du temps et la r\u00e9duction du nombre de chromosomes", "correct": false}, {"id": "136_F", "text": "Elles sont d\u00e9termin\u00e9es exclusivement par des facteurs h\u00e9r\u00e9ditaires", "correct": false}, {"id": "136_G", "text": "Elles sont class\u00e9es en dominantes et r\u00e9cessives", "correct": true}, {"id": "136_H", "text": "Elles sont produites par des mutations qui n'affectent qu'une paire de g\u00e8nes all\u00e8les", "correct": false}, {"id": "136_I", "text": "Elles sont transmises selon les lois de Mendel", "correct": true}, {"id": "136_J", "text": "Dans l'arbre g\u00e9n\u00e9alogique, en utilisant des crit\u00e8res sp\u00e9cifiques, le mode de transmission de la maladie peut \u00eatre identifi\u00e9", "correct": true}]}, {"id": 137, "question": "On peut dire ce qui suit \u00e0 propos de la consanguinit\u00e9:", "options": [{"id": "137_A", "text": "Elle repr\u00e9sente le mariage entre personness appartenant \u00e0 la m\u00eame famille", "correct": false}, {"id": "137_B", "text": "Elle augmente la probabilit\u00e9 que la prog\u00e9niture soit homozygote pour une mutation r\u00e9cessive", "correct": true}, {"id": "137_C", "text": "Elle peut \u00eatre \u00e9valu\u00e9 par le coefficient de consanguinit\u00e9 (la proportion moyenne de g\u00e8nes communs des membres d'un couple consanguin)", "correct": true}, {"id": "137_D", "text": "Elle peut \u00eatre \u00e9valu\u00e9e par le coefficient de p\u00e9n\u00e9tration incompl\u00e8te", "correct": false}, {"id": "137_E", "text": "Cela augmente la probabilit\u00e9 que la prog\u00e9niture du couple soit affect\u00e9e par des maladies mitochondriales", "correct": false}, {"id": "137_F", "text": "Augmente la probabilit\u00e9 que la prog\u00e9niture h\u00e9rite de la m\u00eame mutation g\u00e9n\u00e9tique r\u00e9cessive des deux parents", "correct": true}, {"id": "137_G", "text": "Elle repr\u00e9sente la transfusion sanguine entre personnes apparent\u00e9es", "correct": false}, {"id": "137_H", "text": "Elle augmente le risque de non-disjonction ", "correct": true}, {"id": "137_I", "text": "Cela augmente la probabilit\u00e9 que la prog\u00e9niture du couple soit affect\u00e9e par des maladies r\u00e9cessives", "correct": true}, {"id": "137_J", "text": "Elle augmente le risque de retard anaphasique", "correct": false}]}, {"id": 138, "question": "\u00c0 propos des maladies autosomiques r\u00e9cessives, nous pouvons dire ce qui suit\u00a0:", "options": [{"id": "138_A", "text": "Un couple avec un p\u00e8re en bonne sant\u00e9 et une m\u00e8re malade peut avoir des filles malades", "correct": true}, {"id": "138_B", "text": "Lorsque les parents sont h\u00e9t\u00e9rozygotes, le risque de r\u00e9cidive pour les suivantes grossesses est de 75 %", "correct": true}, {"id": "138_C", "text": "Les femmes malades peuvent avoir des fils en bonne sant\u00e9", "correct": false}, {"id": "138_D", "text": "Deux parents malades peuvent avoir des enfants sains exclusivement des gar\u00e7ons", "correct": false}, {"id": "138_E", "text": "Lorsque les parents sont en bonne sant\u00e9 et ils ont un enfant malade, le risque de r\u00e9cidive pour les suivantes grossesses est de 25 %", "correct": true}, {"id": "138_F", "text": "Les hommes en bonne sant\u00e9 peuvent avoir des filles malades", "correct": false}, {"id": "138_G", "text": "Les hommes malades ne peuvent pas transmettre la maladie chez leurs fils", "correct": true}, {"id": "138_H", "text": "Un parent malade et un parent sain (homozygote) ont un risque de 25% d'avoir des enfants malades", "correct": true}, {"id": "138_I", "text": "Les h\u00e9t\u00e9rozygotes sont malades", "correct": false}, {"id": "138_J", "text": "Deux parents en bonne sant\u00e9 peuvent avoir des enfants malades gar\u00e7ons ou filles", "correct": false}]}, {"id": 139, "question": "\u00c0 propos des maladies r\u00e9cessives li\u00e9es au chromosome X nous pouvons dire ce qui suit\u00a0:", "options": [{"id": "139_A", "text": "Les hommes touch\u00e9s peuvent transmettre le g\u00e8ne anormal chez leurs fils", "correct": true}, {"id": "139_B", "text": "Les hommes atteints ont le g\u00e9notype XY", "correct": false}, {"id": "139_C", "text": "Deux parents malades peuvent avoir des enfants sains exclusivement des gar\u00e7ons", "correct": false}, {"id": "139_D", "text": "Un homme en bonne sant\u00e9 et une femme malade ont un risque de 75% d'avoir des filles malades", "correct": true}, {"id": "139_E", "text": "Deux parents en bonne sant\u00e9 peuvent avoir des enfants malades, exclusivement des gar\u00e7ons", "correct": false}, {"id": "139_F", "text": "Un homme malade et une femme en bonne sant\u00e9 (homozygote) ont un risque de 25% d'avoir des enfants malades", "correct": true}, {"id": "139_G", "text": "Les femmes malades ne peuvent pas avoir de fils en bonne sant\u00e9", "correct": true}, {"id": "139_H", "text": "Un homme en bonne sant\u00e9 et une femme malade ont un risque de 50% d'avoir des enfants malades", "correct": false}, {"id": "139_I", "text": "Les femmes atteintes ont le g\u00e9notype X X", "correct": false}, {"id": "139_J", "text": "Les hommes en bonne sant\u00e9 ont toutes des filles en bonne sant\u00e9", "correct": true}]}, {"id": 140, "question": "Dans les maladies mol\u00e9culaires, les mutations peuvent provoquer les types d'effets suivants sur le ph\u00e9notype\u00a0:", "options": [{"id": "140_A", "text": "Des mutations avec l'acquisition de nouvelles fonctions", "correct": true}, {"id": "140_B", "text": "Mutations avec gain de fonction", "correct": true}, {"id": "140_C", "text": "Mutations avec expression g\u00e9nique inchang\u00e9e", "correct": false}, {"id": "140_D", "text": "Mutations avec expression g\u00e9nique h\u00e9t\u00e9rochronique", "correct": false}, {"id": "140_E", "text": "Mutations silencieuses", "correct": false}, {"id": "140_F", "text": "Mutations avec expression g\u00e9nique ectopique", "correct": true}, {"id": "140_G", "text": "Mutations avec perte de fonction", "correct": true}, {"id": "140_H", "text": "Mutations synonymes", "correct": true}, {"id": "140_I", "text": "Mutations b\u00e9n\u00e9fiques", "correct": false}, {"id": "140_J", "text": "Mutations neutres", "correct": false}]}];
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const optContainer = document.createElement('div');
+                    optContainer.className = 'option-container';
+
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    optContainer.appendChild(label);
+                    optionsGrid.appendChild(optContainer);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

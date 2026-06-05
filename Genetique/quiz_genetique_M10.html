@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMF EXAMENE - Génétique M10</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .nav-links { display: flex; justify-content: space-between; margin-bottom: 30px; margin-top: 20px; }
+        .nav-links a { text-decoration: none; padding: 10px 20px; background-color: #2c3e50; color: white; border-radius: 5px; font-weight: bold; transition: background-color 0.2s; }
+        .nav-links a:hover { background-color: #1a252f; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-container { display: flex; flex-direction: column; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="quiz_genetique_M9.html">◄ Fichier Précédent</a>
+            <span></span>
+        </div>
+        <header>
+            <h1>UMF EXAMENE - Génétique M10</h1>
+        </header>
+        
+        <div class="revision-box">
+            <h3>📝 Fiche de révision : Biochimie Sanguine et Calcium (Questions 181 à 200)</h3><p><strong>Calcium :</strong> Régulé par la PTH (hyper), le Calcitriol (augmente absorption) et la Calcitonine (hypo). Rôles : contraction, coagulation, minéralisation.</p>
+        </div>
+        
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer les questions 🔄</button>
+        </form>
+        
+        <div class="nav-links">
+            <a href="quiz_genetique_M9.html">◄ Fichier Précédent</a>
+            <span></span>
+        </div>
+    </div>
+    
+    <script>
+        const quizData = [{"id": 181, "question": "Les principales anomalies chromosomiques identi\ufb01ables par le diagnostic pr\u00e9natal apr\u00e8s amniocent\u00e8se:", "options": [{"id": "181_A", "text": "Monosomie X", "correct": false}, {"id": "181_B", "text": "Trisomie 18", "correct": false}, {"id": "181_C", "text": "Trisomie 21", "correct": true}, {"id": "181_D", "text": "Trisomie 13", "correct": true}, {"id": "181_E", "text": "Tetraploidie", "correct": false}, {"id": "181_F", "text": "Trisomie XXY", "correct": false}, {"id": "181_G", "text": "Trisomie 16", "correct": true}, {"id": "181_H", "text": "Monosomie 3", "correct": false}, {"id": "181_I", "text": "Trisomie 1", "correct": true}, {"id": "181_J", "text": "Monosomie Y", "correct": true}]}, {"id": 182, "question": "Le d\u00e9pistage pr\u00e9natal de la trisomie 21 (syndrome de Down) repose sur:", "options": [{"id": "182_A", "text": "Niveaux r\u00e9duits de la gonadotrophine chorionique humaine (hCG)", "correct": true}, {"id": "182_B", "text": "Identification \u00e9chographique d'un f\u00e9mur ou d'un hum\u00e9rus plus court", "correct": true}, {"id": "182_C", "text": "Niveaux r\u00e9duits de l\u00b4oestrog\u00e8ne non conjugu\u00e9e (\u00b5E)", "correct": false}, {"id": "182_D", "text": "Niveaux r\u00e9duits de l\u00b4alpha fetoprot\u00e9ine (AFP)", "correct": true}, {"id": "182_E", "text": "Mise en \u00e9vidence d'un pli nucal (clart\u00e9 nucale) inf\u00e9rieur \u00e0 2 mm", "correct": true}, {"id": "182_F", "text": "Niveaux \u00e9lev\u00e9s de la prot\u00e9ine A associ\u00e9e \u00e0 la grossesse (PAPP-A)", "correct": true}, {"id": "182_G", "text": "Niveaux \u00e9lev\u00e9s de l\u00b4oestrog\u00e8ne non conjugu\u00e9e (\u00b5E)", "correct": false}, {"id": "182_H", "text": "Niveaux \u00e9lev\u00e9s de la gonadotrophine chorionique humaine (hCG)", "correct": false}, {"id": "182_I", "text": "Niveaux \u00e9lev\u00e9s de l\u00b4alpha fetoprot\u00e9ine (AFP)", "correct": false}, {"id": "182_J", "text": "Niveaux r\u00e9duits de la prot\u00e9ine A associ\u00e9e \u00e0 la grossesse (PAPP-A)", "correct": false}]}, {"id": 183, "question": "Le d\u00e9pistage pr\u00e9natal de la trisomie 21 (syndrome de Down) peut \u00eatre fait par:", "options": [{"id": "183_A", "text": "Double test au premier trimestre de la grossesse", "correct": true}, {"id": "183_B", "text": "Niveaux r\u00e9duites de la gonadotrophine chorionique humaine (hCG)", "correct": false}, {"id": "183_C", "text": "Analyse chromosomique apr\u00e8s l\u00b4amniocent\u00e8se dans la semaine 7 de la grossesse", "correct": false}, {"id": "183_D", "text": "Triple test au deuxi\u00e8me trimestre de la grossesse", "correct": true}, {"id": "183_E", "text": "Mise en \u00e9vidence par \u00e9chographie de certaines particularit\u00e9s morphologiques au deuxi\u00e8me trimestre de la grossesse (clart\u00e9 nucale sup\u00e9rieure \u00e0 3 mm)", "correct": true}, {"id": "183_F", "text": "D\u00e9pistage de l'ADN f\u0153tal dans la circulation maternelle", "correct": false}, {"id": "183_G", "text": "Mise en \u00e9vidence par \u00e9chographie de certaines particularit\u00e9s morphologiques au premier trimestre de grossesse (clart\u00e9 nucale sup\u00e9rieure \u00e0 3 mm)", "correct": true}, {"id": "183_H", "text": "Triple test au premier trimestre de la grossesse", "correct": false}, {"id": "183_I", "text": "Double test au deuxi\u00e8me trimestre de la grossesse", "correct": true}, {"id": "183_J", "text": "Niveaux \u00e9lev\u00e9s de la gonadotrophine chorionique humaine (hCG)", "correct": false}]}, {"id": 184, "question": "Les devoirs du g\u00e9n\u00e9ticien dans le conseil g\u00e9n\u00e9tique sont:", "options": [{"id": "184_A", "text": "Discuter des options de la reproduction avec des tiers, ind\u00e9pendamment de l'autonomie de la famille et des concepts religieux ou ethniques", "correct": false}, {"id": "184_B", "text": "Discuter des options de la reproduction avec les membres de la famille, en respectant l'autonomie de la famille et les concepts religieux ou ethniques 02/06/2023 21:43 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 62/64", "correct": true}, {"id": "184_C", "text": "D\u00e9terminer le risque de r\u00e9currence de la maladie, selon le type de transmission de la maladie", "correct": true}, {"id": "184_D", "text": "\u00c9tablir le diagnostic exact de la maladie et les moyens d'influencer l'\u00e9volution de la maladie", "correct": false}, {"id": "184_E", "text": "\u00c9tablir le poids des facteurs environnementaux dans l'\u00e9tiologie de la maladie", "correct": false}, {"id": "184_F", "text": "D\u00e9terminer les chances de gu\u00e9rison de la maladie, selon le type de transmission de la maladie", "correct": true}, {"id": "184_G", "text": "La consid\u00e9ration de l'impact psychologique de la maladie sur le patient et les membres de sa famille n\u2019est pas importante.", "correct": true}, {"id": "184_H", "text": "\u00c9tablir le diagnostic diff\u00e9rentiel et les m\u00e9thodes de traitement", "correct": false}, {"id": "184_I", "text": "Fournir un soutien psychologique ad\u00e9quat n\u00e9cessaire en raison de l'impact majeur de la maladie sur le patient et les membres de sa famille", "correct": true}, {"id": "184_J", "text": "\u00c9tablir le poids des facteurs g\u00e9n\u00e9tiques dans le d\u00e9terminisme de la maladie", "correct": false}]}, {"id": 185, "question": "Dans lesquelles situations le conseil g\u00e9n\u00e9tique est-il demand\u00e9 ?", "options": [{"id": "185_A", "text": "Maladies infectieuses", "correct": false}, {"id": "185_B", "text": "Maladies d\u00e9g\u00e9n\u00e9ratives", "correct": false}, {"id": "185_C", "text": "Anomalies cong\u00e9nitales", "correct": true}, {"id": "185_D", "text": "Vieillissement", "correct": false}, {"id": "185_E", "text": "D\u00e9ficience intellectuelle de cause non pr\u00e9cis\u00e9e", "correct": true}, {"id": "185_F", "text": "Les accidents", "correct": false}, {"id": "185_G", "text": "Troubles de la croissance et du d\u00e9veloppement", "correct": true}, {"id": "185_H", "text": "Ambigu\u00eft\u00e9 sexuelle", "correct": true}, {"id": "185_I", "text": "Erreurs inn\u00e9es du m\u00e9tabolisme", "correct": true}, {"id": "185_J", "text": "Des situations stressantes", "correct": false}]}, {"id": 186, "question": "Les \u00e9tapes du conseil g\u00e9n\u00e9tique comprennent :", "options": [{"id": "186_A", "text": "Etablir le diagnostic", "correct": true}, {"id": "186_B", "text": "R\u00e9alisation d'une anamn\u00e8se pathologique personnelle", "correct": true}, {"id": "186_C", "text": "Les \u00e9tudes d'imagerie ne sont pas importantes", "correct": false}, {"id": "186_D", "text": "Administration d'analg\u00e9siques", "correct": false}, {"id": "186_E", "text": "Les consultations intercliniques ne sont pas obligatoires", "correct": false}, {"id": "186_F", "text": "Administration d'antithermiques", "correct": false}, {"id": "186_G", "text": "Les r\u00e9sultats des analyses de laboratoire (l'h\u00e9mogramme et biochimie) ne sont pas importants", "correct": false}, {"id": "186_H", "text": "Identification de la composante g\u00e9n\u00e9tique", "correct": true}, {"id": "186_I", "text": "R\u00e9alisation d'histoire familiale et arbre g\u00e9n\u00e9alogique", "correct": true}, {"id": "186_J", "text": "R\u00e9alisation d'anamn\u00e8ses physiologiques personnelles", "correct": true}]}, {"id": 187, "question": "Le conseil g\u00e9n\u00e9tique dans le syndrome de Down se caract\u00e9rise par :", "options": [{"id": "187_A", "text": "En cas de syndrome de Down en mosa\u00efque avec trisomie 21, le risque de r\u00e9cidive de la maladie est inf\u00e9rieur \u00e0 0,1%", "correct": true}, {"id": "187_B", "text": "Le risque de trisomie 21 par translocation Robertsonienne entre chromosomes non homologues chez un homme porteur est de 100% 02/06/2023 21:43 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 63/64", "correct": false}, {"id": "187_C", "text": "La trisomie 21 libre homog\u00e8ne a un risque de 5% \u00e0 30 ans, 10% \u00e0 35 ans et 100% \u00e0 40 ans", "correct": false}, {"id": "187_D", "text": "Le risque de trisomie 21 par translocation Robertsonienne entre chromosomes homologues chez une femme porteuse est de 100%", "correct": true}, {"id": "187_E", "text": "La trisomie 21 libre homog\u00e8ne a un risque de 0,1% \u00e0 30 ans, 0,3% \u00e0 35 ans et 1% \u00e0 40 ans", "correct": false}, {"id": "187_F", "text": "Le risque de trisomie 21 par translocation Robertsonienne entre chromosomes homologues chez une femme porteuse est de 10%", "correct": false}, {"id": "187_G", "text": "Le risque de trisomie 21 par translocation Robertsonienne entre chromosomes non homologues chez une femme porteuse est de 100%", "correct": true}, {"id": "187_H", "text": "Le risque de trisomie 21 par translocation Robertsonienne entre chromosomes non homologues chez un homme porteur est de 30%", "correct": true}, {"id": "187_I", "text": "Le risque de trisomie 21 par translocation Robertsonienne entre chromosomes non homologues chez une femme porteuse est de 10%", "correct": false}, {"id": "187_J", "text": "Si les parents d'un enfant atteint de trisomie 21 par translocation Robertsonienne ont un caryotype normal, alors le risque de r\u00e9cidive est inf\u00e9rieur \u00e0 1%", "correct": true}]}, {"id": 188, "question": "Le risque de r\u00e9cidive d'une maladie multifactorielle augmente dans les situations suivantes :", "options": [{"id": "188_A", "text": "Il existe des formes graves de la maladie dans la famille", "correct": true}, {"id": "188_B", "text": "Dans la famille, il y a des personnes affect\u00e9es par un certain sexe chez qui la maladie respective est normalement moins fr\u00e9quente", "correct": false}, {"id": "188_C", "text": "Il existe des formes b\u00e9nignes de la maladie dans la famille", "correct": false}, {"id": "188_D", "text": "Il n'y a qu'un seul cas de la maladie dans la famille", "correct": false}, {"id": "188_E", "text": "Le d\u00e9but de la maladie est tardif", "correct": true}, {"id": "188_F", "text": "Dans la famille, il y a des personnes affect\u00e9es par un certain sexe chez qui la maladie respective est normalement plus fr\u00e9quente", "correct": true}, {"id": "188_G", "text": "Il n'y a pas de mariages consanguins", "correct": false}, {"id": "188_H", "text": "Il y a des mariages consanguins", "correct": false}, {"id": "188_I", "text": "Il y a plusieurs cas de maladie dans la famille", "correct": true}, {"id": "188_J", "text": "Le d\u00e9but de la maladie s'est produit plus t\u00f4t", "correct": true}]}, {"id": 189, "question": "Les cat\u00e9gories de risque g\u00e9n\u00e9tique sont :", "options": [{"id": "189_A", "text": "Risque presque nul - ~ 0%", "correct": false}, {"id": "189_B", "text": "Risque tr\u00e8s \u00e9lev\u00e9 - 50-75%", "correct": true}, {"id": "189_C", "text": "Risque faible - 3-10\u00a0%", "correct": true}, {"id": "189_D", "text": "Risque \u00e9lev\u00e9 - 25-50%", "correct": true}, {"id": "189_E", "text": "Risque n\u00e9gligeable - 5-7%", "correct": false}, {"id": "189_F", "text": "Risque interm\u00e9diaire - 0-3%", "correct": false}, {"id": "189_G", "text": "Risque total \u2013 100 %", "correct": false}, {"id": "189_H", "text": "Risque moyen - 0-25%", "correct": true}, {"id": "189_I", "text": "Risque mod\u00e9r\u00e9 - 10-25%", "correct": true}, {"id": "189_J", "text": "Risque tr\u00e8s faible - 10-20% 02/06/2023 21:43 UMF EXAMENE https://examen.um\ufb01asi.ro/questionPreview 64/64", "correct": false}]}, {"id": 190, "question": "La consultation du patient atteint de maladie g\u00e9n\u00e9tique comprend :", "options": [{"id": "190_A", "text": "Consultation sp\u00e9cialis\u00e9e", "correct": true}, {"id": "190_B", "text": "Examens de laboratoire", "correct": false}, {"id": "190_C", "text": "Identification de l'\u00e9tiologie bact\u00e9rienne de certaines infections courantes dans l'esp\u00e8ce humaine", "correct": false}, {"id": "190_D", "text": "L'adoption de sch\u00e9mas th\u00e9rapeutiques", "correct": false}, {"id": "190_E", "text": "Examen radiologique", "correct": false}, {"id": "190_F", "text": "Imposition par le m\u00e9decin d'options en mati\u00e8re de procr\u00e9ation", "correct": false}, {"id": "190_G", "text": "L'anamn\u00e8se", "correct": true}, {"id": "190_H", "text": "Calcul des risques d'accident", "correct": true}, {"id": "190_I", "text": "\u00c9valuation des risques de mutagen\u00e8se", "correct": false}, {"id": "190_J", "text": "Consultation primaire", "correct": true}]}];
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const optContainer = document.createElement('div');
+                    optContainer.className = 'option-container';
+
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    optContainer.appendChild(label);
+                    optionsGrid.appendChild(optContainer);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
