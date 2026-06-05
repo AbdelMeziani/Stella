@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informatique Médicale - M9</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .nav-links { display: flex; justify-content: space-between; margin-bottom: 30px; margin-top: 20px; }
+        .nav-links a { text-decoration: none; padding: 10px 20px; background-color: #2c3e50; color: white; border-radius: 5px; font-weight: bold; transition: background-color 0.2s; }
+        .nav-links a:hover { background-color: #1a252f; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="quiz_info_S2_M8.html">◄ Fichier Précédent</a>
+            <a href="quiz_info_S2_M10.html">Fichier Suivant ►</a>
+        </div>
+        <header>
+            <h1>Informatique Médicale - M9</h1>
+        </header>
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer les questions 🔄</button>
+        </form>
+        
+        <div class="nav-links">
+            <a href="quiz_info_S2_M8.html">◄ Fichier Précédent</a>
+            <a href="quiz_info_S2_M10.html">Fichier Suivant ►</a>
+        </div>
+    </div>
+    
+    <script>
+        const quizData = [
+            {"id": 161, "question": "Lesquels des d\u00e9clarations suivantes sont des exemples d\u2019hypoth\u00e8ses nulles dans un test de signi\ufb01cation param\u00e9trique :", "options": [{"id": "161_A", "text": "Les distributions des fr\u00e9quences dans deux \u00e9chantillons ont des formes similaires", "correct": true}, {"id": "161_B", "text": "Les proportions dans deux \u00e9chantillons sont \u00e9gales", "correct": false}, {"id": "161_C", "text": "La diff\u00e9rence des moyennes entre les valeurs appari\u00e9es dans 2 \u00e9chantillons est \u00e9gale \u00e0 z\u00e9ro", "correct": true}, {"id": "161_D", "text": "Les m\u00e9dianes de plusieurs \u00e9chantillons sont \u00e9gales", "correct": true}, {"id": "161_E", "text": "Les moyennes de la variable analys\u00e9e sont \u00e9gales dans 2 \u00e9chantillons", "correct": false}, {"id": "161_F", "text": "Les dispersions de la variable analys\u00e9e sont \u00e9gales dans 2 \u00e9chantillons", "correct": false}, {"id": "161_G", "text": "La diff\u00e9rence m\u00e9diane entre les valeurs appari\u00e9es dans 2 \u00e9chantillons est \u00e9gale \u00e0 z\u00e9ro", "correct": false}, {"id": "161_H", "text": "Les param\u00e8tres \u00e0 comparer sont diff\u00e9rents", "correct": false}, {"id": "161_I", "text": "Les distributions des probabilit\u00e9s dans plusieurs \u00e9chantillons sont \u00e9quivalentes", "correct": false}, {"id": "161_J", "text": "La moyenne de la variable analys\u00e9e dans un \u00e9chantillon est inf\u00e9rieure \u00e0 une valeur seuil", "correct": false}]},
+            {"id": 162, "question": "Lesquels des d\u00e9clarations suivantes sont des exemples d\u2019hypoth\u00e8ses nulles dans un test de signi\ufb01cation non param\u00e9trique :", "options": [{"id": "162_A", "text": "La dispersion de la variable analys\u00e9e dans un \u00e9chantillon est sup\u00e9rieure \u00e0 une valeur seuil", "correct": true}, {"id": "162_B", "text": "Les distributions des fr\u00e9quences dans deux \u00e9chantillons ne diff\u00e8rent pas significativement", "correct": false}, {"id": "162_C", "text": "Les m\u00e9dianes de plusieurs \u00e9chantillons sont \u00e9gales", "correct": true}, {"id": "162_D", "text": "Les distributions des probabilit\u00e9s dans deux \u00e9chantillons ont des formes similaires", "correct": true}, {"id": "162_E", "text": "La diff\u00e9rence moyenne entre les valeurs appari\u00e9es dans 2 \u00e9chantillons est \u00e9gale \u00e0 z\u00e9ro", "correct": false}, {"id": "162_F", "text": "Les moyennes de la variable analys\u00e9e sont \u00e9gales dans plusieurs \u00e9chantillons", "correct": false}, {"id": "162_G", "text": "Les param\u00e8tres \u00e0 comparer sont \u00e9gaux", "correct": false}, {"id": "162_H", "text": "La moyenne de la variable analys\u00e9e dans un \u00e9chantillon est \u00e9gale \u00e0 une valeur seuil", "correct": false}, {"id": "162_I", "text": "Les dispersions de la variable analys\u00e9e sont \u00e9gales dans 2 \u00e9chantillons", "correct": false}, {"id": "162_J", "text": "Les distributions des probabilit\u00e9s dans plusieurs \u00e9chantillons sont \u00e9quivalentes", "correct": false}]},
+            {"id": 163, "question": "Lesquels des d\u00e9clarations suivantes sont des exemples d\u2019hypoth\u00e8ses alternatives dans un test de signi\ufb01cation :", "options": [{"id": "163_A", "text": "Les m\u00e9dianes de plusieurs \u00e9chantillons sont diff\u00e9rentes", "correct": true}, {"id": "163_B", "text": "La dispersion de la variable analys\u00e9e dans un \u00e9chantillon est \u00e9gale \u00e0 une valeur seuil", "correct": false}, {"id": "163_C", "text": "Les dispersions de la variable analys\u00e9e sont \u00e9gales dans 2 \u00e9chantillons", "correct": true}, {"id": "163_D", "text": "Les distributions des probabilit\u00e9s dans deux \u00e9chantillons ont des formes diff\u00e9rentes", "correct": true}, {"id": "163_E", "text": "Les param\u00e8tres \u00e0 comparer sont diff\u00e9rents", "correct": false}, {"id": "163_F", "text": "Les valeurs moyennes d\u2019une variable dans plusieurs \u00e9chantillons sont diff\u00e9rentes", "correct": false}, {"id": "163_G", "text": "La diff\u00e9rence m\u00e9diane entre les valeurs appari\u00e9es dans 2 \u00e9chantillons est \u00e9gale \u00e0 z\u00e9ro", "correct": false}, {"id": "163_H", "text": "Les moyennes de la variable analys\u00e9e sont \u00e9gales dans plusieurs \u00e9chantillons", "correct": false}, {"id": "163_I", "text": "La moyenne de la variable analys\u00e9e dans un \u00e9chantillon est \u00e9gale \u00e0 une valeur seuil", "correct": false}, {"id": "163_J", "text": "Les dispersions d\u2019une variable dans deux \u00e9chantillons sont diff\u00e9rentes", "correct": false}]},
+            {"id": 164, "question": "Lesquels des exemples suivants sont des tests de signi\ufb01cation param\u00e9triques :", "options": [{"id": "164_A", "text": "Le test de Friedman", "correct": true}, {"id": "164_B", "text": "Le test du Chi-carr\u00e9", "correct": false}, {"id": "164_C", "text": "Le test de Wilcoxon", "correct": true}, {"id": "164_D", "text": "Le test de Kruskal-Wallis", "correct": true}, {"id": "164_E", "text": "Le test Fisher", "correct": false}, {"id": "164_F", "text": "Le test de Mann-Whitney", "correct": false}, {"id": "164_G", "text": "Le test ANOVA", "correct": false}, {"id": "164_H", "text": "Le test Bartlett", "correct": false}, {"id": "164_I", "text": "Le test des proportions", "correct": false}, {"id": "164_J", "text": "Le test t Student", "correct": false}]},
+            {"id": 165, "question": "Lesquels des exemples suivants sont des tests de signi\ufb01cation non param\u00e9triques :", "options": [{"id": "165_A", "text": "Le test de Mann-Whitney", "correct": true}, {"id": "165_B", "text": "Le test de Kruskal-Wallis", "correct": false}, {"id": "165_C", "text": "Le test Fisher", "correct": true}, {"id": "165_D", "text": "Le test Bartlett", "correct": true}, {"id": "165_E", "text": "Le test ANOVA", "correct": false}, {"id": "165_F", "text": "Le test de Friedman", "correct": false}, {"id": "165_G", "text": "Le test de Wilcoxon", "correct": false}, {"id": "165_H", "text": "Le test t Student", "correct": false}, {"id": "165_I", "text": "Le test des proportions", "correct": false}, {"id": "165_J", "text": "Le test du Chi-carr\u00e9", "correct": false}]},
+            {"id": 166, "question": "Lesquelles des op\u00e9rations suivantes font partie du processus d\u2019analyse de la discriminante statistique d\u2019un test de signi\ufb01cation :", "options": [{"id": "166_A", "text": "Si la valeur calcul\u00e9e de la discriminante statistique appartient \u00e0 la r\u00e9gion de rejet du test, il s\u2019ensuit que l\u2019hypoth\u00e8se alternative est confirm\u00e9e", "correct": true}, {"id": "166_B", "text": "Comparaison entre la valeur calcul\u00e9e de la discriminante statistique et les valeurs th\u00e9oriques de la distribution, qui correspondent \u00e0 la r\u00e9gion d\u2019acceptation du test", "correct": false}, {"id": "166_C", "text": "Calcul de la distribution des fr\u00e9quences de la discriminante statistique", "correct": true}, {"id": "166_D", "text": "Identification du type de distribution des valeurs de la discriminante statistique", "correct": true}, {"id": "166_E", "text": "Si la valeur calcul\u00e9e de la discriminante statistique appartient \u00e0 la r\u00e9gion d\u2019acceptation du test, il s\u2019ensuit que l\u2019hypoth\u00e8se nulle est confirm\u00e9e", "correct": false}, {"id": "166_F", "text": "Calcul des mesures de dispersion pour la discriminante statistique", "correct": false}, {"id": "166_G", "text": "Si la valeur calcul\u00e9e de la discriminante statistique appartient \u00e0 la r\u00e9gion de rejet du test, il s\u2019ensuit que l\u2019hypoth\u00e8se nulle est invalid\u00e9e", "correct": false}, {"id": "166_H", "text": "Si la valeur calcul\u00e9e de la discriminante statistique appartient \u00e0 la r\u00e9gion du rejet du test, il s\u2019ensuit que l\u2019hypoth\u00e8se alternative est r\u00e9fut\u00e9e", "correct": false}, {"id": "166_I", "text": "Calcul des mesures de la valeur centrale pour la discriminante statistique", "correct": false}, {"id": "166_J", "text": "Si la valeur calcul\u00e9e de la discriminante statistique appartient \u00e0 la r\u00e9gion d\u2019acceptation du test, il s\u2019ensuit que l\u2019hypoth\u00e8se alternative est confirm\u00e9e", "correct": false}]},
+            {"id": 167, "question": "Lesquelles des propri\u00e9t\u00e9s suivantes caract\u00e9risent les tests de signi\ufb01cation de type two- tail :", "options": [{"id": "167_A", "text": "L\u2019hypoth\u00e8se nulle utilise dans l\u2019\u00e9nonciation l\u2019op\u00e9rateur =", "correct": true}, {"id": "167_B", "text": "L\u2019hypoth\u00e8se alternative utilise dans l\u2019\u00e9nonciation l\u2019op\u00e9rateur >", "correct": false}, {"id": "167_C", "text": "Ils utilisent une r\u00e9gion d\u2019acceptation", "correct": true}, {"id": "167_D", "text": "L\u2019hypoth\u00e8se nulle et l\u2019hypoth\u00e8se alternative sont compl\u00e9mentaires", "correct": true}, {"id": "167_E", "text": "Les 2 r\u00e9gions d\u2019acceptation sont situ\u00e9es aux extr\u00e9mit\u00e9s de la distribution des probabilit\u00e9s de la discriminante statistique", "correct": false}, {"id": "167_F", "text": "L\u2019hypoth\u00e8se alternative utilise dans l\u2019\u00e9nonciation l\u2019op\u00e9rateur \u00b9", "correct": false}, {"id": "167_G", "text": "L\u2019hypoth\u00e8se nulle utilise dans l\u2019\u00e9nonciation l\u2019op\u00e9rateur \u00a3", "correct": false}, {"id": "167_H", "text": "La r\u00e9gion d\u2019acceptation est situ\u00e9e \u00e0 l\u2019extr\u00eame droite de la distribution des probabilit\u00e9s de la discriminante statistique", "correct": false}, {"id": "167_I", "text": "Ils utilisent 2 r\u00e9gions d\u2019acceptation", "correct": false}, {"id": "167_J", "text": "La r\u00e9gion d\u2019acceptation est situ\u00e9e \u00e0 l\u2019extr\u00eame gauche de la distribution des probabilit\u00e9s de la discriminante statistique", "correct": false}]},
+            {"id": 168, "question": "Lesquelles des propri\u00e9t\u00e9s suivantes caract\u00e9risent les tests de signi\ufb01cation de type one- tail :", "options": [{"id": "168_A", "text": "L\u2019hypoth\u00e8se nulle utilise dans l\u2019\u00e9nonciation les op\u00e9rateurs < ou >", "correct": true}, {"id": "168_B", "text": "L\u2019hypoth\u00e8se alternative utilise dans l\u2019\u00e9nonciation l\u2019op\u00e9rateur =", "correct": false}, {"id": "168_C", "text": "L\u2019hypoth\u00e8se nulle et l\u2019hypoth\u00e8se alternative sont compl\u00e9mentaires", "correct": true}, {"id": "168_D", "text": "La r\u00e9gion d\u2019acceptation est situ\u00e9e \u00e0 l\u2019extr\u00eame droite de la distribution des probabilit\u00e9s de la discriminante statistique", "correct": true}, {"id": "168_E", "text": "Ils utilisent une r\u00e9gion d\u2019acceptation", "correct": false}, {"id": "168_F", "text": "La r\u00e9gion d\u2019acceptation est situ\u00e9e \u00e0 l\u2019extr\u00eame gauche de la distribution des probabilit\u00e9s de la discriminante statistique", "correct": false}, {"id": "168_G", "text": "L\u2019hypoth\u00e8se nulle utilise dans l\u2019\u00e9nonciation l\u2019op\u00e9rateur =", "correct": false}, {"id": "168_H", "text": "Ils utilisent 2 r\u00e9gions d\u2019acceptation", "correct": false}, {"id": "168_I", "text": "L\u2019hypoth\u00e8se alternative utilise l\u2019\u00e9nonciation l\u2019op\u00e9rateur", "correct": false}, {"id": "168_J", "text": "L\u2019hypoth\u00e8se nulle utilise dans l\u2019\u00e9nonciation les op\u00e9rateurs \u00a3 ou \u00b3", "correct": false}]},
+            {"id": 169, "question": "Lesquelles des propri\u00e9t\u00e9s suivantes caract\u00e9risent le niveau de signi\ufb01cation d\u2019un test statistique :", "options": [{"id": "169_A", "text": "Le niveau de signification est not\u00e9 avec alpha", "correct": true}, {"id": "169_B", "text": "En r\u00e8gle g\u00e9n\u00e9rale, la valeur pr\u00e9d\u00e9finie de 0,08 est utilis\u00e9e pour le niveau de signification d\u2019un test statistique", "correct": false}, {"id": "169_C", "text": "Le niveau de signification est \u00e9galement appel\u00e9 erreur de type I", "correct": true}, {"id": "169_D", "text": "Le niveau de signification est not\u00e9 avec b\u00eata", "correct": true}, {"id": "169_E", "text": "Le niveau de signification est la probabilit\u00e9 d\u2019accepter une hypoth\u00e8se nulle qui en r\u00e9alit\u00e9 est fausse", "correct": false}, {"id": "169_F", "text": "Les valeurs 0,1 ou 0,01 pour le niveau de signification d\u2019un test statistique sont \u00e9galement accept\u00e9es", "correct": false}, {"id": "169_G", "text": "En r\u00e8gle g\u00e9n\u00e9rale, la valeur pr\u00e9d\u00e9finie de 0,05 est utilis\u00e9e pour le niveau de signification d\u2019un test statistique", "correct": false}, {"id": "169_H", "text": "Le niveau de signification est la probabilit\u00e9 de rejeter une hypoth\u00e8se nulle qui en r\u00e9alit\u00e9 est vraie", "correct": false}, {"id": "169_I", "text": "En r\u00e8gle g\u00e9n\u00e9rale, les valeurs pr\u00e9d\u00e9finies de 0,8 ou 0,9 sont utilis\u00e9es pour le niveau de signification d\u2019un test statistique", "correct": false}, {"id": "169_J", "text": "Le niveau de signification est \u00e9galement appel\u00e9 erreur de type II", "correct": false}]},
+            {"id": 170, "question": "Lesquelles des propri\u00e9t\u00e9s suivantes caract\u00e9risent l\u2019erreur de type II qui peut affecter un test statistique :", "options": [{"id": "170_A", "text": "En r\u00e8gle g\u00e9n\u00e9rale, les valeurs pr\u00e9d\u00e9finies 0,1 ou 0,2 sont utilis\u00e9es pour l\u2019erreur de type II d\u2019un test statistique", "correct": true}, {"id": "170_B", "text": "En r\u00e8gle g\u00e9n\u00e9rale, la valeur pr\u00e9d\u00e9finie de 0,05 est utilis\u00e9e pour l\u2019erreur de type II d\u2019un test statistique", "correct": false}, {"id": "170_C", "text": "La puissance du test est d\u00e9finie par le coefficient 1 - b\u00eata", "correct": true}, {"id": "170_D", "text": "Les valeurs pr\u00e9d\u00e9finies 0,9 ou 0,8 sont utilis\u00e9es pour l\u2019erreur de type II d\u2019un test statistique", "correct": true}, {"id": "170_E", "text": "L\u2019erreur de type II est not\u00e9e avec alpha", "correct": false}, {"id": "170_F", "text": "L\u2019erreur de type II est d\u00e9finie comme la probabilit\u00e9 d\u2019accepter une hypoth\u00e8se nulle qui en r\u00e9alit\u00e9 est fausse", "correct": false}, {"id": "170_G", "text": "L\u2019erreur de type II est d\u00e9finie comme la probabilit\u00e9 de rejeter une hypoth\u00e8se nulle qui en r\u00e9alit\u00e9 est vraie", "correct": false}, {"id": "170_H", "text": "L\u2019erreur de type II est not\u00e9e avec b\u00eata", "correct": false}, {"id": "170_I", "text": "La puissance du test est d\u00e9finie par le coefficient 1 + b\u00eata", "correct": false}, {"id": "170_J", "text": "L\u2019erreur de type II est utilis\u00e9e pour calculer la puissance du test", "correct": false}]},
+            {"id": 171, "question": "Lesquelles des d\u00e9clarations suivantes sont des conditions pour r\u00e9futer l\u2019hypoth\u00e8se nulle par un test de signi\ufb01cation statistique :", "options": [{"id": "171_A", "text": "La valeur de p est inf\u00e9rieure ou \u00e9gale au coefficient b\u00eata", "correct": true}, {"id": "171_B", "text": "La valeur de p est inf\u00e9rieure ou \u00e9gale \u00e0 0,8", "correct": false}, {"id": "171_C", "text": "La valeur de p est inf\u00e9rieure ou \u00e9gale au coefficient alpha","correct": true},{"id": "171_D", "text": "La valeur de p est inf\u00e9rieure ou \u00e9gale au niveau de signification du test", "correct": false}, {"id": "171_E", "text": "La valeur de p appartient \u00e0 la r\u00e9gion d\u2019acceptation du test", "correct": false}, {"id": "171_F", "text": "La valeur de p est inf\u00e9rieure ou \u00e9gale \u00e0 0,01", "correct": false}, {"id": "171_G", "text": "La valeur de p est inf\u00e9rieure ou \u00e9gale au coefficient de signification du test", "correct": false}, {"id": "171_H", "text": "La valeur de p appartient \u00e0 la r\u00e9gion critique du test", "correct": false}, {"id": "171_I", "text": "La valeur de p est inf\u00e9rieure ou \u00e9gale \u00e0 0,05", "correct": false}, {"id": "171_J", "text": "La valeur de p est inf\u00e9rieure \u00e0 0,2", "correct": false}]},
+                    {"id": 172, "question": "Lesquelles des propri\u00e9t\u00e9s suivantes caract\u00e9risent les tests param\u00e9triques :", "options": [{"id": "172_A", "text": "Ce sont des tests pour comparer les proportions", "correct": true}, {"id": "172_B", "text": "Les valeurs de la variable analys\u00e9e sont conformes \u00e0 la loi de distribution binomiale", "correct": false}, {"id": "172_C", "text": "Les valeurs de la variable analys\u00e9e sont conformes \u00e0 la loi de distribution normale", "correct": true}, {"id": "172_D", "text": "Ce sont des tests pour comparer les fr\u00e9quences", "correct": true}, {"id": "172_E", "text": "Ce sont des tests pour comparer les moyennes", "correct": false}, {"id": "172_F", "text": "Ce sont des tests pour comparer les rangs", "correct": false}, {"id": "172_G", "text": "Ils sont utilis\u00e9s dans l\u2019analyse des variables qualitatives", "correct": false}, {"id": "172_H", "text": "Ils sont utilis\u00e9s dans l\u2019analyse des variables quantitatives", "correct": false}, {"id": "172_I", "text": "Ce sont des tests pour comparer les variances", "correct": false}, {"id": "172_J", "text": "Les valeurs de la variable analys\u00e9e sont conformes \u00e0 la loi de distribution uniforme", "correct": false}]},
+                    {"id": 173, "question": "Lesquelles des propri\u00e9t\u00e9s suivantes sont des conditions d\u2019applicabilit\u00e9 du test de Mann- Whitney :", "options": [{"id": "173_A", "text": "La variable \u00e0 analyser est binaire", "correct": true}, {"id": "173_B", "text": "La variable \u00e0 analyser est nominale", "correct": false}, {"id": "173_C", "text": "Les valeurs exactes de la variable \u00e0 analyser sont connues", "correct": true}, {"id": "173_D", "text": "La distribution des valeurs de la variable \u00e0 analyser est conforme \u00e0 la loi normale", "correct": true}, {"id": "173_E", "text": "Il s\u2019agit de l\u2019analyse de 2 \u00e9chantillons ind\u00e9pendants", "correct": false}, {"id": "173_F", "text": "La variable \u00e0 analyser est continue ou ordinale", "correct": false}, {"id": "173_G", "text": "La distribution des valeurs de la variable \u00e0 analyser n\u2019est pas conforme \u00e0 la loi normale", "correct": false}, {"id": "173_H", "text": "Il s\u2019agit de l\u2019analyse de 3 \u00e9chantillons ind\u00e9pendants ou plus", "correct": false}, {"id": "173_I", "text": "Les distributions de valeurs de la variable \u00e0 analyser dans les 2 \u00e9chantillons \u00e0 comparer sont de forme similaire", "correct": false}, {"id": "173_J", "text": "L\u2019ordre entre les valeurs de la variable \u00e0 analyser est connue, m\u00eame si les valeurs exactes ne sont pas disponibles", "correct": false}]},
+                    {"id": 174, "question": "Lesquelles des propri\u00e9t\u00e9s suivantes sont des conditions d\u2019applicabilit\u00e9 du test de Wilcoxon Signed-Rank :", "options": [{"id": "174_A", "text": "La distribution des valeurs de la variable \u00e0 analyser est conforme \u00e0 la loi normale", "correct": true}, {"id": "174_B", "text": "Il s\u2019agit de l\u2019analyse de 2 \u00e9chantillons appari\u00e9s", "correct": false}, {"id": "174_C", "text": "Il s\u2019agit de l\u2019analyse de 2 \u00e9chantillons ind\u00e9pendants", "correct": true}, {"id": "174_D", "text": "La variable \u00e0 analyser est continue ou ordinale", "correct": true}, {"id": "174_E", "text": "Il s\u2019agit de l\u2019analyse de plusieurs \u00e9chantillons appari\u00e9s", "correct": false}, {"id": "174_F", "text": "La distribution des valeurs de la variable \u00e0 analyser est conforme aux lois hyperg\u00e9om\u00e9trique et normale", "correct": false}, {"id": "174_G", "text": "La distribution des valeurs de la variable \u00e0 analyser n\u2019est pas conforme \u00e0 la loi normale", "correct": false}, {"id": "174_H", "text": "Il v\u00e9rifie l\u2019hypoth\u00e8se nulle que la diff\u00e9rence m\u00e9diane entre les valeurs appari\u00e9es entre les 2 \u00e9chantillons est \u00e9gale \u00e0 z\u00e9ro", "correct": false}, {"id": "174_I", "text": "La distribution des diff\u00e9rences de valeurs de la variable \u00e0 analyser entre les 2 \u00e9chantillons \u00e0 comparer est uniforme", "correct": false}, {"id": "174_J", "text": "La distribution des diff\u00e9rences de valeurs de la variable \u00e0 analyser entre les 2 \u00e9chantillons \u00e0 comparer est sym\u00e9trique", "correct": false}]},
+                    {"id": 175, "question": "Lesquelles des propri\u00e9t\u00e9s suivantes caract\u00e9risent le test de Kruskal-Wallis :", "options": [{"id": "175_A", "text": "Il v\u00e9rifie l\u2019hypoth\u00e8se nulle que les valeurs m\u00e9dianes de la variable dans les \u00e9chantillons \u00e0 analyser sont diff\u00e9rentes", "correct": true}, {"id": "175_B", "text": "La distribution des valeurs de la variable \u00e0 analyser n\u2019est pas conforme \u00e0 la loi normale", "correct": false}, {"id": "175_C", "text": "Il v\u00e9rifie l\u2019hypoth\u00e8se nulle que les \u00e9chantillons \u00e0 analyser ont des distributions des probabilit\u00e9s \u00e9quivalentes", "correct": true}, {"id": "175_D", "text": "Il s\u2019agit de l\u2019analyse de 2 \u00e9chantillons ind\u00e9pendants ou plus", "correct": true}, {"id": "175_E", "text": "Il s\u2019agit de l\u2019analyse de plusieurs \u00e9chantillons appari\u00e9s", "correct": false}, {"id": "175_F", "text": "Il s\u2019agit de l\u2019analyse de 2 \u00e9chantillons ind\u00e9pendants", "correct": false}, {"id": "175_G", "text": "La distribution des valeurs de la variable \u00e0 analyser est conforme \u00e0 la loi normale", "correct": false}, {"id": "175_H", "text": "La variable \u00e0 analyser est continue ou ordinale", "correct": false}, {"id": "175_I", "text": "Il v\u00e9rifie l\u2019hypoth\u00e8se nulle que les \u00e9chantillons \u00e0 analyser ont des distributions des probabilit\u00e9s diff\u00e9rentes", "correct": false}, {"id": "175_J", "text": "Il v\u00e9rifie l\u2019hypoth\u00e8se nulle que les valeurs m\u00e9dianes de la variable dans les \u00e9chantillons \u00e0 analyser sont \u00e9gales", "correct": false}]},
+                    {"id": 176, "question": "Lesquelles des propri\u00e9t\u00e9s suivantes caract\u00e9risent le test de Friedman :", "options": [{"id": "176_A", "text": "La distribution des valeurs de la variable \u00e0 analyser est conforme \u00e0 la loi normale", "correct": true}, {"id": "176_B", "text": "Il s\u2019agit de l\u2019analyse de 2 \u00e9chantillons ind\u00e9pendants", "correct": false}, {"id": "176_C", "text": "Il v\u00e9rifier l\u2019hypoth\u00e8se nulle que les \u00e9chantillons \u00e0 analyser ont des distributions des probabilit\u00e9s \u00e9quivalentes", "correct": true}, {"id": "176_D", "text": "La distribution des valeurs de la variable \u00e0 analyser n\u2019est pas conforme \u00e0 la loi normale", "correct": true}, {"id": "176_E", "text": "Il s\u2019agit de l\u2019analyse de 2 \u00e9chantillons ind\u00e9pendants ou plus", "correct": false}, {"id": "176_F", "text": "La variable \u00e0 analyser est continue ou ordinale", "correct": false}, {"id": "176_G", "text": "Les rangs des valeurs de la variable \u00e0 analyser ne sont pas connus", "correct": false}, {"id": "176_H", "text": "Il s\u2019agit de l\u2019analyse de 2 \u00e9chantillons appari\u00e9s ou plus", "correct": false}, {"id": "176_I", "text": "La distribution des valeurs de la variable \u00e0 analyser est conforme \u00e0 la loi hyperg\u00e9om\u00e9trique", "correct": false}, {"id": "176_J", "text": "Il s\u2019agit d\u2019un test non param\u00e9trique", "correct": false}]},
+                    {"id": 177, "question": "Lesquelles des propri\u00e9t\u00e9s suivantes caract\u00e9risent le test du Chi-carr\u00e9", "options": [{"id": "177_A", "text": "D\u00e9pend sur les distributions des probabilit\u00e9s des variables", "correct": true}, {"id": "177_B", "text": "Montre la causalit\u00e9 de la relation entre les variables \u00e9tudi\u00e9es", "correct": false}, {"id": "177_C", "text": "Il s\u2019applique aux variables qualitatives", "correct": true}, {"id": "177_D", "text": "Il s\u2019agit d\u2019un test \u00ab\u00a0distribution - free\u00a0\u00bb", "correct": true}, {"id": "177_E", "text": "Indique s\u2019il existe une relation entre 2 variables", "correct": false}, {"id": "177_F", "text": "C\u2019est difficile \u00e0 calculer", "correct": false}, {"id": "177_G", "text": "Il s\u2019applique aux variables quantitatives", "correct": false}, {"id": "177_H", "text": "Ne pr\u00e9cise pas la causalit\u00e9 de la relation entre les variables \u00e9tudi\u00e9es", "correct": false}, {"id": "177_I", "text": "C\u2019est facile \u00e0 calculer", "correct": false}, {"id": "177_J", "text": "Ne peut pas \u00eatre calcul\u00e9 manuellement", "correct": false}]},
+                    {"id": 178, "question": "Lesquelles des propri\u00e9t\u00e9s suivantes sont vraies en ce qui concerne la consistance du test du Chi-carr\u00e9 :", "options": [{"id": "178_A", "text": "Si le pourcentage de fr\u00e9quences attendues inf\u00e9rieure \u00e0 5 est sup\u00e9rieur \u00e0 20%, nous avons des erreurs trop importantes pour accepter le r\u00e9sultat du test du Chi-carr\u00e9", "correct": true}, {"id": "178_B", "text": "La consistance des donn\u00e9es est d\u00e9finie par le volume d\u2019\u00e9chantillons de travail", "correct": false}, {"id": "178_C", "text": "Si le pourcentage de fr\u00e9quences attendues inf\u00e9rieure \u00e0 5 est sup\u00e9rieur \u00e0 25%, nous avons des erreurs trop importantes pour accepter le r\u00e9sultat du test du Chi-carr\u00e9", "correct": true}, {"id": "178_D", "text": "Si le pourcentage de fr\u00e9quences observ\u00e9es inf\u00e9rieure \u00e0 5 est sup\u00e9rieur \u00e0 25%, nous avons des erreurs trop importantes pour accepter le r\u00e9sultat du test du Chi-carr\u00e9", "correct": true}, {"id": "178_E", "text": "Si au moins une fr\u00e9quence attendue est inf\u00e9rieure \u00e0 0,05, le test du Chi-carr\u00e9 est inconsistant", "correct": false}, {"id": "178_F", "text": "Plus le volume de l\u2019\u00e9chantillon est important, moins nous avons confiance dans les r\u00e9sultats obtenus", "correct": false}, {"id": "178_G", "text": "La consistance de test est d\u00e9finie par le pourcentage de fr\u00e9quences attendues inferieures du seuil de 5", "correct": false}, {"id": "178_H", "text": "Plus le volume d\u2019\u00e9chantillon est important, plus nous avons confiance \u00e9lev\u00e9e dans les r\u00e9sultats obtenus", "correct": false}, {"id": "178_I", "text": "Dans le cas particulier des tableaux 2X2, si au moins une fr\u00e9quence attendue est inf\u00e9rieure \u00e0 5, le test du Chi-carr\u00e9 est inconsistant", "correct": false}, {"id": "178_J", "text": "La consistance de test est d\u00e9finie par le pourcentage de fr\u00e9quences observ\u00e9es inferieures du seuil de 5", "correct": false}]},
+                    {"id": 179, "question": "Lesquelles des propri\u00e9t\u00e9s suivantes caract\u00e9risent l\u2019approximation de Fisher pour le test du Chi-carr\u00e9 :", "options": [{"id": "179_A", "text": "Il est calcul\u00e9 par des techniques combinatoires", "correct": true}, {"id": "179_B", "text": "Il s\u2019applique dans la situation critique o\u00f9 nous avons plus de 25% des fr\u00e9quences observ\u00e9es inf\u00e9rieures \u00e0 5", "correct": false}, {"id": "179_C", "text": "La condition de consistance qui s\u2019y applique est que les fr\u00e9quences observ\u00e9es ne soient pas inf\u00e9rieures \u00e0 5", "correct": true}, {"id": "179_D", "text": "La condition de consistance qui s\u2019applique dans son cas est que les fr\u00e9quences attendues ne soient pas inf\u00e9rieures \u00e0 1", "correct": true}, {"id": "179_E", "text": "Il s\u2019applique dans la situation critique o\u00f9 nous avons plus de 20% des fr\u00e9quences attendues inf\u00e9rieures \u00e0 5", "correct": false}, {"id": "179_F", "text": "Il s\u2019appelle aussi \u00ab m\u00e9thode exacte \u00bb", "correct": false}, {"id": "179_G", "text": "Il s\u2019applique dans la situation critique o\u00f9 nous avons plus de 20% des fr\u00e9quences observ\u00e9es inf\u00e9rieures \u00e0 5", "correct": false}, {"id": "179_H", "text": "Il est bas\u00e9 sur la distribution hyperg\u00e9om\u00e9trique dans le calcul de la signification statistique", "correct": false}, {"id": "179_I", "text": "La condition de consistance qui s\u2019applique dans son cas est que les fr\u00e9quences attendues ne soient pas inf\u00e9rieures \u00e0 0,5", "correct": false}, {"id": "179_J", "text": "La condition de consistance qui s\u2019y applique est que les fr\u00e9quences observ\u00e9es ne sont pas inf\u00e9rieures \u00e0 0,1", "correct": false}]}];
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `Q${q.id} - ${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    optionsGrid.appendChild(label);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

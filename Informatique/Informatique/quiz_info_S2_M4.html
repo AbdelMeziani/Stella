@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informatique Médicale - M4</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .nav-links { display: flex; justify-content: space-between; margin-bottom: 30px; margin-top: 20px; }
+        .nav-links a { text-decoration: none; padding: 10px 20px; background-color: #2c3e50; color: white; border-radius: 5px; font-weight: bold; transition: background-color 0.2s; }
+        .nav-links a:hover { background-color: #1a252f; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="quiz_info_S2_M3.html">◄ Fichier Précédent</a>
+            <a href="quiz_info_S2_M5.html">Fichier Suivant ►</a>
+        </div>
+        <header>
+            <h1>Informatique Médicale - M4</h1>
+        </header>
+        
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer les questions 🔄</button>
+        </form>
+        
+        <div class="nav-links">
+            <a href="quiz_info_S2_M3.html">◄ Fichier Précédent</a>
+            <a href="quiz_info_S2_M5.html">Fichier Suivant ►</a>
+        </div>
+    </div>
+    
+    <script>
+        const quizData = [{"id": 61, "question": "Parmi les exemples suivants, lesquels sont des structures de donn\u00e9es lin\u00e9aires :", "options": [{"id": "61_A", "text": "Tableau", "correct": true}, {"id": "61_B", "text": "Arbre binaire", "correct": false}, {"id": "61_C", "text": "Foule", "correct": true}, {"id": "61_D", "text": "Enregistrement", "correct": true}, {"id": "61_E", "text": "Liste \u00e0 double lien", "correct": false}, {"id": "61_F", "text": "Arbre des pr\u00e9fixes", "correct": false}, {"id": "61_G", "text": "Liste encha\u00een\u00e9e simple", "correct": false}, {"id": "61_H", "text": "Vecteur", "correct": false}, {"id": "61_I", "text": "File d\u2019attente", "correct": false}, {"id": "61_J", "text": "Pile", "correct": false}]}, {"id": 62, "question": "Parmi les exemples suivants de donn\u00e9es m\u00e9dicales, lesquels sont des donn\u00e9es administratives :", "options": [{"id": "62_A", "text": "Ant\u00e9c\u00e9dents m\u00e9dicaux", "correct": true}, {"id": "62_B", "text": "CNP", "correct": false}, {"id": "62_C", "text": "Nom", "correct": true}, {"id": "62_D", "text": "T\u00e9l\u00e9phone", "correct": true}, {"id": "62_E", "text": "Date de naissance", "correct": false}, {"id": "62_F", "text": "Traitements permanents", "correct": false}, {"id": "62_G", "text": "Groupe sanguin", "correct": false}, {"id": "62_H", "text": "Allergies", "correct": false}, {"id": "62_I", "text": "Situation d\u2019assurance maladie", "correct": false}, {"id": "62_J", "text": "Examen physique", "correct": false}]}, {"id": 63, "question": "Parmi les exemples suivants de donn\u00e9es m\u00e9dicales, lesquels sont des donn\u00e9es m\u00e9dicales permanentes :", "options": [{"id": "63_A", "text": "Poids", "correct": true}, {"id": "63_B", "text": "\u00c9lectrocardiogramme", "correct": false}, {"id": "63_C", "text": "Groupe sanguin", "correct": true}, {"id": "63_D", "text": "Sexe", "correct": true}, {"id": "63_E", "text": "RH", "correct": false}, {"id": "63_F", "text": "Couleur des yeux", "correct": false}, {"id": "63_G", "text": "Glucose", "correct": false}, {"id": "63_H", "text": "Cholest\u00e9rol", "correct": false}, {"id": "63_I", "text": "Allergies", "correct": false}, {"id": "63_J", "text": "Hauteur", "correct": false}]}, {"id": 64, "question": "Parmi les exemples suivants de donn\u00e9es m\u00e9dicales, lesquels sont des donn\u00e9es m\u00e9dicales variables :", "options": [{"id": "64_A", "text": "Sexe", "correct": true}, {"id": "64_B", "text": "Ant\u00e9c\u00e9dents du patient", "correct": false}, {"id": "64_C", "text": "Traitement prescrit", "correct": true}, {"id": "64_D", "text": "\u00c9lectrocardiogramme", "correct": true}, {"id": "64_E", "text": "Situation d\u2019assurance maladie", "correct": false}, {"id": "64_F", "text": "RH", "correct": false}, {"id": "64_G", "text": "Imagerie", "correct": false}, {"id": "64_H", "text": "Groupe sanguin", "correct": false}, {"id": "64_I", "text": "Couleur des yeux", "correct": false}, {"id": "64_J", "text": "Examen physique", "correct": false}]}, {"id": 65, "question": "Parmi les caract\u00e9ristiques suivantes, lesquelles sont des avantages du stockage des donn\u00e9es m\u00e9dicales dans les syst\u00e8mes informatis\u00e9s de dossiers des patients :", "options": [{"id": "65_A", "text": "Le syst\u00e8me peut exister simultan\u00e9ment \u00e0 plusieurs endroits en m\u00eame temps", "correct": true}, {"id": "65_B", "text": "La recherche des donn\u00e9es est instantan\u00e9e", "correct": false}, {"id": "65_C", "text": "L\u2019utilisateur peut d\u00e9finir ses propres crit\u00e8res pour s\u00e9lectionner les donn\u00e9es qui l\u2019int\u00e9ressent", "correct": true}, {"id": "65_D", "text": "Le syst\u00e8me ne peut exister qu\u2019\u00e0 un seul endroit \u00e0 la fois", "correct": true}, {"id": "65_E", "text": "Le syst\u00e8me fournit une liste pr\u00e9d\u00e9finie de variantes de filtrage de donn\u00e9es", "correct": false}, {"id": "65_F", "text": "L\u2019ordre de stockage des documents est d\u00e9fini \u00e0 l\u2019avance et fix\u00e9", "correct": false}, {"id": "65_G", "text": "L\u2019utilisateur doit consulter tous les documents pour trouver ce qui l\u2019int\u00e9resse \u00e0 un moment donn\u00e9", "correct": false}, {"id": "65_H", "text": "Le syst\u00e8me n\u2019est pas ordonn\u00e9 selon un crit\u00e8re fixe", "correct": false}, {"id": "65_I", "text": "Le syst\u00e8me ne peut \u00eatre consult\u00e9 que par une seule personne \u00e0 la fois", "correct": false}, {"id": "65_J", "text": "Le syst\u00e8me peut \u00eatre consult\u00e9 en parall\u00e8le", "correct": false}]}, {"id": 66, "question": "Parmi les caract\u00e9ristiques suivantes, lesquelles sont des avantages de l\u2019organisation des donn\u00e9es dans des bases de donn\u00e9es :", "options": [{"id": "66_A", "text": "Le syst\u00e8me n\u2019est accessible qu\u2019\u00e0 un seul utilisateur \u00e0 la fois", "correct": true}, {"id": "66_B", "text": "Le syst\u00e8me peut fournir des r\u00e9sultats diff\u00e9rents \u00e0 partir des m\u00eames op\u00e9rations, effectu\u00e9es \u00e0 diff\u00e9rents moments dans le temps", "correct": false}, {"id": "66_C", "text": "L'ind\u00e9pendance des donn\u00e9es stock\u00e9es par l'application", "correct": true}, {"id": "66_D", "text": "Le syst\u00e8me permet un acc\u00e8s gratuit, local et publique, aux donn\u00e9es", "correct": true}, {"id": "66_E", "text": "L\u2019int\u00e9grit\u00e9 des donn\u00e9es tout au long du fonctionnement du syst\u00e8me", "correct": false}, {"id": "66_F", "text": "Les m\u00eames donn\u00e9es peuvent \u00eatre trouv\u00e9es dans des tableaux distincts du syst\u00e8me pour une meilleure s\u00e9curit\u00e9 en fonctionnement", "correct": false}, {"id": "66_G", "text": "La possibilit\u00e9 d\u2019appliquer des restrictions en mati\u00e8re de s\u00e9curit\u00e9 des donn\u00e9es", "correct": false}, {"id": "66_H", "text": "Le syst\u00e8me dispose d\u2019un menu fixe de crit\u00e8res de s\u00e9lection des donn\u00e9es", "correct": false}, {"id": "66_I", "text": "L\u2019interface conviviale", "correct": false}, {"id": "66_J", "text": "La facilit\u00e9 de manipulation", "correct": false}]}, {"id": 67, "question": "Parmi les caract\u00e9ristiques suivantes, lesquelles sont des avantages de l\u2019organisation des donn\u00e9es dans des bases de donn\u00e9es :", "options": [{"id": "67_A", "text": "Possibilit\u00e9 d\u2019acc\u00e9der aux donn\u00e9es et de les g\u00e9rer simultan\u00e9ment \u00e0 partir de plusieurs ordinateurs", "correct": true}, {"id": "67_B", "text": "Le syst\u00e8me dispose d\u2019un menu fixe de rapports disponibles", "correct": false}, {"id": "67_C", "text": "Faible niveau de redondance des donn\u00e9es", "correct": true}, {"id": "67_D", "text": "L\u2019interface complexe, qui n\u00e9cessite des connaissances en programmation pour \u00eatre utilis\u00e9", "correct": true}, {"id": "67_E", "text": "Possibilit\u00e9 de d\u00e9finir des crit\u00e8res personnalis\u00e9s de s\u00e9lection des donn\u00e9es", "correct": false}, {"id": "67_F", "text": "Le syst\u00e8me n\u2019est accessible qu\u2019\u00e0 un seul utilisateur \u00e0 la fois, qui ne peut effectuer qu\u2019un seul traitement", "correct": false}, {"id": "67_G", "text": "Les donn\u00e9es saisies et les applications qui les utilisent forment un tout unitaire", "correct": false}, {"id": "67_H", "text": "Protection des donn\u00e9es contre les acc\u00e8s non autoris\u00e9s", "correct": false}, {"id": "67_I", "text": "Exactitude des donn\u00e9es tout au long du fonctionnement du syst\u00e8me", "correct": false}, {"id": "67_J", "text": "Le syst\u00e8me n\u2019utilise pas de restrictions de s\u00e9curit\u00e9 des donn\u00e9es", "correct": false}]}, {"id": 68, "question": "Lesquelles des op\u00e9rations suivantes sont facilit\u00e9es par le syst\u00e8me de gestion de base de donn\u00e9es (SGBD) :", "options": [{"id": "68_A", "text": "Description compl\u00e8te de la structure de la base de donn\u00e9es", "correct": true}, {"id": "68_B", "text": "Contr\u00f4le du fonctionnement de la base de donn\u00e9es", "correct": false}, {"id": "68_C", "text": "Enregistrement et suivi des utilisateurs", "correct": true}, {"id": "68_D", "text": "Conception de l\u2019interface avec la base de donn\u00e9es", "correct": true}, {"id": "68_E", "text": "Transmission des rapports \u00e0 distance", "correct": false}, {"id": "68_F", "text": "Extraire des informations sp\u00e9cifiques de la base de donn\u00e9es", "correct": false}, {"id": "68_G", "text": "Gestion des utilisateurs ayant acc\u00e8s \u00e0 la base de donn\u00e9es", "correct": false}, {"id": "68_H", "text": "Traitement statistique sur la base de donn\u00e9es", "correct": false}, {"id": "68_I", "text": "Contr\u00f4le de l\u2019acc\u00e8s \u00e0 la base de donn\u00e9es", "correct": false}, {"id": "68_J", "text": "V\u00e9rification de l\u2019int\u00e9grit\u00e9 des donn\u00e9es", "correct": false}]}, {"id": 69, "question": "Lesquelles des op\u00e9rations suivantes sont facilit\u00e9es par le syst\u00e8me de gestion de base de donn\u00e9es (SGBD) :", "options": [{"id": "69_A", "text": "Administration de la base de donn\u00e9es", "correct": true}, {"id": "69_B", "text": "D\u00e9finition des droits d\u2019acc\u00e8s des utilisateurs aux donn\u00e9es", "correct": false}, {"id": "69_C", "text": "Assurer la s\u00e9curit\u00e9 des donn\u00e9es en cas d\u2019incidents", "correct": true}, {"id": "69_D", "text": "Maintien de la base de donn\u00e9es op\u00e9rationnelle", "correct": true}, {"id": "69_E", "text": "Entr\u00e9e des donn\u00e9es r\u00e9elles dans la base de donn\u00e9es", "correct": false}, {"id": "69_F", "text": "Contr\u00f4le op\u00e9rationnel de la base de donn\u00e9es", "correct": false}, {"id": "69_G", "text": "Conception de base de donn\u00e9es", "correct": false}, {"id": "69_H", "text": "Pr\u00e9servation de l\u2019int\u00e9grit\u00e9 des donn\u00e9es", "correct": false}, {"id": "69_I", "text": "Ajout d\u2019installations suppl\u00e9mentaires pour le traitement des donn\u00e9es", "correct": false}, {"id": "69_J", "text": "Modification de contenu de la base de donn\u00e9es", "correct": false}]}, {"id": 70, "question": "Lesquels des \u00e9l\u00e9ments suivants sont des \u00e9tapes de la conception d\u2019un module de s\u00e9curit\u00e9 des donn\u00e9es bas\u00e9 sur l\u2019\u00e9valuation des menaces dans un syst\u00e8me informatique hospitalier :", "options": [{"id": "70_A", "text": "Mettre en \u0153uvre des proc\u00e9dures pour g\u00e9rer les incidents", "correct": true}, {"id": "70_B", "text": "Identification des menaces potentielles qui peuvent affecter de mani\u00e8re r\u00e9aliste les ressources pr\u00e9cieuses du syst\u00e8me", "correct": false}, {"id": "70_C", "text": "Identification des menaces potentielles qui peuvent affecter les ressources dispensables du syst\u00e8me", "correct": true}, {"id": "70_D", "text": "Mettre en \u0153uvre de proc\u00e9dures de contr\u00f4le pour la protection des utilisateurs du syst\u00e8me", "correct": true}, {"id": "70_E", "text": "Identification des ressources pr\u00e9cieuses du syst\u00e8me, qui n\u00e9cessitent le plus haut niveau de protection", "correct": false}, {"id": "70_F", "text": "Identification des ressources dispensables du syst\u00e8me, qui n\u00e9cessitent le niveau de protection le plus bas", "correct": false}, {"id": "70_G", "text": "Mettre en \u0153uvre de proc\u00e9dures de contr\u00f4le pour la protection des \u00e9quipements mat\u00e9riels du syst\u00e8me", "correct": false}, {"id": "70_H", "text": "Mettre en \u0153uvre des proc\u00e9dures de contr\u00f4le pour prot\u00e9ger les informations en pr\u00e9sence de vuln\u00e9rabilit\u00e9s du syst\u00e8me", "correct": false}, {"id": "70_I", "text": "Mettre en \u0153uvre de proc\u00e9dures pour \u00e9liminer les incidents survenus", "correct": false}, {"id": "70_J", "text": "\u00c9valuation et r\u00e9duction des risques r\u00e9siduels", "correct": false}]}, {"id": 71, "question": "Lesquels des \u00e9l\u00e9ments suivants sont des ressources physiques pr\u00e9cieuses dans un syst\u00e8me informatique :", "options": [{"id": "71_A", "text": "Points d\u2019acc\u00e8s sans fil", "correct": true}, {"id": "71_B", "text": "Modules n\u00e9cessaires pour les transmissions de donn\u00e9es dans le syst\u00e8me", "correct": false}, {"id": "71_C", "text": "\u00c9quipement logiciel du syst\u00e8me", "correct": true}, {"id": "71_D", "text": "Informations critiques du syst\u00e8me", "correct": true}, {"id": "71_E", "text": "Postes de travail", "correct": false}, {"id": "71_F", "text": "Donn\u00e9es confidentielles avec lesquelles le syst\u00e8me informatique fonctionne", "correct": false}, {"id": "71_G", "text": "Commutateurs et routeurs de r\u00e9seau", "correct": false}, {"id": "71_H", "text": "Locaux o\u00f9 sont install\u00e9s les serveurs institutionnels", "correct": false}, {"id": "71_I", "text": "Dispositifs mat\u00e9riels", "correct": false}, {"id": "71_J", "text": "Modules n\u00e9cessaires au fonctionnement du syst\u00e8me", "correct": false}]}, {"id": 72, "question": "Lesquels des \u00e9l\u00e9ments suivants sont des ressources abstraites pr\u00e9cieuses dans un syst\u00e8me informatique :", "options": [{"id": "72_A", "text": "Points d\u2019acc\u00e8s sans fil", "correct": true}, {"id": "72_B", "text": "Base de donn\u00e9es d\u2019imagerie", "correct": false}, {"id": "72_C", "text": "Module de calcul et de r\u00e9partition des salaires", "correct": true}, {"id": "72_D", "text": "Locaux o\u00f9 sont install\u00e9s les serveurs institutionnels", "correct": true}, {"id": "72_E", "text": "Dispositifs mat\u00e9riels", "correct": false}, {"id": "72_F", "text": "Informations critiques du syst\u00e8me", "correct": false}, {"id": "72_G", "text": "Postes de travail", "correct": false}, {"id": "72_H", "text": "Donn\u00e9es confidentielles avec lesquelles le syst\u00e8me informatique fonctionne", "correct": false}, {"id": "72_I", "text": "Commutateurs et routeurs de r\u00e9seau", "correct": false}, {"id": "72_J", "text": "Modules n\u00e9cessaires au fonctionnement du syst\u00e8me", "correct": false}]}, {"id": 73, "question": "Lesquels des exemples suivants sont des proc\u00e9dures de contr\u00f4le qui prot\u00e8gent les ressources pr\u00e9cieuses d\u2019un syst\u00e8me d\u2019information hospitalier :", "options": [{"id": "73_A", "text": "Verrouillage automatique du syst\u00e8me dans les situations d\u2019urgence", "correct": true}, {"id": "73_B", "text": "L'ex\u00e9cution de certaines op\u00e9rations dans le syst\u00e8me en suivant strictement un ensemble d\u2019\u00e9tapes", "correct": false}, {"id": "73_C", "text": "Formation du personnel de l\u2019institution pour l\u2019ex\u00e9cution d\u2019op\u00e9rations sp\u00e9ciales dans le syst\u00e8me", "correct": true}, {"id": "73_D", "text": "L'ex\u00e9cution de certaines op\u00e9rations dans le syst\u00e8me uniquement dans des situations particuli\u00e8res", "correct": true}, {"id": "73_E", "text": "Acc\u00e8s libre des utilisateurs au syst\u00e8me", "correct": false}, {"id": "73_F", "text": "Fonctionnement du syst\u00e8me uniquement sur site, sans acc\u00e8s \u00e0 distance", "correct": false}, {"id": "73_G", "text": "Identification et \u00e9limination des faiblesses du syst\u00e8me", "correct": false}, {"id": "73_H", "text": "Fonctionnement du syst\u00e8me uniquement sur une base intranet, sans acc\u00e8s \u00e0 Internet", "correct": false}, {"id": "73_I", "text": "L'exigence d'authentification de l'utilisateur au d\u00e9but d'une session du syst\u00e8me", "correct": false}, {"id": "73_J", "text": "L'ex\u00e9cution des contr\u00f4les technologiques automatiquement, sans intervention humaine", "correct": false}]}, {"id": 74, "question": "Lesquelles des actions suivantes font partie du cycle d\u2019identi\ufb01cation / \u00e9valuation des violations de la s\u00e9curit\u00e9 :", "options": [{"id": "74_A", "text": "Comprendre le risque r\u00e9siduel en tant que tel", "correct": true}, {"id": "74_B", "text": "Ajout des nouvelles proc\u00e9dures de contr\u00f4le pour r\u00e9duire les risques identifi\u00e9s", "correct": false}, {"id": "74_C", "text": "Quantification de la virulence exprim\u00e9e par le degr\u00e9 de perturbation du syst\u00e8me caus\u00e9", "correct": true}, {"id": "74_D", "text": "Acceptation formelle des risques par les gestionnaires des ressources menac\u00e9es", "correct": true}, {"id": "74_E", "text": "Surveillance permanente de l\u2019activit\u00e9 du syst\u00e8me", "correct": false}, {"id": "74_F", "text": "Utilisation de syst\u00e8mes d\u2019assurance pour compenser les pertes mat\u00e9rielles caus\u00e9es par les incidents de s\u00e9curit\u00e9", "correct": false}, {"id": "74_G", "text": "Quantification de l\u2019impact exprim\u00e9 par le nombre d\u2019utilisateurs qui ne peuvent plus exercer leur activit\u00e9 normale", "correct": false}, {"id": "74_H", "text": "Constatation de l\u2019absence de la ressource touch\u00e9e", "correct": false}, {"id": "74_I", "text": "Am\u00e9lioration des proc\u00e9dures de contr\u00f4le pour r\u00e9duire les risques identifi\u00e9s", "correct": false}, {"id": "74_J", "text": "Quantification de l\u2019impact exprim\u00e9 par le nombre d\u2019ordinateurs touches", "correct": false}]}, {"id": 75, "question": "Parmi les \u00e9v\u00e9nements suivants, lesquels constituent des menaces pour la con\ufb01dentialit\u00e9 de l\u2019information contenue dans le syst\u00e8me d\u2019information de l\u2019h\u00f4pital :", "options": [{"id": "75_A", "text": "Erreur humaine lors de l'utilisation du syst\u00e8me", "correct": true}, {"id": "75_B", "text": "Dysfonctionnement de l'\u00e9quipement mat\u00e9riel", "correct": false}, {"id": "75_C", "text": "Surveillance des changements", "correct": true}, {"id": "75_D", "text": "Vol de mots de passe", "correct": true}, {"id": "75_E", "text": "Mise en place de comptes d\u2019utilisateurs distincts avec des droits d\u2019acc\u00e8s diff\u00e9rents aux fonctions du syst\u00e8me", "correct": false}, {"id": "75_F", "text": "Utilisation n\u00e9gligente des installations du syst\u00e8me", "correct": false}, {"id": "75_G", "text": "Utilisation abusive des fonctions du syst\u00e8me informatique", "correct": false}, {"id": "75_H", "text": "Vol direct de donn\u00e9es", "correct": false}, {"id": "75_I", "text": "Raccordement non autoris\u00e9 de nouveaux terminaux au r\u00e9seau", "correct": false}, {"id": "75_J", "text": "Erreurs logicielles", "correct": false}]}, {"id": 76, "question": "Parmi les \u00e9v\u00e9nements suivants, lesquels constituent des menaces pour la disponibilit\u00e9 de l\u2019information contenue dans le syst\u00e8me d\u2019information de l\u2019h\u00f4pital :", "options": [{"id": "76_A", "text": "D\u00e9faillance logicielle des \u00e9quipements du r\u00e9seau", "correct": true}, {"id": "76_B", "text": "Raccordement non autoris\u00e9 de nouveaux terminaux au r\u00e9seau", "correct": false}, {"id": "76_C", "text": "Extension non autoris\u00e9e des droits d\u2019acc\u00e8s accord\u00e9s \u00e0 un utilisateur", "correct": true}, {"id": "76_D", "text": "Diffusion incontr\u00f4l\u00e9e des rapports imprim\u00e9s", "correct": true}, {"id": "76_E", "text": "Attaque du syst\u00e8me afin d\u2019obtenir des mots de passe", "correct": false}, {"id": "76_F", "text": "Consommation des ressources requises par le syst\u00e8me", "correct": false}, {"id": "76_G", "text": "D\u00e9faillance physique des \u00e9quipements du r\u00e9seau", "correct": false}, {"id": "76_H", "text": "D\u00e9veloppement du syst\u00e8me \u00ab \u00e0 la vol\u00e9e \u00bb", "correct": false}, {"id": "76_I", "text": "Perte accidentelle de donn\u00e9es", "correct": false}, {"id": "76_J", "text": "Erreur humaine lors de l'utilisation du syst\u00e8me", "correct": false}]}, {"id": 77, "question": "Lesquelles des actions suivantes font partie des mesures physiques de protection du syst\u00e8me d\u2019information :", "options": [{"id": "77_A", "text": "Installation de l'\u00e9quipement central et des n\u0153uds de communication importants du r\u00e9seau dans des salles sp\u00e9cialement \u00e9quip\u00e9es, avec des syst\u00e8mes pour maintenir la temp\u00e9rature et l\u2019humidit\u00e9 optimales de l\u2019air", "correct": true}, {"id": "77_B", "text": "Installation de l'\u00e9quipement central et des n\u0153uds de communication importants du r\u00e9seau dans des salles sp\u00e9cialement \u00e9quip\u00e9es, avec des syst\u00e8mes de protection contre les inondations", "correct": false}, {"id": "77_C", "text": "Dotation des terminaux avec dispositifs d\u2019identification suppl\u00e9mentaires \u2013 cartes d\u2019acc\u00e8s", "correct": true}, {"id": "77_D", "text": "Installation de syst\u00e8mes d\u2019authentification d\u2019acc\u00e8s au r\u00e9seau", "correct": true}, {"id": "77_E", "text": "Installation de l'\u00e9quipement central et des n\u0153uds de communication importants du r\u00e9seau dans des salles sp\u00e9cialement \u00e9quip\u00e9es, avec acc\u00e8s contr\u00f4l\u00e9 par carte", "correct": false}, {"id": "77_F", "text": "Utilisation de syst\u00e8mes de pr\u00e9vention et de d\u00e9tection d\u2019infiltration de r\u00e9seau (IPDS)", "correct": false}, {"id": "77_G", "text": "Installation de pare-feu de r\u00e9seau", "correct": false}, {"id": "77_H", "text": "Installation de l'\u00e9quipement central et des n\u0153uds de communication importants du r\u00e9seau dans des salles sp\u00e9cialement \u00e9quip\u00e9es, avec d\u00e9tecteurs de fum\u00e9e et syst\u00e8mes de protection contre l\u2019incendie", "correct": false}, {"id": "77_I", "text": "Utilisation de syst\u00e8mes dynamiques d\u2019analyse des vuln\u00e9rabilit\u00e9s informatiques", "correct": false}, {"id": "77_J", "text": "Utilisation de r\u00e9seaux priv\u00e9s virtuels (VPN)", "correct": false}]}, {"id": 78, "question": "Lesquelles des actions suivantes sont caract\u00e9ristiques des syst\u00e8mes de pr\u00e9vention et de d\u00e9tection des in\ufb01ltrations dans le r\u00e9seau (IPDS) :", "options": [{"id": "78_A", "text": "Limitent le degr\u00e9 de connectivit\u00e9 entre le r\u00e9seau informatique interne et Internet sur la base de r\u00e8gles pr\u00e9d\u00e9finies", "correct": true}, {"id": "78_B", "text": "\u00c9tendent les r\u00e9seaux priv\u00e9s sur les r\u00e9seaux publics", "correct": false}, {"id": "78_C", "text": "Lancent d\u2019op\u00e9rations concr\u00e8tes pour \u00e9liminer les activit\u00e9s dangereuses", "correct": true}, {"id": "78_D", "text": "D\u00e9tectent les activit\u00e9s dangereuses", "correct": true}, {"id": "78_E", "text": "Utilisent une op\u00e9ration d\u2019identification avant que l\u2019ordinateur ne soit autoris\u00e9 \u00e0 connecter le logiciel au r\u00e9seau interne", "correct": false}, {"id": "78_F", "text": "Mettent en quarantaine les ordinateurs qui ont \u00e9t\u00e9 identifi\u00e9s avec des vuln\u00e9rabilit\u00e9s", "correct": false}, {"id": "78_G", "text": "Surveillent dynamique des vuln\u00e9rabilit\u00e9s des postes de travail", "correct": false}, {"id": "78_H", "text": "G\u00e9n\u00e8rent des alertes lorsque des activit\u00e9s dangereuses ont \u00e9t\u00e9 identifi\u00e9es", "correct": false}, {"id": "78_I", "text": "Suppriment le r\u00e9seau de l\u2019ordinateur \u00e0 partir duquel les activit\u00e9s dangereuses ont \u00e9t\u00e9 initi\u00e9es", "correct": false}, {"id": "78_J", "text": "Surveillent passivement le trafic r\u00e9seau", "correct": false}]}, {"id": 79, "question": "Parmi les \u00e9l\u00e9ments suivants, lesquels sont utilis\u00e9s pour \u00e9tablir les droits d\u2019acc\u00e8s des utilisateurs au syst\u00e8me d\u2019information hospitalier :", "options": [{"id": "79_A", "text": "Analyse de l\u2019efficacit\u00e9 hospitali\u00e8re", "correct": true}, {"id": "79_B", "text": "Nature des diagnostics trait\u00e9s", "correct": false}, {"id": "79_C", "text": "Type de donn\u00e9es cliniques", "correct": true}, {"id": "79_D", "text": "Intention de traiter des donn\u00e9es", "correct": true}, {"id": "79_E", "text": "\u00c2ge des donn\u00e9es", "correct": false}, {"id": "79_F", "text": "Cr\u00e9ation d\u2019une image favorable dans les m\u00e9dias locaux", "correct": false}, {"id": "79_G", "text": "Possibilit\u00e9 d\u2019attirer des sources de financement externes", "correct": false}, {"id": "79_H", "text": "Scolarit\u00e9", "correct": false}, {"id": "79_I", "text": "Position dans l\u2019institution", "correct": false}, {"id": "79_J", "text": "Anciennet\u00e9", "correct": false}]}, {"id": 80, "question": "Parmi les \u00e9l\u00e9ments suivants, lesquels sont utilis\u00e9s pour \u00e9tablir les droits d\u2019acc\u00e8s des utilisateurs au syst\u00e8me d\u2019information hospitalier : ", "options": [{"id": "80_A", "text": "Int\u00e9r\u00eats professionnels", "correct": true}, {"id": "80_B", "text": "Relation professionnelle avec la direction de l\u2019h\u00f4pital", "correct": false}, {"id": "80_C", "text": "Niveau de revenu", "correct": true}, {"id": "80_D", "text": "Politique institutionnelle", "correct": true}, {"id": "80_E", "text": "Relation avec les patients concern\u00e9s", "correct": false}, {"id": "80_F", "text": "Identification de nouveaux fournisseurs de m\u00e9dicaments et de mat\u00e9riel biologique", "correct": false}, {"id": "80_G", "text": "Facilitation de l\u2019audit externe", "correct": false}, {"id": "80_H", "text": "\u00c2ge", "correct": false}, {"id": "80_I", "text": "Cat\u00e9gorie de personnel \u00e0 laquelle ils appartiennent", "correct": false}, {"id": "80_J", "text": "Type de donn\u00e9es cliniques", "correct": false}]}];
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `Q${q.id} - ${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    optionsGrid.appendChild(label);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

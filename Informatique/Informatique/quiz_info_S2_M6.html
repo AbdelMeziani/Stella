@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informatique Médicale - M6</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct-bg: #d4edda;
+            --correct-border: #c3e6cb;
+            --correct-text: #155724;
+            --incorrect-bg: #f8d7da;
+            --incorrect-border: #f5c6cb;
+            --incorrect-text: #721c24;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 40px 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); font-size: 2.5em; margin-bottom: 10px; }
+        .nav-links { display: flex; justify-content: space-between; margin-bottom: 30px; margin-top: 20px; }
+        .nav-links a { text-decoration: none; padding: 10px 20px; background-color: #2c3e50; color: white; border-radius: 5px; font-weight: bold; transition: background-color 0.2s; }
+        .nav-links a:hover { background-color: #1a252f; }
+        .revision-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 8px; border-left: 6px solid #ffeeba; margin-bottom: 30px; font-size: 1.1em; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .revision-box h3 { margin-top: 0; color: #856404; margin-bottom: 10px; }
+        .question-card { background: var(--card-bg); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent-color); animation: fadeIn 0.5s ease; }
+        .question-title { font-size: 1.3em; font-weight: 600; color: var(--primary-color); margin-top: 0; margin-bottom: 20px; line-height:1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .option-label { display: flex; align-items: flex-start; padding: 12px 15px; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05em; }
+        .option-label:hover:not(.disabled) { background-color: #e2e6ea; border-color: #dae0e5; }
+        .option-label input[type="checkbox"] { margin-top: 5px; margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; }
+        .option-label.disabled { cursor: default; }
+        .buttons-container { display: flex; gap: 20px; margin-top: 40px; }
+        .btn { flex: 1; padding: 18px; color: white; border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; text-align: center; transition: all 0.3s; cursor:pointer; }
+        .btn-valider { background-color: var(--accent-color); box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .btn-valider:hover { background-color: #2980b9; transform: translateY(-2px); }
+        .btn-recommencer { background-color: #f39c12; display: none; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(243, 156, 18, 0.3); }
+        .btn-recommencer:hover { background-color: #d68910; transform: translateY(-2px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .is-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text); font-weight: 500; }
+        .is-incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text); text-decoration: line-through; opacity: 0.8; }
+        .missed-correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; border-style: dashed !important; border-width: 2px !important; color: var(--correct-text); }
+        #results { margin-top: 30px; padding: 20px; background: var(--card-bg); border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; animation: fadeIn 0.5s ease; }
+        #score-text { font-size: 1.8em; color: var(--primary-color); font-weight: bold; margin: 0; }
+        #global-score-text { font-size: 1.3em; color: #7f8c8d; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="quiz_info_S2_M5.html">◄ Fichier Précédent</a>
+            <a href="quiz_info_S2_M7.html">Fichier Suivant ►</a>
+        </div>
+        <header>
+            <h1>Informatique Médicale - M6</h1>
+        </header>
+
+        
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            
+            <div id="results">
+                <p id="score-text"></p>
+                <p id="global-score-text"></p>
+            </div>
+            <div class="buttons-container" id="nav-buttons">
+                <button type="button" class="btn btn-valider" id="btn-valider" onclick="validerReponses()">Valider mes réponses</button>
+            </div>
+            <button type="button" class="btn btn-recommencer" id="btn-recommencer" style="width: 100%;" onclick="initQuiz()">Recommencer les questions 🔄</button>
+        </form>
+        
+        <div class="nav-links">
+            <a href="quiz_info_S2_M5.html">◄ Fichier Précédent</a>
+            <a href="quiz_info_S2_M7.html">Fichier Suivant ►</a>
+        </div>
+    </div>
+    
+    <script>
+        const quizData = [{"id": 101, "question": "Les syst\u00e8mes de d\u00e9clenchement des stimulateurs cardiaques (\u00ab\u00a0pacemaker trigger\u00a0\u00bb) sont caract\u00e9ris\u00e9s par les \u00e9nonc\u00e9s suivants :", "options": [{"id": "101_A", "text": "Ce sont des syst\u00e8mes de surveillance d\u2019un \u00e9quipement m\u00e9dical", "correct": true}, {"id": "101_B", "text": "Ils effectuent le r\u00e9glage et l\u2019\u00e9talonnage automatiques de l\u2019\u00e9quipement surveill\u00e9", "correct": false}, {"id": "101_C", "text": "L\u2019appareil surveille l\u2019activit\u00e9 cardiaque du patient", "correct": true}, {"id": "101_D", "text": "Ce sont des syst\u00e8mes de contr\u00f4le th\u00e9rapeutique", "correct": true}, {"id": "101_E", "text": "Ils d\u00e9clenchent le stimulateur lorsque des perturbations du rythme cardiaque sont d\u00e9tect\u00e9es", "correct": false}, {"id": "101_F", "text": "Ce sont des syst\u00e8mes d\u2019alerte/d\u2019avertissement", "correct": false}, {"id": "101_G", "text": "Ils corr\u00e8lent les connaissances cliniques dans une sp\u00e9cialit\u00e9 m\u00e9dicale particuli\u00e8re", "correct": false}, {"id": "101_H", "text": "Ils sont utilis\u00e9s par les patients qui portent des stimulateurs cardiaques", "correct": false}, {"id": "101_I", "text": "Ils utilisent des algorithmes de contr\u00f4le de la perfusion bas\u00e9s sur des mod\u00e8les pharmacocin\u00e9tiques", "correct": false}, {"id": "101_J", "text": "Ils utilisent des structures de donn\u00e9es compos\u00e9es de n\u0153uds et de connexions", "correct": false}]}, {"id": 102, "question": "L\u2019\u00e9tude des processus biologiques a\ufb01n de pouvoir les formaliser puis de d\u00e9velopper des mod\u00e8les et algorithmes appropri\u00e9s pour les simuler pr\u00e9sente les avantages suivants :", "options": [{"id": "102_A", "text": "Cr\u00e9ation de th\u00e9rapies et de m\u00e9dicaments adapt\u00e9s aux sp\u00e9cificit\u00e9s du patient", "correct": true}, {"id": "102_B", "text": "Compr\u00e9hension des m\u00e9canismes intrins\u00e8ques des processus biologiques et des r\u00e9ponses aux stimuli externes", "correct": false}, {"id": "102_C", "text": "Conception de d\u00e9p\u00f4ts de donn\u00e9es pouvant \u00eatre utilis\u00e9s ult\u00e9rieurement dans la recherche", "correct": true}, {"id": "102_D", "text": "Conception des th\u00e9rapies universelles et des m\u00e9dicaments qui fonctionnent correctement, quelles que soient les sp\u00e9cificit\u00e9s du patient", "correct": true}, {"id": "102_E", "text": "Conception des th\u00e9rapies efficaces, m\u00eame si les co\u00fbts des soins de sant\u00e9 augmentent", "correct": false}, {"id": "102_F", "text": "D\u00e9couverte de nouveaux traitements", "correct": false}, {"id": "102_G", "text": "Compr\u00e9hension plus correcte des processus de la maladie", "correct": false}, {"id": "102_H", "text": "Suivi en temps r\u00e9el des th\u00e9rapies prescrites et identification rapide des b\u00e9n\u00e9fices et des effets ind\u00e9sirables", "correct": false}, {"id": "102_I", "text": "Practication de la m\u00e9decine bas\u00e9e sur des preuves", "correct": false}, {"id": "102_J", "text": "Analyse des donn\u00e9es acquises par des m\u00e9thodes math\u00e9matiques et statistiques", "correct": false}]}, {"id": 103, "question": "Parmi les applications pratiques de l\u2019utilisation des m\u00e9thodes d\u2019informatisation dans la recherche m\u00e9dicale, on peut citer :", "options": [{"id": "103_A", "text": "D\u00e9veloppement des technologies pour l\u2019analyse intelligente d\u2019images et l\u2019identification de leur signification", "correct": true}, {"id": "103_B", "text": "Analyse des donn\u00e9es acquises par des m\u00e9thodes math\u00e9matiques et statistiques afin d\u2019extraire des informations \u00e9pid\u00e9miologiques", "correct": false}, {"id": "103_C", "text": "D\u00e9veloppement de syst\u00e8mes d\u2019aide \u00e0 la d\u00e9cision clinique CDSS", "correct": true}, {"id": "103_D", "text": "D\u00e9veloppement de syst\u00e8mes d\u2019assistance m\u00e9dicale CAD", "correct": true}, {"id": "103_E", "text": "D\u00e9veloppement de mod\u00e8les informatiques pour simuler des processus biologiques complexes, pour comprendre les m\u00e9canismes intrins\u00e8ques et les r\u00e9ponses aux stimuli externes", "correct": false}, {"id": "103_F", "text": "Cr\u00e9ation d\u2019entrep\u00f4ts de donn\u00e9es bas\u00e9s sur les dossiers m\u00e9dicaux \u00e9lectroniques des patients, qui peuvent ensuite \u00eatre utilis\u00e9s dans la recherche", "correct": false}, {"id": "103_G", "text": "\u00c9tablissement de sp\u00e9cifications techniques pour la normalisation des donn\u00e9es de sant\u00e9", "correct": false}, {"id": "103_H", "text": "\u00c9tablissement de sp\u00e9cifications techniques pour la codification et la classification des donn\u00e9es m\u00e9dicales", "correct": false}, {"id": "103_I", "text": "R\u00e9alisation des mod\u00e8les informatiques pour des exp\u00e9riences in vivo, \u00e9tablissement de protocoles et v\u00e9rification d\u2019hypoth\u00e8ses de travail", "correct": false}, {"id": "103_J", "text": "D\u00e9veloppement de la proc\u00e9dure-cadre pour cr\u00e9er le dossier m\u00e9dical \u00e9lectronique du patient", "correct": false}]}, {"id": 104, "question": "Lequel des logiciels suivants peut \u00eatre utilis\u00e9 pour l\u2019analyse des donn\u00e9es m\u00e9dicales par des m\u00e9thodes math\u00e9matiques et statistiques, a\ufb01n d\u2019extraire des informations \u00e9pid\u00e9miologiques :", "options": [{"id": "104_A", "text": "Pascal", "correct": true}, {"id": "104_B", "text": "SPSS", "correct": false}, {"id": "104_C", "text": "Adobe Lightroom", "correct": true}, {"id": "104_D", "text": "PowerPoint", "correct": true}, {"id": "104_E", "text": "Statistiques", "correct": false}, {"id": "104_F", "text": "R", "correct": false}, {"id": "104_G", "text": "C++", "correct": false}, {"id": "104_H", "text": "Epi-Info", "correct": false}, {"id": "104_I", "text": "Adobe Photoshop", "correct": false}, {"id": "104_J", "text": "Excel", "correct": false}]}, {"id": 105, "question": "Lesquels des exemples suivants sont des processus biologiques pour lesquels des mod\u00e8les de simulation informatique ont \u00e9t\u00e9 d\u00e9velopp\u00e9s :", "options": [{"id": "105_A", "text": "M\u00e9canismes de transport et de signalisation cellulaire", "correct": true}, {"id": "105_B", "text": "Fonctionnement du cerveau humain", "correct": false}, {"id": "105_C", "text": "Fonctionnement de l\u2019appareil r\u00e9nal chez l\u2019homme", "correct": true}, {"id": "105_D", "text": "Human Genome Project", "correct": true}, {"id": "105_E", "text": "Syst\u00e8mes de contr\u00f4le nerveux ou hormonal", "correct": false}, {"id": "105_F", "text": "Fonctionnement du syst\u00e8me digestif humain", "correct": false}, {"id": "105_G", "text": "D\u00e9polarisation \u00e9lectrique du muscle cardiaque", "correct": false}, {"id": "105_H", "text": "D\u00e9veloppement tumoral", "correct": false}, {"id": "105_I", "text": "Processus de croissance et de vieillissement", "correct": false}, {"id": "105_J", "text": "Fonctions de la peau", "correct": false}]}, {"id": 106, "question": "Quels sont les composants qu\u2019une machine VR doit contenir pour cr\u00e9er le sentiment d\u2019immersion :", "options": [{"id": "106_A", "text": "Ordinateur qui g\u00e9n\u00e8re l\u2019environnement virtuel", "correct": true}, {"id": "106_B", "text": "Disque dur externe", "correct": false}, {"id": "106_C", "text": "Souris", "correct": true}, {"id": "106_D", "text": "Moniteur d\u2019haute r\u00e9solution sur lequel des images 3D peuvent \u00eatre projet\u00e9es", "correct": true}, {"id": "106_E", "text": "Lunettes st\u00e9r\u00e9oscopiques", "correct": false}, {"id": "106_F", "text": "Gant DataGlove, semblable \u00e0 un joystick", "correct": false}, {"id": "106_G", "text": "Casque st\u00e9r\u00e9o", "correct": false}, {"id": "106_H", "text": "Gyroscope et capteurs qui d\u00e9tectent les mouvements de la t\u00eate", "correct": false}, {"id": "106_I", "text": "Imprimante 3D", "correct": false}, {"id": "106_J", "text": "Fax, pour la transmission de donn\u00e9es enregistr\u00e9es", "correct": false}]}, {"id": 107, "question": "Laquelle des af\ufb01rmations suivantes caract\u00e9rise le concept de \u00ab r\u00e9alit\u00e9 augment\u00e9e \u00bb :", "options": [{"id": "107_A", "text": "Il s\u2019agit d\u2019une simulation interactive d\u2019un environnement imaginaire", "correct": true}, {"id": "107_B", "text": "Des informations suppl\u00e9mentaires superpos\u00e9es \u00e0 l\u2019image de l\u2019environnement r\u00e9el peuvent \u00eatre ajout\u00e9es \u00e0 des fins constructives", "correct": false}, {"id": "107_C", "text": "Il s\u2019agit d\u2019une simulation immersive d\u2019un environnement imaginaire", "correct": true}, {"id": "107_D", "text": "L\u2019environnement virtuel est r\u00e9aliste et rendu avec une pr\u00e9cision maximale", "correct": true}, {"id": "107_E", "text": "Les informations suppl\u00e9mentaires obtenues par traitement informatique se superposent \u00e0 l\u2019image de l\u2019environnement r\u00e9el", "correct": false}, {"id": "107_F", "text": "Des informations suppl\u00e9mentaires superpos\u00e9es \u00e0 l\u2019image de l\u2019environnement r\u00e9el peuvent \u00eatre ajout\u00e9es \u00e0 des fins destructrices", "correct": false}, {"id": "107_G", "text": "C\u2019est une variante particuli\u00e8re de la r\u00e9alit\u00e9 virtuelle", "correct": false}, {"id": "107_H", "text": "Il s\u2019agit d\u2019une simulation interactive d\u2019un environnement r\u00e9aliste", "correct": false}, {"id": "107_I", "text": "L\u2019utilisateur a la sensation de pr\u00e9sence, entour\u00e9 par l\u2019espace et capable d\u2019interagir avec les objets environnants", "correct": false}, {"id": "107_J", "text": "L\u2019environnement r\u00e9el est visualis\u00e9 directement ou indirectement", "correct": false}]}, {"id": 108, "question": "Lesquels des exemples suivants sont des domaines m\u00e9dicaux pour lesquels les applications de RV sont utilis\u00e9es :", "options": [{"id": "108_A", "text": "Contr\u00f4le automatique de la perfusion", "correct": true}, {"id": "108_B", "text": "Syst\u00e8mes d\u2019alerte dans l\u2019administration des m\u00e9dicaments", "correct": false}, {"id": "108_C", "text": "Radioth\u00e9rapie", "correct": true}, {"id": "108_D", "text": "Th\u00e9rapie psychologique et contr\u00f4le de la peur", "correct": true}, {"id": "108_E", "text": "Mod\u00e8les pharmacocin\u00e9tiques", "correct": false}, {"id": "108_F", "text": "Syst\u00e8mes de visualisation", "correct": false}, {"id": "108_G", "text": "Syst\u00e8mes d'apprentissage et de test pour les \u00e9tudiants en anatomie", "correct": false}, {"id": "108_H", "text": "Chimioth\u00e9rapie", "correct": false}, {"id": "108_I", "text": "Chirurgie assist\u00e9e par ordinateur", "correct": false}, {"id": "108_J", "text": "M\u00e9decine de r\u00e9cup\u00e9ration", "correct": false}]}, {"id": 109, "question": "Lesquels des \u00e9l\u00e9ments suivants sont des avantages des simulations informatiques pour le corps humain, utilis\u00e9es par les m\u00e9decins pour la formation au lieu de la pratique sur des cadavres humains :", "options": [{"id": "109_A", "text": "Les tissus sont plus forts et les couleurs sont chang\u00e9es", "correct": true}, {"id": "109_B", "text": "Les man\u0153uvres peuvent \u00eatre r\u00e9p\u00e9t\u00e9 chaque fois que n\u00e9cessaire", "correct": false}, {"id": "109_C", "text": "Si le m\u00e9decin coupe accidentellement un vaisseau sanguin, rien ne se passe", "correct": true}, {"id": "109_D", "text": "Le site op\u00e9ratoire est pr\u00e9sent\u00e9 de mani\u00e8re dynamique", "correct": true}, {"id": "109_E", "text": "Les organs sont visualis\u00e9s de diff\u00e9rentes mani\u00e8res, \u00e9ventuellement rendus transparents ou mod\u00e9lis\u00e9s en mouvement", "correct": false}, {"id": "109_F", "text": "Un travail ne peut \u00eatre ex\u00e9cut\u00e9 qu\u2019une seule fois", "correct": false}, {"id": "109_G", "text": "Les r\u00e9actions de r\u00e9ponse de l\u2019organisme sont simul\u00e9es de mani\u00e8re r\u00e9aliste", "correct": false}, {"id": "109_H", "text": "Les fonctions physiologiques de l\u2019organisme sont simul\u00e9es de mani\u00e8re r\u00e9aliste", "correct": false}, {"id": "109_I", "text": "Les art\u00e8res ne pulsent pas", "correct": false}, {"id": "109_J", "text": "Les actions ne peuvent pas \u00eatre annul\u00e9es", "correct": false}]}, {"id": 110, "question": "Lesquels des \u00e9l\u00e9ments suivants sont des inconv\u00e9nients de la pratique sur les cadavres humains, \u00e9limin\u00e9s lors de l\u2019utilisation de simulations informatiques pour le corps humain :", "options": [{"id": "110_A", "text": "Les tissus sont plus forts et les couleurs sont chang\u00e9es", "correct": true}, {"id": "110_B", "text": "Les fonctions physiologiques de l\u2019organisme sont simul\u00e9es de mani\u00e8re r\u00e9aliste", "correct": false}, {"id": "110_C", "text": "Les art\u00e8res ne pulsent pas", "correct": true}, {"id": "110_D", "text": "Les actions ne peuvent pas \u00eatre annul\u00e9es", "correct": true}, {"id": "110_E", "text": "Le site op\u00e9ratoire est pr\u00e9sent\u00e9 de mani\u00e8re dynamique", "correct": false}, {"id": "110_F", "text": "Les man\u0153uvres peuvent \u00eatre r\u00e9p\u00e9t\u00e9 chaque fois que n\u00e9cessaire", "correct": false}, {"id": "110_G", "text": "Les r\u00e9actions de r\u00e9ponse de l\u2019organisme sont simul\u00e9es de mani\u00e8re r\u00e9aliste", "correct": false}, {"id": "110_H", "text": "Un travail ne peut \u00eatre ex\u00e9cut\u00e9 qu\u2019une seule fois", "correct": false}, {"id": "110_I", "text": "Si le m\u00e9decin coupe accidentellement un vaisseau sanguin, rien ne se passe", "correct": false}, {"id": "110_J", "text": "Les organes sont visualis\u00e9s de diff\u00e9rentes mani\u00e8res, \u00e9ventuellement rendus transparents ou mod\u00e9lis\u00e9s en mouvement", "correct": false}]}, {"id": 111, "question": "Le concept de sant\u00e9 en ligne (soins de sant\u00e9 \u00e9lectroniques) est orient\u00e9 vers la r\u00e9alisation des objectifs suivants :", "options": [{"id": "111_A", "text": "Interaction entre les m\u00e9decins ou entre le patient et le m\u00e9decin", "correct": true}, {"id": "111_B", "text": "Int\u00e9gration - la fusion de toutes les donn\u00e9es m\u00e9dicales et param\u00e9dicales du patient dans un format unitaire", "correct": false}, {"id": "111_C", "text": "Diminuer l\u2019interaction physique entre le m\u00e9decin et le patient", "correct": true}, {"id": "111_D", "text": "Transaction \u2013 \u00e9change de donn\u00e9es \u2013 pour traiter le dossier m\u00e9dical \u00e9lectronique du patient", "correct": true}, {"id": "111_E", "text": "Optimisation du temps de travail des m\u00e9decins et de personnel m\u00e9dical", "correct": false}, {"id": "111_F", "text": "\u00c9limination des erreurs dans le dossier m\u00e9dical informatis\u00e9", "correct": false}, {"id": "111_G", "text": "Diffusion \u2013 stockage des donn\u00e9es m\u00e9dicales et param\u00e9dicales du patient dans diff\u00e9rents documents et lieux, pour leur s\u00e9curit\u00e9", "correct": false}, {"id": "111_H", "text": "Fourniture d\u2019informations aux patients via des portails sp\u00e9cialis\u00e9s", "correct": false}, {"id": "111_I", "text": "Communication des donn\u00e9es \u00e0 la Caisse d\u2019assurance maladie", "correct": false}, {"id": "111_J", "text": "Communication entre les m\u00e9decins ou entre le patient et le m\u00e9decin", "correct": false}]}, {"id": 112, "question": "Les principaux avantages des services de t\u00e9l\u00e9m\u00e9decine sont les suivants :", "options": [{"id": "112_A", "text": "La m\u00e9thode peut \u00eatre accessible \u00e0 tous \u2013 m\u00e9decin ou patient", "correct": true}, {"id": "112_B", "text": "Toute condition peut \u00eatre diagnostiqu\u00e9e", "correct": false}, {"id": "112_C", "text": "\u00c9largir l\u2019acc\u00e8s aux m\u00e9decins sp\u00e9cialistes", "correct": true}, {"id": "112_D", "text": "Fournir des soins de sant\u00e9 aux patients d\u2019une mani\u00e8re beaucoup plus pratique et accessible", "correct": true}, {"id": "112_E", "text": "N\u00e9cessite une formation technique suppl\u00e9mentaire pour les b\u00e9n\u00e9ficiaires", "correct": false}, {"id": "112_F", "text": "Diminuer le degr\u00e9 d\u2019interaction humaine entre le m\u00e9decin et le patient", "correct": false}, {"id": "112_G", "text": "Faciliter la continuit\u00e9 de l\u2019acte m\u00e9dical", "correct": false}, {"id": "112_H", "text": "Responsabiliser le patient", "correct": false}, {"id": "112_I", "text": "R\u00e9duire les co\u00fbts des soins de sant\u00e9", "correct": false}, {"id": "112_J", "text": "Am\u00e9liorer la qualit\u00e9 des soins m\u00e9dicales", "correct": false}]}, {"id": 113, "question": "Dans laquelle des situations suivantes il n\u2019est pas recommand\u00e9 d\u2019utiliser des applications de t\u00e9l\u00e9m\u00e9decine :", "options": [{"id": "113_A", "text": "Examens d\u2019imagerie et analyse conjointe de cas", "correct": true}, {"id": "113_B", "text": "Proc\u00e9dures d'investigation qui exigent le respect d'un certain protocole", "correct": false}, {"id": "113_C", "text": "Examen direct du patient par le m\u00e9decin", "correct": true}, {"id": "113_D", "text": "Proc\u00e9dures d\u2019investigation invasives", "correct": true}, {"id": "113_E", "text": "Urgences m\u00e9dicales", "correct": false}, {"id": "113_F", "text": "La pr\u00e9sence de sympt\u00f4mes graves n\u00e9cessitant un examen direct du patient", "correct": false}, {"id": "113_G", "text": "Maladies simples, qui ne n\u00e9cessitent pas de contact direct avec le patient", "correct": false}, {"id": "113_H", "text": "Soins et assistance pr\u00e9nataux", "correct": false}, {"id": "113_I", "text": "Conseils psychologiques sp\u00e9cialis\u00e9s", "correct": false}, {"id": "113_J", "text": "R\u00e9habilitation m\u00e9dicale et physioth\u00e9rapie", "correct": false}]}, {"id": 114, "question": "Les solutions \u00ab Store \u2013 et \u2013 forward \u00bb :", "options": [{"id": "114_A", "text": "Ils sont utilis\u00e9s intensivement en t\u00e9l\u00e9radiologie, t\u00e9l\u00e9pathologie, t\u00e9l\u00e9dermatologie, t\u00e9l\u00e9ophtalmologie", "correct": true}, {"id": "114_B", "text": "Ils sont \u00e9galement appel\u00e9s \u00ab services asynchrones \u00bb", "correct": false}, {"id": "114_C", "text": "Ils sont utilis\u00e9s pour relier les petits centres m\u00e9dicaux \u00e0 la m\u00eame institution centrale", "correct": true}, {"id": "114_D", "text": "Donnent aux m\u00e9decins la possibilit\u00e9 d\u2019envoyer les donn\u00e9es m\u00e9dicales des patients \u00e0 des sp\u00e9cialistes dans d'autres lieux \u00e9loign\u00e9s", "correct": true}, {"id": "114_E", "text": "Les sujets du processus de communication (patient, m\u00e9decin traitant et sp\u00e9cialiste) ne doivent pas \u00eatre pr\u00e9sentes simultan\u00e9ment", "correct": false}, {"id": "114_F", "text": "Font r\u00e9f\u00e9rence \u00e0 l\u2019interaction directe entre le m\u00e9decin et le patient", "correct": false}, {"id": "114_G", "text": "Ils utilisent des connexions Internet haute vitesse pour relier les h\u00f4pitaux et les cliniques locaux", "correct": false}, {"id": "114_H", "text": "Ils sont principalement utilis\u00e9s dans le cas des services d\u2019urgence", "correct": false}, {"id": "114_I", "text": "La transmission se fait par le biais de plates-formes de messagerie \u00e9lectronique d\u00e9di\u00e9es qui disposent de protocoles de s\u00e9curit\u00e9 sp\u00e9ciaux", "correct": false}, {"id": "114_J", "text": "Permettent aux m\u00e9decins de surveiller les signes vitaux des patients", "correct": false}]}, {"id": 115, "question": "T\u00e9l\u00e9m\u00e9decine en temps r\u00e9el :", "options": [{"id": "115_A", "text": "Rationalise les soins de sant\u00e9 \u2013 de meilleurs r\u00e9sultats pour les patients", "correct": true}, {"id": "115_B", "text": "Il est principalement utilis\u00e9 dans le cas des services d\u2019urgence", "correct": false}, {"id": "115_C", "text": "Il repr\u00e9sente l\u2019alternative virtuelle d\u2019une visite r\u00e9elle chez le m\u00e9decin", "correct": true}, {"id": "115_D", "text": "Permet aux m\u00e9decins de surveiller les signes vitaux des patients", "correct": true}, {"id": "115_E", "text": "Rationalise les services m\u00e9dicaux \u2013 un degr\u00e9 plus \u00e9lev\u00e9 d\u2019adressabilit\u00e9", "correct": false}, {"id": "115_F", "text": "Il est bas\u00e9 sur une communication vid\u00e9o et audio du type \u00ab\u00a0videochat\u00a0\u00bb", "correct": false}, {"id": "115_G", "text": "Il enregistre automatiquement et envoie au m\u00e9decin les valeurs mesur\u00e9es pour les param\u00e8tres physiologiques du patient", "correct": false}, {"id": "115_H", "text": "Il est utilis\u00e9 intensivement en t\u00e9l\u00e9radiologie, t\u00e9l\u00e9pathologie, t\u00e9l\u00e9dermatologie, t\u00e9l\u00e9ophtalmologie", "correct": false}, {"id": "115_I", "text": "Fait r\u00e9f\u00e9rence \u00e0 l\u2019interaction directe entre le m\u00e9decin et le patient ou entre les m\u00e9decins", "correct": false}, {"id": "115_J", "text": "Il utilise des connexions Internet haute vitesse pour relier les h\u00f4pitaux et les cliniques locaux", "correct": false}]}, {"id": 116, "question": "Parmi les services suivants, lesquels sont inclus dans le concept de t\u00e9l\u00e9assistance \u00e0 domicile :", "options": [{"id": "116_A", "text": "Education de la population et promouvoir la qualit\u00e9 de vie", "correct": true}, {"id": "116_B", "text": "Identification pr\u00e9coce d\u2019\u00e9ventuels processus morbides", "correct": false}, {"id": "116_C", "text": "Suivi des m\u00e9dicaments administr\u00e9s", "correct": true}, {"id": "116_D", "text": "Consultation de routine des patients", "correct": true}, {"id": "116_E", "text": "Surveillance des signes vitaux et des param\u00e8tres biologiques du patient", "correct": false}, {"id": "116_F", "text": "Education des patients sur la maladie, le comportement pr\u00e9ventif et la m\u00e9dication", "correct": false}, {"id": "116_G", "text": "Utilisation d\u2019\u00e9quipements m\u00e9dicaux dot\u00e9s de fonctions de communication en ligne int\u00e9gr\u00e9es et pouvant \u00e9ventuellement \u00eatre command\u00e9s \u00e0 distance", "correct": false}, {"id": "116_H", "text": "Popularisation du comportement sanog\u00e8ne", "correct": false}, {"id": "116_I", "text": "Optimisation de la logistique impliqu\u00e9e dans le traitement des maladies", "correct": false}, {"id": "116_J", "text": "\u00c9valuation r\u00e9guli\u00e8re des fonctions c\u00e9r\u00e9brales", "correct": false}]}, {"id": 117, "question": "Quels sont les principaux b\u00e9n\u00e9\ufb01ciaires des applications de t\u00e9l\u00e9soins \u00e0 domicile :", "options": [{"id": "117_A", "text": "Patients atteints de maladies chroniques n\u00e9cessitant une surveillance permanente", "correct": true}, {"id": "117_B", "text": "Les personnes qui vivent seules et ne peuvent pas demander de l\u2019aide dans des situations d\u2019urgence", "correct": false}, {"id": "117_C", "text": "Les personnes \u00e2g\u00e9es ou handicap\u00e9es, qui ont des fonctions physiques ou cognitives alt\u00e9r\u00e9es", "correct": true}, {"id": "117_D", "text": "M\u00e9decins de famille, qui peuvent plus facilement contacter des m\u00e9decins sp\u00e9cialistes", "correct": true}, {"id": "117_E", "text": "Les personnes qui ont besoin d\u2019aide pour effectuer des activit\u00e9s quotidiennes de soins personnels ou m\u00e9nagers", "correct": false}, {"id": "117_F", "text": "Personnes vivant dans les zones urbaines", "correct": false}, {"id": "117_G", "text": "Patients hospitalis\u00e9s dans des centres de soins palliatifs", "correct": false}, {"id": "117_H", "text": "M\u00e9decins sp\u00e9cialistes, qui communiquent plus rapidement avec leurs coll\u00e8gues \u00e0 distance", "correct": false}, {"id": "117_I", "text": "Personnes vivant dans des zones rurales, difficiles \u00e0 atteindre ou dans des communaut\u00e9s isol\u00e9es o\u00f9 les services de sant\u00e9 sont inexistants ou limit\u00e9s", "correct": false}, {"id": "117_J", "text": "Patients hospitalis\u00e9s, n\u00e9cessitant une surveillance permanente", "correct": false}]}, {"id": 118, "question": "Lesquels des exemples suivants sont des exemples de donn\u00e9es enregistr\u00e9es dans les maisons intelligentes pour surveiller la sant\u00e9 des r\u00e9sidents :", "options": [{"id": "118_A", "text": "Nombre et dur\u00e9e des appels t\u00e9l\u00e9phoniques", "correct": true}, {"id": "118_B", "text": "Signes vitaux", "correct": false}, {"id": "118_C", "text": "Images, sons, mouvements du corps", "correct": true}, {"id": "118_D", "text": "Comportement de sommeil", "correct": true}, {"id": "118_E", "text": "Nombre de calories consomm\u00e9es quotidiennement", "correct": false}, {"id": "118_F", "text": "Param\u00e8tres environnementaux", "correct": false}, {"id": "118_G", "text": "Volume et nature des d\u00e9penses mensuelles", "correct": false}, {"id": "118_H", "text": "Consommation quotidienne de m\u00e9dicaments", "correct": false}, {"id": "118_I", "text": "Intensit\u00e9 de l\u2019exercice physique", "correct": false}, {"id": "118_J", "text": "Activit\u00e9s quotidiennes", "correct": false}]}, {"id": 119, "question": "Laquelle des d\u00e9clarations suivantes sur le package de programme Microsoft Excel est vraie :", "options": [{"id": "119_A", "text": "Permet l\u2019\u00e9dition facile des tableaux", "correct": true}, {"id": "119_B", "text": "Permet la v\u00e9rification orthographique", "correct": false}, {"id": "119_C", "text": "Permet le traitement des tables", "correct": true}, {"id": "119_D", "text": "Permet l\u2019ajout automatique de listes \u00e0 puces ou num\u00e9rot\u00e9es", "correct": true}, {"id": "119_E", "text": "Permet des calculs et des graphiques", "correct": false}, {"id": "119_F", "text": "Contient des mod\u00e8les int\u00e9gr\u00e9s de travail", "correct": false}, {"id": "119_G", "text": "C\u2019est un programme sp\u00e9cialis\u00e9 pour l\u2019\u00e9dition de textes", "correct": false}, {"id": "119_H", "text": "Il est connu sous le nom de \"programme de calcul sur des tableaux\".", "correct": false}, {"id": "119_I", "text": "C\u2019est l\u2019un des composants de base du logiciel Office", "correct": false}, {"id": "119_J", "text": "Permet d\u2019ajouter des en-t\u00eates et des pieds de page", "correct": false}]}, {"id": 120, "question": "Parmi les options suivantes permettant d\u2019aligner du texte dans une cellule, lesquelles sont disponibles dans Microsoft Excel :", "options": [{"id": "120_A", "text": "Merge Cells", "correct": true}, {"id": "120_B", "text": "Bottom Align", "correct": false}, {"id": "120_C", "text": "Align Text Left", "correct": true}, {"id": "120_D", "text": "Center Text", "correct": true}, {"id": "120_E", "text": "Autofit", "correct": false}, {"id": "120_F", "text": "Middle Align", "correct": false}, {"id": "120_G", "text": "Merge and Center", "correct": false}, {"id": "120_H", "text": "Wrap Text", "correct": false}, {"id": "120_I", "text": "Split Cell", "correct": false}, {"id": "120_J", "text": "Top Align", "correct": false}]}];
+        let allQuestions = [];
+        let totalScore = 0, maxPossibleScore = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            allQuestions = JSON.parse(JSON.stringify(quizData));
+            shuffleArray(allQuestions);
+            allQuestions.forEach(q => shuffleArray(q.options));
+            totalScore = 0; maxPossibleScore = 0;
+            allQuestions.forEach(q => { q.options.forEach(o => { if (o.correct) maxPossibleScore++; }) });
+            document.getElementById('btn-recommencer').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('nav-buttons').style.display = 'flex';
+            renderPage();
+        }
+
+        function renderPage() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'q-' + q.id;
+                
+                const title = document.createElement('h3');
+                title.className = 'question-title';
+                title.textContent = `Q${q.id} - ${q.question}`;
+                card.appendChild(title);
+                
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+                
+                q.options.forEach(opt => {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'label-' + opt.id;
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'question-' + q.id;
+                    checkbox.value = opt.id;
+                    
+                    const textNode = document.createTextNode(opt.text);
+                    label.appendChild(checkbox);
+                    label.appendChild(textNode);
+                    
+                    optionsGrid.appendChild(label);
+                });
+                card.appendChild(optionsGrid);
+                container.appendChild(card);
+            });
+
+            document.getElementById('btn-valider').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+        }
+
+        function validerReponses() {
+            let pageScore = 0, pageMaxScore = 0;
+            allQuestions.forEach(q => {
+                q.options.forEach(opt => {
+                    if (opt.correct) pageMaxScore++;
+                    const checkbox = document.querySelector(`input[value="${opt.id}"]`);
+                    const label = document.getElementById(`label-${opt.id}`);
+                    
+                    checkbox.disabled = true;
+                    label.classList.add('disabled');
+                    
+                    if (checkbox.checked) {
+                        if (opt.correct) { 
+                            label.classList.add('is-correct'); 
+                            pageScore++; 
+                            totalScore++; 
+                        } else { 
+                            label.classList.add('is-incorrect'); 
+                        }
+                    } else {
+                        if (opt.correct) { 
+                            label.classList.add('missed-correct'); 
+                        }
+                    }
+                });
+            });
+            
+            const resultsDiv = document.getElementById('results');
+            const scoreText = document.getElementById('score-text');
+            const globalScoreText = document.getElementById('global-score-text');
+            const percentage = pageMaxScore > 0 ? Math.round((pageScore / pageMaxScore) * 100) : 0;
+            
+            scoreText.textContent = `Score Total : ${pageScore} / ${pageMaxScore} (${percentage}%)`;
+            globalScoreText.innerHTML = `Le bouton ci-dessous vous permet de mélanger les questions et de retenter votre chance !`;
+            resultsDiv.style.display = 'block';
+            document.getElementById('btn-valider').style.display = 'none';
+            
+            document.getElementById('nav-buttons').style.display = 'none';
+            document.getElementById('btn-recommencer').style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
